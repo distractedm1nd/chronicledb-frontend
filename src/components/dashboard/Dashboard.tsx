@@ -32,8 +32,18 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
+type EventType = "Float" | "Integer" | "Compound" | "VarStringList" |"ConstStringList"|"VarFloatList"|"ConstFloatList"|"VarIntegerList"|"ConstIntegerList"|"VarString"|"ConstString"
+
+type StreamConfig = {
+  Event: {[key in EventType]: any}
+}
+
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const createStream = (config: StreamConfig) => {
+    fetch("http://localhost:8000", {method: "POST", body: JSON.stringify(config)}).then(res => res.json()).then(res => console.log(res));
+  }
 
   return (
     <>
