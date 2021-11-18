@@ -14,7 +14,7 @@ import {
 import { SearchIcon } from "@heroicons/react/solid";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
-import {StreamConfig} from "../../types/types";
+import {DefaultStreamConfig, StreamConfig} from "../../types/types";
 import {classNames, configToINI} from "../../utils";
 
 const navigation = [
@@ -32,7 +32,6 @@ const userNavigation = [
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const testStreamConfig: StreamConfig = {Event: {"ConstStringList":[[77,105,110,105],[77,105,107,101]]}}
 
   const createStream = (config: StreamConfig) => {
     fetch("http://192.168.178.69:8000/create_stream/", {method: "POST", body: configToINI(config)})
@@ -264,7 +263,7 @@ export default function Dashboard() {
                   <h1 className="text-2xl font-semibold text-gray-900">
                     Amirs Übersicht
                   </h1>
-                  <button onClick={() => createStream(testStreamConfig)} className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
+                  <button onClick={() => createStream(DefaultStreamConfig)} className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
