@@ -14,6 +14,8 @@ import {
 import { SearchIcon } from "@heroicons/react/solid";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
+import {StreamConfig} from "../../types/types";
+import {classNames, configToINI} from "../../utils";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -28,21 +30,14 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
-type EventType = "Float" | "Integer" | "Compound" | "VarStringList" |"ConstStringList"|"VarFloatList"|"ConstFloatList"|"VarIntegerList"|"ConstIntegerList"|"VarString"|"ConstString"
-
-type StreamConfig = {
-  Event: {[key in EventType]: any}
-}
-
-export default function Example() {
+export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const testStreamConfig: StreamConfig = {Event: {"ConstStringList":[[77,105,110,105],[77,105,107,101]]}}
 
   const createStream = (config: StreamConfig) => {
-    fetch("http://localhost:8000", {method: "POST", body: JSON.stringify(config)}).then(res => res.json()).then(res => console.log(res));
+    fetch("http://192.168.178.69:8000/create_stream/", {method: "POST", body: configToINI(config)})
+        .then(res => res.json())
+        .then(res => console.log(res));
   }
 
   return (
@@ -269,7 +264,7 @@ export default function Example() {
                   <h1 className="text-2xl font-semibold text-gray-900">
                     Amirs Übersicht
                   </h1>
-                  <button className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
+                  <button onClick={() => createStream(testStreamConfig)} className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
