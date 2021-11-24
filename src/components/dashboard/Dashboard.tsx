@@ -34,7 +34,7 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const createStream = (config: StreamConfig) => {
-    fetch("http://192.168.178.69:8000/create_stream/", {method: "POST", body: configToINI(config)})
+    fetch("http://192.168.178.69:8000/create_stream", {method: "POST", body: configToINI(config)})
         .then(res => res.json())
         .then(res => console.log(res));
   }

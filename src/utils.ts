@@ -1,16 +1,19 @@
-import {StreamConfig} from "./types/types";
+import {configString, StreamConfig, StreamConfigKey} from "./types/types";
 
 export const nameof = <T>(name: keyof T) => name;
 
 export const configToINI = (config: StreamConfig): string => {
+    // return configString;
     let body: string = "";
     for (const [key, value] of Object.entries(config)) {
         if(Array.isArray(value)) {
             value.forEach(x => {
-                body += `${key} = ${interpolate(x)}\n`;
+                // @ts-ignore
+                body += `${StreamConfigKey[key]} = ${interpolate(x)}\n`;
             })
         } else {
-            body += `${key} = ${interpolate(value)}\n`;
+            // @ts-ignore
+            body += `${StreamConfigKey[key]} = ${interpolate(value)}\n`;
         }
     }
     return body;
