@@ -33,10 +33,29 @@ const userNavigation = [
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const createStream = (config: StreamConfig) => {
-    fetch("http://192.168.178.69:8000/create_stream", {method: "POST", body: configToINI(config)})
-        .then(res => res.json())
-        .then(res => console.log(res));
+  const createStream = () => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/plain");
+
+    var raw = "\r\n	Log							= false\r\n	Debug							= false\r\n	Data 							= data0\r\n	Translation						= translation\r\n	Boot							= .boot\r\n	Multiple disk max queue 		= 10\r\n	Event 							= {\"VarCompound\":[{\"U64\":0},{\"I64\":0},{\"F64\":0.0},{\"VarString\":\"Hallo-Welt\"}]}\r\n	Lightweight index				= {\"aggregate\":{\"SMA\":{\"cnt\":0,\"sum\":0.0,\"min\":0.0,\"max\":0.0}},\"projector_sequence\":\"Mono\"}\r\n	LogicalBlock size 				= 32768\r\n	MacroBlock size 				= 10\r\n	MacroBlock spare				= 0.1\r\n	MacroBlock preallocation 		= 300\r\n	MacroBlock batch allocation		= 300\r\n	MacroBlocks cache				= 2500\r\n	Nodes cache						= 10000\r\n	Compressor						= LZ4_Fast_No_Meta\r\n	Compressor extras				= {\"I32\":12}\r\n	River threads 					= t\r\n	Max delta queue					= 10\r\n\r\n";
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://127.0.0.1:8000/create_stream",  {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    })
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
   }
 
   return (
@@ -263,7 +282,8 @@ export default function Dashboard() {
                   <h1 className="text-2xl font-semibold text-gray-900">
                     Amirs Übersicht
                   </h1>
-                  <button onClick={() => createStream(DefaultStreamConfig)} className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
+                  <button onClick={() => createStream()}
+                          className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
