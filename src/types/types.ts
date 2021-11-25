@@ -1,10 +1,11 @@
-export type EventType = "Float" | "Integer" | "Compound" | "VarStringList" | "ConstStringList" | "VarFloatList" | "ConstFloatList" | "VarIntegerList" | "ConstIntegerList" | "VarString" | "ConstString";
+export type EventType = "Float" | "Integer" | "Compound" | "VarStringList" | "VarCompound" | "ConstStringList" | "VarFloatList" | "ConstFloatList" | "VarIntegerList" | "ConstIntegerList" | "VarString" | "ConstString";
 
 export enum StreamConfigKey {
     Log = "Log",
     Debug = "Debug",
     Data= "Data",
     Translation= "Translation",
+    Boot = "Boot",
     RightFlank=  "Right flank",
     MultipleDiskMaxQueue= "Multiple disk max queue",
     Event="Event",
@@ -20,6 +21,50 @@ export enum StreamConfigKey {
     CompressorExtras= "Compressor extras",
     RiverThreads= "River threads",
     MaxDeltaQueue= "Max delta queue"
+}
+
+export type StreamConfig = {
+    Log: boolean
+    Debug: boolean
+    Data: [string]
+    Translation: string
+    Boot: string
+    MultipleDiskMaxQueue: number
+    Event: [{[key in EventType]?: any}]
+    LightweightIndex: {"aggregate": any, "projector_sequence": "Mono" | "Empty"}
+    LogicalBlockSize: number
+    MacroBlockSize: "l" | "p" | number
+    MacroBlockSpare: number
+    MacroBlockPreallocation: number
+    MacroBlockBatchAllocation: number
+    MacroBlocksCache: number
+    NodesCache: number
+    Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta"
+    CompressorExtras: {"I32": number | "None"}
+    RiverThreads: number | string
+    MaxDeltaQueue: number
+}
+
+export const DefaultStreamConfig: StreamConfig = {
+    Log: false,
+    Debug: false,
+    Data: ["data0"],
+    Boot: ".boot",
+    Translation: "translation",
+    MultipleDiskMaxQueue: 100,
+    Event: [{"VarCompound":[{"U64":0},{"I64":0},{"F64":0.0},{"VarString":"Hallo-Welt"}]}],
+    LightweightIndex: {"aggregate":{"SMA":{"cnt":0,"sum":0.0,"min":0.0,"max":0.0}},"projector_sequence":"Mono"},
+    LogicalBlockSize: 8192,
+    MacroBlockSize: 10,
+    MacroBlockSpare: 0.1,
+    MacroBlockPreallocation: 300,
+    MacroBlockBatchAllocation: 300,
+    MacroBlocksCache: 2500,
+    NodesCache: 3000,
+    Compressor: "LZ4_Fast_No_Meta",
+    CompressorExtras:  {"I32":12},
+    RiverThreads: "t",
+    MaxDeltaQueue: 10
 }
 
 export const configString: string= `##########################################################################################
@@ -280,47 +325,3 @@ export const configString: string= `############################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################`;
-
-export type StreamConfig = {
-    Log: boolean
-    Debug: boolean
-    Data: [string]
-    Translation: string
-    RightFlank:  string
-    MultipleDiskMaxQueue: number
-    Event: [{[key in EventType]?: any}]
-    LightweightIndex: {"aggregate": any, "projector_sequence": "Mono" | "Empty"}
-    LogicalBlockSize: number
-    MacroBlockSize: "l" | "p" | number
-    MacroBlockSpare: number
-    MacroBlockPreallocation: number
-    MacroBlockBatchAllocation: number
-    MacroBlocksCache: number
-    NodesCache: number
-    Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta"
-    CompressorExtras: {"I32": number | "None"}
-    RiverThreads: number | string
-    MaxDeltaQueue: number
-}
-
-export const DefaultStreamConfig: StreamConfig = {
-    Log: false,
-    Debug: false,
-    Data: ["data0"],
-    Translation: "translation",
-    RightFlank: "flank",
-    MultipleDiskMaxQueue: 100,
-    Event: [{"Float": 0.0}],
-    LightweightIndex: {"aggregate":{"SMA":{"cnt":0,"sum":0.0,"min":0.0,"max":0.0}},"projector_sequence":"Mono"},
-    LogicalBlockSize: 8192,
-    MacroBlockSize: 10,
-    MacroBlockSpare: 0.1,
-    MacroBlockPreallocation: 300,
-    MacroBlockBatchAllocation: 300,
-    MacroBlocksCache: 2500,
-    NodesCache: 3000,
-    Compressor: "LZ4_Fast_No_Meta",
-    CompressorExtras:  {"I32":12},
-    RiverThreads: "t",
-    MaxDeltaQueue: 10
-}
