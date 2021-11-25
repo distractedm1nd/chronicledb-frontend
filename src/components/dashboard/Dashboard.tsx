@@ -11,7 +11,7 @@ import {
   UsersIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import {ChevronDownIcon, SearchIcon} from "@heroicons/react/solid";
+import {ChevronDownIcon, SearchIcon, SelectorIcon} from "@heroicons/react/solid";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
 import {configString, DefaultStreamConfig, EventType, IEvent, ip, StreamConfig} from "../../types/types";
@@ -205,6 +205,77 @@ export default function Dashboard() {
                 alt="Logo der Philipps Universität Marburg"
               />
             </div>
+            <Menu as="div" className="px-3 relative inline-block text-left pt-6">
+              <div>
+                <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
+                  <span className="flex w-full justify-between items-center">
+                    <span className="flex min-w-0 items-center justify-between space-x-3">
+                      <img
+                          className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
+                          src={BSeeger}
+                          alt=""
+                      />
+                      <span className="flex-1 flex flex-col min-w-0">
+                        <span className="text-gray-900 text-sm font-medium truncate">Prof. Seeger</span>
+                        <span className="text-gray-500 text-sm truncate">Administrator</span>
+                      </span>
+                    </span>
+                    <SelectorIcon
+                        className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                    />
+                  </span>
+                </Menu.Button>
+              </div>
+              <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="z-10 mx-3 origin-top absolute right-0 left-0 mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
+                  {userNavigation.map((item) => (
+                      <Menu.Item key={item.name}>
+                        {({ active }) => (
+                            <a
+                                href={item.href}
+                                className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block py-2 px-4 text-sm text-gray-700"
+                                )}
+                            >
+                              {item.name}
+                            </a>
+                        )}
+                      </Menu.Item>
+                  ))}
+                </Menu.Items>
+              </Transition>
+            </Menu>
+            {/* Sidebar Search */}
+            <div className="px-3 mt-5">
+              <label htmlFor="search" className="sr-only">
+                Search
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div
+                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                    aria-hidden="true"
+                >
+                  <SearchIcon className="mr-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                </div>
+                <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Search"
+                />
+              </div>
+            </div>
             <div className="flex-grow mt-5 flex flex-col">
               <nav className="flex-1 px-2 pb-4 space-y-1">
                 {navigation.map((item) => (
@@ -237,96 +308,25 @@ export default function Dashboard() {
 
         <div className="md:pl-64">
           <div className="mx-auto flex flex-col xl:px-0">
-            <div className="sticky top-0 z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 flex px-6">
+            <div className="sticky top-0 z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 flex px-6 md:hidden">
               <button
                 type="button"
-                className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+                className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-800 md:hidden"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
                 <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
               </button>
-              <div className="flex-1 flex justify-between px-4 md:px-0">
-                <div className="flex-1 flex">
-                  <form className="w-full flex md:ml-0" action="#" method="GET">
-                    <label htmlFor="search-field" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                        <SearchIcon className="h-5 w-5" aria-hidden="true" />
-                      </div>
-                      <input
-                        id="search-field"
-                        className="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                        placeholder="Search"
-                        type="search"
-                        name="search"
-                      />
-                    </div>
-                  </form>
-                </div>
-                <div className="ml-4 flex items-center md:ml-6">
-                  <button
-                    type="button"
-                    className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-
-                  {/* Profile dropdown */}
-                  <Menu as="div" className="ml-3 relative">
-                    <div>
-                      <Menu.Button className="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-12 w-12 rounded-full"
-                          src={BSeeger}
-                          alt=""
-                        />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block py-2 px-4 text-sm text-gray-700"
-                                )}
-                              >
-                                {item.name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
-              </div>
             </div>
 
             <main className="flex-1">
-              <div className="px-6 pt-6">
+              <div className="p-6">
                 <div className="px-4 sm:px-6 md:px-0 flex justify-between">
-                  <h1 className="text-2xl font-semibold text-gray-900">
+                  <h1 className="text-2xl font-semibold text-gray-900 my-auto">
                     Stream Dashboard
                   </h1>
                   <button onClick={() => createStream()}
-                          className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
+                          className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800">
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
@@ -342,7 +342,7 @@ export default function Dashboard() {
                 {/*</div>*/}
               </div>
               {/* Projects table (small breakpoint and up) */}
-              <div className="hidden mt-8 sm:block">
+              <div className="hidden sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
                   <table className="min-w-full">
                     <thead>
