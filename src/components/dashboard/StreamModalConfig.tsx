@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { DefaultStreamConfig } from "../../types/types";
+import React, {Dispatch, SetStateAction, useState} from "react";
+import {DefaultStreamConfig, StreamConfig} from "../../types/types";
 
-export default function StreamModalConfig() {
-  const [configState, setConfigState] = useState(DefaultStreamConfig);
+export interface IStreamModalConfig {
+  configState: StreamConfig,
+  setConfigState: Dispatch<SetStateAction<StreamConfig>>
+}
+
+export default function StreamModalConfig(props: IStreamModalConfig) {
+  let {configState, setConfigState} = props;
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">

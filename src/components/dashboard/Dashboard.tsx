@@ -22,7 +22,7 @@ import {
   ip,
   StreamConfig,
 } from "../../types/types";
-import { classNames, configToINI } from "../../utils";
+import {classNames, configToINI, recoverStreamSnapshot, shutdownStream} from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
 
@@ -54,59 +54,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchStreams();
-  }, []);
-
-  // Question: How should insert_ordered_array be formatted?
-  const insertOrdered = (streamId: number, event: IEvent) => {
-    fetch(`${ip}/insert_ordered${streamId}`, {
-      method: "POST",
-      body: `Event = ${JSON.stringify(event)}`,
-    })
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
-  };
+  }, [modalOpen]);
 
   const fetchStreams = () => {
     fetch(`${ip}/show_streams`)
-      .then((response) => response.json())
-      .then((result) => setAvailableStreams(result))
-      .catch((error) => console.log("error", error));
+        .then((response) => response.json())
+        .then((result) => setAvailableStreams(result))
+        .catch((error) => console.log("error", error));
   };
 
   const fetchStreamInfo = (streamId: number) => {
     setStreamInfoModalOpen(true);
     fetch(`${ip}/stream_info/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setStreamInfo(result))
-      .catch((error) => console.log("error", error));
-  };
-
-  const shutdownStream = (streamId: number) => {
-    fetch(`${ip}/shutdown_stream/${streamId}`)
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error))
-      .finally(fetchStreams);
-  };
-
-  const recoverStreamSnapshot = (streamId: number) => {
-    fetch(`${ip}/recover_stream_snapshot/${streamId}`)
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error))
-      .finally(fetchStreams);
-  };
-
-  const createStream = () => {
-    fetch(`${ip}/create_stream`, {
-      method: "POST",
-      body: configToINI(DefaultStreamConfig),
-    })
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error))
-      .finally(fetchStreams);
+        .then((response) => response.text())
+        .then((result) => setStreamInfo(result))
+        .catch((error) => console.log("error", error));
   };
 
   return (
@@ -347,7 +309,6 @@ export default function Dashboard() {
                   <button
                       onClick={() => {
                         setModalState(true);
-                        createStream();
                       }}
                           className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800">
                     Create Stream
@@ -430,8 +391,8 @@ export default function Dashboard() {
                                 className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-xs font-normal text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800"
                                 onClick={() =>
                                   stream[1] === "Online"
-                                    ? shutdownStream(stream[0])
-                                    : recoverStreamSnapshot(stream[0])
+                                    ? shutdownStream(stream[0], fetchStreams)
+                                    : recoverStreamSnapshot(stream[0], fetchStreams)
                                 }
                               >
                                 {stream[1] === "Online"
