@@ -49,8 +49,9 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalState] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);
-  const [streamInfoModalOpen, setStreamInfoModalOpen] = useState(false);
-  const [streamInfo, setStreamInfo] = useState("");
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [modalBody, setModalBody] = useState("");
+  const [modalTitle, setModalTitle] = useState("Loading...");
 
   useEffect(() => {
     fetchStreams();
@@ -64,12 +65,22 @@ export default function Dashboard() {
   };
 
   const fetchStreamInfo = (streamId: number) => {
-    setStreamInfoModalOpen(true);
+    setModalTitle("Stream Info: " + streamId);
+    setInfoModalOpen(true);
     fetch(`${ip}/stream_info/${streamId}`)
         .then((response) => response.text())
-        .then((result) => setStreamInfo(result))
+        .then((result) => setModalBody(result))
         .catch((error) => console.log("error", error));
   };
+
+  const fetchSystemInfo = () => {
+    setModalTitle("System Info");
+    setInfoModalOpen(true);
+    fetch(`${ip}/system_info`)
+        .then((response) => response.text())
+        .then((result) => setModalBody(result))
+        .catch((error) => console.log("error", error));
+  }
 
   return (
     <>
@@ -79,11 +90,11 @@ export default function Dashboard() {
           setOpen={(val) => setModalState(val)}
         />
         <Modal
-          title={"Stream Info"}
-          body={streamInfo}
+          title={modalTitle}
+          body={modalBody}
           buttonTitle={"Close"}
-          open={streamInfoModalOpen}
-          setOpen={setStreamInfoModalOpen}
+          open={infoModalOpen}
+          setOpen={setInfoModalOpen}
         />
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -236,12 +247,39 @@ export default function Dashboard() {
                 </Menu.Items>
               </Transition>
             </Menu>
+            <div className="text-xs p-3">
+              <div className={"flex items-center space-x-3"}>
+                <div
+                    className={classNames(
+                        "bg-green-500",
+                        "flex-shrink-0 w-2.5 h-2.5 rounded-full"
+                    )}
+                    aria-hidden="true"
+                />
+                <a
+                    href="#"
+                    className="truncate hover:text-gray-600"
+                >
+                  <span>
+                    Connected:
+                  </span>
+                </a>
+              </div>
+              <div className="flex mt-2 ml-2 text-gray-500 font-normal">
+                <p>
+                  {ip}
+                </p>
+                <button className="bg-gray-200 ml-auto rounded-md shadow-lg px-2" onClick={() => fetchSystemInfo()}>
+                 ...
+                </button>
+              </div>
+              </div>
             {/* Sidebar Search */}
-            <div className="px-3 mt-5">
-              <label htmlFor="search" className="sr-only">
-                Search
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
+          <div className="px-3">
+            <label htmlFor="search" className="sr-only">
+              Search
+            </label>
+            <div className="mt-1 relative rounded-md shadow-sm">
                 <div
                     className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                     aria-hidden="true"
