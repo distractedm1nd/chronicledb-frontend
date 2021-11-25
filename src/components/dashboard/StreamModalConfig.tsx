@@ -1,13 +1,13 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
-import {DefaultStreamConfig, StreamConfig} from "../../types/types";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { DefaultStreamConfig, StreamConfig } from "../../types/types";
 
 export interface IStreamModalConfig {
-  configState: StreamConfig,
-  setConfigState: Dispatch<SetStateAction<StreamConfig>>
+  configState: StreamConfig;
+  setConfigState: Dispatch<SetStateAction<StreamConfig>>;
 }
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
-  let {configState, setConfigState} = props;
+  let { configState, setConfigState } = props;
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -152,17 +152,26 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Data
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="text"
-                  name="data"
-                  id="data"
-                  value={configState.Data}
-                  // TODO: parse to array
-                  onChange={(e) =>
-                    setConfigState({ ...configState, Data: [e.target.value] })
-                  }
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                />
+                <p className="text-sm text-gray-500">
+                  Data files. <br />
+                  data = C:\\dataFile1 <br />
+                  data = I:\\dataFile2 <br />
+                  data = H:\\dataFile3 <br />
+                  ...
+                </p>
+                <div className="mt-4 space-y-4">
+                  <input
+                    type="text"
+                    name="data"
+                    id="data"
+                    value={configState.Data}
+                    // TODO: parse to array
+                    onChange={(e) =>
+                      setConfigState({ ...configState, Data: [e.target.value] })
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
               </div>
             </div>
 
@@ -174,44 +183,50 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Translation
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="text"
-                  name="translation"
-                  id="translation"
-                  value={configState.Translation}
-                  // TODO: parse to array
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      Translation: e.target.value,
-                    })
-                  }
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                />
+                <p className="text-sm text-gray-500">
+                  This is used to serialize the rightFlank on a clean system
+                  shutdown.
+                </p>
+                <div className="mt-4 space-y-4">
+                  <input
+                    type="text"
+                    name="translation"
+                    id="translation"
+                    value={configState.Translation}
+                    // TODO: parse to array
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        Translation: e.target.value,
+                      })
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
               </div>
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
               <label
-                  htmlFor="translation"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                htmlFor="translation"
+                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Boot
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <input
-                    type="text"
-                    name="boot"
-                    id="boot"
-                    value={configState.Boot}
-                    // TODO: parse to array
-                    onChange={(e) =>
-                        setConfigState({
-                          ...configState,
-                          Boot: e.target.value,
-                        })
-                    }
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  type="text"
+                  name="boot"
+                  id="boot"
+                  value={configState.Boot}
+                  // TODO: parse to array
+                  onChange={(e) =>
+                    setConfigState({
+                      ...configState,
+                      Boot: e.target.value,
+                    })
+                  }
+                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -247,20 +262,28 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Multiple Disk Queue Checkpoint
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="multiple-disk-max-queue-number"
-                  id="multiple-disk-max-queue-number"
-                  value={configState.MultipleDiskMaxQueue}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MultipleDiskMaxQueue: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="100"
-                />
+                <p className="text-sm text-gray-500">
+                  The number of MacroBlocks allowed to be queued on disk writer
+                  thread(s). <br />
+                  This number must be much lower than MacroBlock Cache * number
+                  of data files.
+                </p>
+                <div className="mt-4 space-y-4">
+                  <input
+                    type="number"
+                    name="multiple-disk-max-queue-number"
+                    id="multiple-disk-max-queue-number"
+                    value={configState.MultipleDiskMaxQueue}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MultipleDiskMaxQueue: parseInt(e.target.value),
+                      })
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    placeholder="100"
+                  />
+                </div>
               </div>
             </div>
 
@@ -283,7 +306,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       MultipleDiskMaxQueue: parseInt(e.target.value),
                     })
                   }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   placeholder="8192"
                 />
               </div>
@@ -315,70 +338,70 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   />
                 </div>
                 <label
-                    htmlFor="macro-block-spare-number"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="macro-block-spare-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
                   Spare
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                   <input
-                      type="number"
-                      step={"0.1"}
-                      name="macro-block-spare-number"
-                      id="macro-block-spare-number"
-                      value={configState.MacroBlockSpare}
-                      onChange={(e) =>
-                          setConfigState({
-                            ...configState,
-                            MacroBlockSpare: parseFloat(e.target.value),
-                          })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder="10"
+                    type="number"
+                    step={"0.1"}
+                    name="macro-block-spare-number"
+                    id="macro-block-spare-number"
+                    value={configState.MacroBlockSpare}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MacroBlockSpare: parseFloat(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="10"
                   />
                 </div>
                 <label
-                    htmlFor="macro-block-preallocation-number"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="macro-block-preallocation-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
                   Preallocation
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                   <input
-                      type="number"
-                      name="macro-block-preallocation-number"
-                      id="macro-block-preallocation-number"
-                      value={configState.MacroBlockPreallocation}
-                      onChange={(e) =>
-                          setConfigState({
-                            ...configState,
-                            MacroBlockPreallocation: parseInt(e.target.value),
-                          })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder="300"
+                    type="number"
+                    name="macro-block-preallocation-number"
+                    id="macro-block-preallocation-number"
+                    value={configState.MacroBlockPreallocation}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MacroBlockPreallocation: parseInt(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="300"
                   />
                 </div>
                 <label
-                    htmlFor="macro-block-batch-allocation-number"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="macro-block-batch-allocation-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
                   Batch Allocation
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                   <input
-                      type="number"
-                      name="macro-block-batch-allocation-number"
-                      id="macro-block-batch-allocation-number"
-                      value={configState.MacroBlockBatchAllocation}
-                      onChange={(e) =>
-                          setConfigState({
-                            ...configState,
-                            MacroBlockBatchAllocation: parseInt(e.target.value),
-                          })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
+                    type="number"
+                    name="macro-block-batch-allocation-number"
+                    id="macro-block-batch-allocation-number"
+                    value={configState.MacroBlockBatchAllocation}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MacroBlockBatchAllocation: parseInt(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
                   />
                 </div>
               </div>
@@ -388,47 +411,47 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               <p className="font-bold">Cache Configuration</p>
               <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start pt-3">
                 <label
-                    htmlFor="macro-block-cache-number"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="macro-block-cache-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
                   Macro Blocks
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                   <input
-                      type="number"
-                      name="macro-block-cache-number"
-                      id="macro-block-cache-number"
-                      value={configState.MacroBlocksCache}
-                      onChange={(e) =>
-                          setConfigState({
-                            ...configState,
-                            MacroBlocksCache: parseInt(e.target.value),
-                          })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
+                    type="number"
+                    name="macro-block-cache-number"
+                    id="macro-block-cache-number"
+                    value={configState.MacroBlocksCache}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MacroBlocksCache: parseInt(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
                   />
                 </div>
                 <label
-                    htmlFor="nodes-cache-number"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="nodes-cache-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
                   Nodes
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                   <input
-                      type="number"
-                      name="nodes-cache-number"
-                      id="nodes-cache-number"
-                      value={configState.NodesCache}
-                      onChange={(e) =>
-                          setConfigState({
-                            ...configState,
-                            NodesCache: parseInt(e.target.value),
-                          })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder={DefaultStreamConfig.NodesCache.toString()}
+                    type="number"
+                    name="nodes-cache-number"
+                    id="nodes-cache-number"
+                    value={configState.NodesCache}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        NodesCache: parseInt(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder={DefaultStreamConfig.NodesCache.toString()}
                   />
                 </div>
               </div>
@@ -471,7 +494,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Compressor: "LZ4_Fast_No_Meta",
                       })
                     }
-                    checked={configState.Log}
+                    checked={configState.Compressor === "LZ4_Fast_No_Meta"}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -492,7 +515,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Compressor: "LZ4_Fast_With_Meta",
                       })
                     }
-                    checked={configState.Log}
+                    checked={configState.Compressor === "LZ4_Fast_With_Meta"}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -504,66 +527,66 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 </div>
               </div>
               <label
-                  htmlFor="compressor-extras"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                htmlFor="compressor-extras"
+                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Compressor extras
               </label>
               <div className="mt-4 space-y-4 col-span-2">
                 <div className="flex items-center">
                   <input
-                      id="compressor-extras-none"
-                      name="compressor-extras"
-                      type="radio"
-                      onClick={() =>
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: { I32: "None" },
-                          })
-                      }
-                      checked={configState.CompressorExtras.I32 === "None"}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    id="compressor-extras-none"
+                    name="compressor-extras"
+                    type="radio"
+                    onClick={() =>
+                      setConfigState({
+                        ...configState,
+                        CompressorExtras: { I32: "None" },
+                      })
+                    }
+                    checked={configState.CompressorExtras.I32 === "None"}
+                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
-                      htmlFor="compressor-extras-none"
-                      className="ml-3 block text-sm font-medium text-gray-700"
+                    htmlFor="compressor-extras-none"
+                    className="ml-3 block text-sm font-medium text-gray-700"
                   >
                     none
                   </label>
                 </div>
                 <div className="flex items-center">
                   <input
-                      id="compressor-extras-int"
-                      name="compressor-extras"
-                      type="radio"
-                      onClick={() =>
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: {
-                              I32: DefaultStreamConfig.CompressorExtras.I32,
-                            },
-                          })
-                      }
-                      checked={!(configState.CompressorExtras.I32 === "None")}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    id="compressor-extras-int"
+                    name="compressor-extras"
+                    type="radio"
+                    onClick={() =>
+                      setConfigState({
+                        ...configState,
+                        CompressorExtras: {
+                          I32: DefaultStreamConfig.CompressorExtras.I32,
+                        },
+                      })
+                    }
+                    checked={!(configState.CompressorExtras.I32 === "None")}
+                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
-                      htmlFor="compressor-extras-int"
-                      className="ml-3 block text-sm font-medium text-gray-700"
+                    htmlFor="compressor-extras-int"
+                    className="ml-3 block text-sm font-medium text-gray-700"
                   >
                     <input
-                        type="number"
-                        name="compressor-extras-int"
-                        id="compressor-extras-int"
-                        value={configState.CompressorExtras.I32}
-                        onChange={(e) =>
-                            setConfigState({
-                              ...configState,
-                              CompressorExtras: { I32: parseInt(e.target.value) },
-                            })
-                        }
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                        placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
+                      type="number"
+                      name="compressor-extras-int"
+                      id="compressor-extras-int"
+                      value={configState.CompressorExtras.I32}
+                      onChange={(e) =>
+                        setConfigState({
+                          ...configState,
+                          CompressorExtras: { I32: parseInt(e.target.value) },
+                        })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
                     />
                   </label>
                 </div>
@@ -625,7 +648,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       MaxDeltaQueue: parseInt(e.target.value),
                     })
                   }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   placeholder={DefaultStreamConfig.MaxDeltaQueue.toString()}
                 />
               </div>
