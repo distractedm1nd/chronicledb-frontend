@@ -23,6 +23,8 @@ export enum StreamConfigKey {
     MaxDeltaQueue= "Max delta queue"
 }
 
+export type IEvent = {[key in EventType]?: any};
+
 export type StreamConfig = {
     Log: boolean
     Debug: boolean
@@ -30,7 +32,7 @@ export type StreamConfig = {
     Translation: string
     Boot: string
     MultipleDiskMaxQueue: number
-    Event: [{[key in EventType]?: any}]
+    Event: [IEvent]
     LightweightIndex: {"aggregate": any, "projector_sequence": "Mono" | "Empty"}
     LogicalBlockSize: number
     MacroBlockSize: "l" | "p" | number
@@ -66,6 +68,8 @@ export const DefaultStreamConfig: StreamConfig = {
     RiverThreads: "t",
     MaxDeltaQueue: 10
 }
+
+export const ip: string = "http://127.0.0.1:8000";
 
 export const configString: string= `##########################################################################################
 ##########################################################################################
