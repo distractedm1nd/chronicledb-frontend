@@ -16,6 +16,7 @@ import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
 import {configString, DefaultStreamConfig, EventType, IEvent, ip, StreamConfig} from "../../types/types";
 import {classNames, configToINI} from "../../utils";
+import Modal from "../Modal";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -39,6 +40,8 @@ const StreamDropdownItems = [
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);
+  const [streamInfoModalOpen, setStreamInfoModalOpen] = useState(false);
+  const [streamInfo, setStreamInfo] = useState("");
 
   useEffect(() => {
     fetchStreams();
@@ -62,10 +65,11 @@ export default function Dashboard() {
         .catch(error => console.log('error', error));
   }
 
-  const streamInfo = (streamId: number) => {
+  const fetchStreamInfo = (streamId: number) => {
+    setStreamInfoModalOpen(true);
     fetch(`${ip}/stream_info/${streamId}`)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => setStreamInfo(result))
         .catch(error => console.log('error', error));
   }
 
@@ -99,6 +103,7 @@ export default function Dashboard() {
   return (
     <>
       <div>
+        <Modal title={"Stream Info"} body={streamInfo} buttonTitle={"Close"} open={streamInfoModalOpen} setOpen={setStreamInfoModalOpen} />
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -370,7 +375,10 @@ export default function Dashboard() {
                             </div>
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-normal">
-                            <button className={"text-xs font-normal text-gray-700"} onClick={() => streamInfo(stream[0])}>
+                            <button
+                                className={classNames("text-xs font-normal", stream[1] === "Offline" ? "text-gray-500 cursor-not-allowed" : "text-gray-700")} onClick={() => fetchStreamInfo(stream[0])}
+                                disabled={stream[1] === "Offline"}
+                            >
                               Show Info
                             </button>
                           </td>
