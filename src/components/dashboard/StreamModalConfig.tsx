@@ -166,7 +166,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
               <label
                 htmlFor="translation"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -191,6 +191,30 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
+              <label
+                  htmlFor="translation"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              >
+                Boot
+              </label>
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <input
+                    type="text"
+                    name="boot"
+                    id="boot"
+                    value={configState.Boot}
+                    // TODO: parse to array
+                    onChange={(e) =>
+                        setConfigState({
+                          ...configState,
+                          Boot: e.target.value,
+                        })
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
             {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="right-flank"
@@ -265,158 +289,152 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="macro-block-size-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Macro Block Size
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="macro-block-size-number"
-                  id="macro-block-size-number"
-                  value={configState.MacroBlockSize}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MacroBlockSize: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="10"
-                />
+            <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
+              <p className={"font-bold"}>Macro Block Configuration</p>
+              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start pt-3">
+                <label
+                  htmlFor="macro-block-size-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Size
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                    type="number"
+                    name="macro-block-size-number"
+                    id="macro-block-size-number"
+                    value={configState.MacroBlockSize}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        MacroBlockSize: parseInt(e.target.value),
+                      })
+                    }
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="10"
+                  />
+                </div>
+                <label
+                    htmlFor="macro-block-spare-number"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Spare
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                      type="number"
+                      step={"0.1"}
+                      name="macro-block-spare-number"
+                      id="macro-block-spare-number"
+                      value={configState.MacroBlockSpare}
+                      onChange={(e) =>
+                          setConfigState({
+                            ...configState,
+                            MacroBlockSpare: parseFloat(e.target.value),
+                          })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="10"
+                  />
+                </div>
+                <label
+                    htmlFor="macro-block-preallocation-number"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Preallocation
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                      type="number"
+                      name="macro-block-preallocation-number"
+                      id="macro-block-preallocation-number"
+                      value={configState.MacroBlockPreallocation}
+                      onChange={(e) =>
+                          setConfigState({
+                            ...configState,
+                            MacroBlockPreallocation: parseInt(e.target.value),
+                          })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="300"
+                  />
+                </div>
+                <label
+                    htmlFor="macro-block-batch-allocation-number"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Batch Allocation
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                      type="number"
+                      name="macro-block-batch-allocation-number"
+                      id="macro-block-batch-allocation-number"
+                      value={configState.MacroBlockBatchAllocation}
+                      onChange={(e) =>
+                          setConfigState({
+                            ...configState,
+                            MacroBlockBatchAllocation: parseInt(e.target.value),
+                          })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="macro-block-spare-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Macro Block Spare
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  step={"0.1"}
-                  name="macro-block-spare-number"
-                  id="macro-block-spare-number"
-                  value={configState.MacroBlockSpare}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MacroBlockSpare: parseFloat(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="10"
-                />
+            <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
+              <p className="font-bold">Cache Configuration</p>
+              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start pt-3">
+                <label
+                    htmlFor="macro-block-cache-number"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Macro Blocks
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                      type="number"
+                      name="macro-block-cache-number"
+                      id="macro-block-cache-number"
+                      value={configState.MacroBlocksCache}
+                      onChange={(e) =>
+                          setConfigState({
+                            ...configState,
+                            MacroBlocksCache: parseInt(e.target.value),
+                          })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
+                  />
+                </div>
+                <label
+                    htmlFor="nodes-cache-number"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Nodes
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <input
+                      type="number"
+                      name="nodes-cache-number"
+                      id="nodes-cache-number"
+                      value={configState.NodesCache}
+                      onChange={(e) =>
+                          setConfigState({
+                            ...configState,
+                            NodesCache: parseInt(e.target.value),
+                          })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder={DefaultStreamConfig.NodesCache.toString()}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="macro-block-preallocation-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Macro Block Preallocation
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="macro-block-preallocation-number"
-                  id="macro-block-preallocation-number"
-                  value={configState.MacroBlockPreallocation}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MacroBlockPreallocation: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="300"
-                />
-              </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="macro-block-batch-allocation-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Macro Block Batch Allocation
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="macro-block-batch-allocation-number"
-                  id="macro-block-batch-allocation-number"
-                  value={configState.MacroBlockBatchAllocation}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MacroBlockBatchAllocation: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
-                />
-              </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="macro-block-cache-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Macro Blocks Cache
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="macro-block-cache-number"
-                  id="macro-block-cache-number"
-                  value={configState.MacroBlocksCache}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MacroBlocksCache: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
-                />
-              </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="nodes-cache-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Nodes Cache
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="nodes-cache-number"
-                  id="nodes-cache-number"
-                  value={configState.NodesCache}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      NodesCache: parseInt(e.target.value),
-                    })
-                  }
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                  placeholder={DefaultStreamConfig.NodesCache.toString()}
-                />
-              </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="compressor"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -485,70 +503,67 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   </label>
                 </div>
               </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
-                htmlFor="compressor-extras"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  htmlFor="compressor-extras"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Compressor extras
               </label>
               <div className="mt-4 space-y-4 col-span-2">
                 <div className="flex items-center">
                   <input
-                    id="compressor-extras-none"
-                    name="compressor-extras"
-                    type="radio"
-                    onClick={() =>
-                      setConfigState({
-                        ...configState,
-                        CompressorExtras: { I32: "None" },
-                      })
-                    }
-                    checked={configState.CompressorExtras.I32 === "None"}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                      id="compressor-extras-none"
+                      name="compressor-extras"
+                      type="radio"
+                      onClick={() =>
+                          setConfigState({
+                            ...configState,
+                            CompressorExtras: { I32: "None" },
+                          })
+                      }
+                      checked={configState.CompressorExtras.I32 === "None"}
+                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
-                    htmlFor="compressor-extras-none"
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                      htmlFor="compressor-extras-none"
+                      className="ml-3 block text-sm font-medium text-gray-700"
                   >
                     none
                   </label>
                 </div>
                 <div className="flex items-center">
                   <input
-                    id="compressor-extras-int"
-                    name="compressor-extras"
-                    type="radio"
-                    onClick={() =>
-                      setConfigState({
-                        ...configState,
-                        CompressorExtras: {
-                          I32: DefaultStreamConfig.CompressorExtras.I32,
-                        },
-                      })
-                    }
-                    checked={!(configState.CompressorExtras.I32 === "None")}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                      id="compressor-extras-int"
+                      name="compressor-extras"
+                      type="radio"
+                      onClick={() =>
+                          setConfigState({
+                            ...configState,
+                            CompressorExtras: {
+                              I32: DefaultStreamConfig.CompressorExtras.I32,
+                            },
+                          })
+                      }
+                      checked={!(configState.CompressorExtras.I32 === "None")}
+                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
-                    htmlFor="compressor-extras-int"
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                      htmlFor="compressor-extras-int"
+                      className="ml-3 block text-sm font-medium text-gray-700"
                   >
                     <input
-                      type="number"
-                      name="compressor-extras-int"
-                      id="compressor-extras-int"
-                      value={configState.CompressorExtras.I32}
-                      onChange={(e) =>
-                        setConfigState({
-                          ...configState,
-                          CompressorExtras: { I32: parseInt(e.target.value) },
-                        })
-                      }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                      placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
+                        type="number"
+                        name="compressor-extras-int"
+                        id="compressor-extras-int"
+                        value={configState.CompressorExtras.I32}
+                        onChange={(e) =>
+                            setConfigState({
+                              ...configState,
+                              CompressorExtras: { I32: parseInt(e.target.value) },
+                            })
+                        }
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                        placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
                     />
                   </label>
                 </div>
