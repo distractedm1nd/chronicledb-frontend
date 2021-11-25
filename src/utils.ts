@@ -3,7 +3,6 @@ import {configString, StreamConfig, StreamConfigKey} from "./types/types";
 export const nameof = <T>(name: keyof T) => name;
 
 export const configToINI = (config: StreamConfig): string => {
-    // return configString;
     let body: string = "";
     for (const [key, value] of Object.entries(config)) {
         if(Array.isArray(value)) {

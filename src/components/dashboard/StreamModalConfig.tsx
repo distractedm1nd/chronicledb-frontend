@@ -186,7 +186,7 @@ export default function StreamModalConfig() {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="right-flank"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -198,7 +198,7 @@ export default function StreamModalConfig() {
                   type="text"
                   name="right-flank"
                   id="right-flank"
-                  value={configState.RightFlank}
+                  value={configState}
                   onChange={(e) =>
                     setConfigState({
                       ...configState,
@@ -208,7 +208,7 @@ export default function StreamModalConfig() {
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
