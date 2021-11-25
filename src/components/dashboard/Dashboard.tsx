@@ -14,8 +14,9 @@ import {
 import { SearchIcon } from "@heroicons/react/solid";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
-import {DefaultStreamConfig, StreamConfig} from "../../types/types";
-import {classNames, configToINI} from "../../utils";
+import { DefaultStreamConfig, StreamConfig } from "../../types/types";
+import { classNames, configToINI } from "../../utils";
+import CreateStreamModal from "./CreateStreamModal";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -32,16 +33,24 @@ const userNavigation = [
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalState] = useState(false);
 
   const createStream = (config: StreamConfig) => {
-    fetch("http://192.168.178.69:8000/create_stream", {method: "POST", body: configToINI(config)})
-        .then(res => res.json())
-        .then(res => console.log(res));
-  }
+    fetch("http://192.168.178.69:8000/create_stream", {
+      method: "POST",
+      body: configToINI(config),
+    })
+      .then((res) => res.json())
+      .then((res) => console.log(res));
+  };
 
   return (
     <>
       <div>
+        <CreateStreamModal
+          open={modalOpen}
+          setOpen={(val) => setModalState(val)}
+        />
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -263,7 +272,13 @@ export default function Dashboard() {
                   <h1 className="text-2xl font-semibold text-gray-900">
                     Amirs Übersicht
                   </h1>
-                  <button onClick={() => createStream(DefaultStreamConfig)} className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex">
+                  <button
+                    onClick={() => {
+                      setModalState(true);
+                      //createStream(DefaultStreamConfig);
+                    }}
+                    className="bg-transparent hover:bg-gray-900 text-black font-semibold hover:text-white py-2 px-4 border border-gray-600 hover:border-transparent rounded flex"
+                  >
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
