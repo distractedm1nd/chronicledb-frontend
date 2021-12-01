@@ -1,5 +1,5 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
-import {DefaultStreamConfig, StreamConfig} from "../../types/types";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {DefaultStreamConfig, EventNames, IEvent, StreamConfig} from "../../types/types";
 
 export interface IStreamModalConfig {
   configState: StreamConfig,
@@ -8,6 +8,24 @@ export interface IStreamModalConfig {
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
   let {configState, setConfigState} = props;
+  const [eventType, setEventType] = useState<string>("Raw");
+  const [dataType, setDataType] = useState<string>("Integer");
+  const [storage, setStorage] = useState<string>("8");
+  const [data, setData] = useState<string>("");
+
+
+  const [dataTypeOptions, setDataTypeOptions] = useState([]);
+  const [storageOptions, setStorageOptions] = useState([]);
+
+  useEffect(() => {
+    // @ts-ignore
+    setDataTypeOptions(Object.keys(EventNames[eventType]))
+  }, [eventType])
+
+  useEffect(() => {
+    // @ts-ignore
+    setStorageOptions(Object.keys(EventNames[eventType][dataType]))
+  }, [dataType])
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -239,6 +257,94 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div> */}
 
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+              <label
+                  htmlFor="data"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              >
+                Event Type
+              </label>
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <select
+                    id="eventType"
+                    name="eventType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={eventType}
+                    onChange={(event) => setEventType(event.target.value)}
+                >
+                  {
+                    Object.keys(EventNames).map(name =>
+                        <option>{name}</option>
+                    )
+                  }
+                </select>
+              </div>
+
+            </div>
+
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
+              <label
+                  htmlFor="translation"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              >
+                Datatype
+              </label>
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={dataType}
+                    onChange={(event) => setDataType(event.target.value)}
+                >
+                  {
+                    dataTypeOptions.map(name =>
+                        <option>{name}</option>
+                    )
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
+              <label
+                  htmlFor="translation"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              >
+                Storage
+              </label>
+              <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={storage}
+                    onChange={(event) => setStorage(event.target.value)}
+                >
+                  {
+                    storageOptions.map(name =>
+                        <option>{name}</option>
+                    )
+                  }
+                </select>
+              </div>
+              <label
+                  htmlFor="multiple-disk-max-queue-number"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              >
+                Data
+              </label>
+                <input
+                    type="text"
+                    name="data"
+                    id="data"
+                    value={data}
+                    onChange={(e) =>
+                        setData(e.target.value)
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                />
+            </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="multiple-disk-max-queue-number"
