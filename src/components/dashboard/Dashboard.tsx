@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
-  BellIcon,
   CogIcon,
   HomeIcon,
   InboxIcon,
@@ -11,18 +10,15 @@ import {
   UsersIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import {ChevronDownIcon, SearchIcon, SelectorIcon} from "@heroicons/react/solid";
+import {
+  ChevronDownIcon,
+  SearchIcon,
+  SelectorIcon,
+} from "@heroicons/react/solid";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import BSeeger from "../../assets/bseeger.jpeg";
-import {
-  configString,
-  DefaultStreamConfig,
-  EventType,
-  IEvent,
-  ip,
-  StreamConfig,
-} from "../../types/types";
-import {classNames, configToINI, recoverStreamSnapshot, shutdownStream} from "../../utils";
+import { ip } from "../../types/types";
+import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
 
@@ -59,28 +55,28 @@ export default function Dashboard() {
 
   const fetchStreams = () => {
     fetch(`${ip}/show_streams`)
-        .then((response) => response.json())
-        .then((result) => setAvailableStreams(result))
-        .catch((error) => console.log("error", error));
+      .then((response) => response.json())
+      .then((result) => setAvailableStreams(result))
+      .catch((error) => console.log("error", error));
   };
 
   const fetchStreamInfo = (streamId: number) => {
     setModalTitle("Stream Info: " + streamId);
     setInfoModalOpen(true);
     fetch(`${ip}/stream_info/${streamId}`)
-        .then((response) => response.text())
-        .then((result) => setModalBody(result))
-        .catch((error) => console.log("error", error));
+      .then((response) => response.text())
+      .then((result) => setModalBody(result))
+      .catch((error) => console.log("error", error));
   };
 
   const fetchSystemInfo = () => {
     setModalTitle("System Info");
     setInfoModalOpen(true);
     fetch(`${ip}/system_info`)
-        .then((response) => response.text())
-        .then((result) => setModalBody(result))
-        .catch((error) => console.log("error", error));
-  }
+      .then((response) => response.text())
+      .then((result) => setModalBody(result))
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <>
@@ -197,52 +193,59 @@ export default function Dashboard() {
                 alt="Logo der Philipps Universität Marburg"
               />
             </div>
-            <Menu as="div" className="px-3 relative inline-block text-left pt-6">
+            <Menu
+              as="div"
+              className="px-3 relative inline-block text-left pt-6"
+            >
               <div>
                 <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
                   <span className="flex w-full justify-between items-center">
                     <span className="flex min-w-0 items-center justify-between space-x-3">
                       <img
-                          className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
-                          src={BSeeger}
-                          alt=""
+                        className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
+                        src={BSeeger}
+                        alt=""
                       />
                       <span className="flex-1 flex flex-col min-w-0">
-                        <span className="text-gray-900 text-sm font-medium truncate">Prof. Seeger</span>
-                        <span className="text-gray-500 text-sm truncate">Administrator</span>
+                        <span className="text-gray-900 text-sm font-medium truncate">
+                          Prof. Seeger
+                        </span>
+                        <span className="text-gray-500 text-sm truncate">
+                          Administrator
+                        </span>
                       </span>
                     </span>
                     <SelectorIcon
-                        className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
+                      className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
                     />
                   </span>
                 </Menu.Button>
               </div>
               <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="z-10 mx-3 origin-top absolute right-0 left-0 mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
                   {userNavigation.map((item) => (
-                      <Menu.Item key={item.name}>
-                        {({ active }) => (
-                            <a
-                                href={item.href}
-                                className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block py-2 px-4 text-sm text-gray-700"
-                                )}
-                            >
-                              {item.name}
-                            </a>
-                        )}
-                      </Menu.Item>
+                    <Menu.Item key={item.name}>
+                      {({ active }) => (
+                        <a
+                          href={item.href}
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block py-2 px-4 text-sm text-gray-700"
+                          )}
+                        >
+                          {item.name}
+                        </a>
+                      )}
+                    </Menu.Item>
                   ))}
                 </Menu.Items>
               </Transition>
@@ -250,48 +253,47 @@ export default function Dashboard() {
             <div className="text-xs p-3">
               <div className={"flex items-center space-x-3"}>
                 <div
-                    className={classNames(
-                        "bg-green-500",
-                        "flex-shrink-0 w-2.5 h-2.5 rounded-full"
-                    )}
-                    aria-hidden="true"
+                  className={classNames(
+                    "bg-green-500",
+                    "flex-shrink-0 w-2.5 h-2.5 rounded-full"
+                  )}
+                  aria-hidden="true"
                 />
-                <a
-                    href="#"
-                    className="truncate hover:text-gray-600"
-                >
-                  <span>
-                    Connected:
-                  </span>
+                <a href="#" className="truncate hover:text-gray-600">
+                  <span>Connected:</span>
                 </a>
               </div>
               <div className="flex mt-2 ml-2 text-gray-500 font-normal">
-                <p>
-                  {ip}
-                </p>
-                <button className="bg-gray-200 ml-auto rounded-md shadow-lg px-2" onClick={() => fetchSystemInfo()}>
-                 ...
+                <p>{ip}</p>
+                <button
+                  className="bg-gray-200 ml-auto rounded-md shadow-lg px-2"
+                  onClick={() => fetchSystemInfo()}
+                >
+                  ...
                 </button>
               </div>
-              </div>
+            </div>
             {/* Sidebar Search */}
-          <div className="px-3">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="px-3">
+              <label htmlFor="search" className="sr-only">
+                Search
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
                 <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    aria-hidden="true"
+                  className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  aria-hidden="true"
                 >
-                  <SearchIcon className="mr-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                  <SearchIcon
+                    className="mr-3 h-4 w-4 text-gray-400"
+                    aria-hidden="true"
+                  />
                 </div>
                 <input
-                    type="text"
-                    name="search"
-                    id="search"
-                    className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="Search"
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
+                  placeholder="Search"
                 />
               </div>
             </div>
@@ -345,10 +347,11 @@ export default function Dashboard() {
                     Stream Dashboard
                   </h1>
                   <button
-                      onClick={() => {
-                        setModalState(true);
-                      }}
-                          className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800">
+                    onClick={() => {
+                      setModalState(true);
+                    }}
+                    className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800"
+                  >
                     Create Stream
                     <PlusIcon className="ml-2 my-auto h-4" />
                   </button>
@@ -430,7 +433,10 @@ export default function Dashboard() {
                                 onClick={() =>
                                   stream[1] === "Online"
                                     ? shutdownStream(stream[0], fetchStreams)
-                                    : recoverStreamSnapshot(stream[0], fetchStreams)
+                                    : recoverStreamSnapshot(
+                                        stream[0],
+                                        fetchStreams
+                                      )
                                 }
                               >
                                 {stream[1] === "Online"
