@@ -1,5 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {DefaultStreamConfig, EventNames, IEvent, StreamConfig} from "../../types/types";
+import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
+import { QuestionMarkCircleIcon } from '@heroicons/react/solid'
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -13,7 +15,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [storage, setStorage] = useState<string>("8");
   const [data, setData] = useState<string>("");
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
-
+  const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
 
   useEffect(() => {
     // @ts-ignore
@@ -29,8 +31,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   }, [eventType, dataType, storage, data])
 
   useEffect(() => {
-    if(currentEvent) setConfigState({...configState, Event: [currentEvent]})
-  }, [currentEvent])
+    let eventToSend = compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent;
+    if(eventToSend) setConfigState({...configState, Event: [eventToSend]})
+  }, [currentEvent, compoundEvents])
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -174,15 +177,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Data
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <p className="text-sm text-gray-500">
-                  Data files. <br />
-                  data = C:\\dataFile1 <br />
-                  data = I:\\dataFile2 <br />
-                  data = H:\\dataFile3 <br />
-                  ...
-                </p>
-                <div className="mt-4 space-y-4">
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="mt-1 relative sm:mt-0 sm:col-span-2">
                   <input
                     type="text"
                     name="data"
@@ -195,6 +191,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" title=" the output Data" />
+                </div>
               </div>
             </div>
 
@@ -205,12 +204,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Translation
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <p className="text-sm text-gray-500">
-                  This is used to serialize the rightFlank on a clean system
-                  shutdown.
-                </p>
-                <div className="mt-4 space-y-4">
+              <div className="mt-1 relative rounded-md shadow-sm">
+              <div className="mt-1 relative sm:mt-0 sm:col-span-2">
                   <input
                     type="text"
                     name="translation"
@@ -225,8 +220,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   />
+                  </div>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" />
+                </div> 
                 </div>
-              </div>
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
@@ -236,7 +234,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Boot
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="mt-1 relative sm:mt-0 sm:col-span-2">
                 <input
                   type="text"
                   name="boot"
@@ -251,7 +250,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   }
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
-              </div>
+                </div>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" />
+                </div> 
+                </div>                
             </div>
             {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
@@ -277,39 +280,35 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div> */}
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                  htmlFor="data"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Event Type
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <select
-                    id="eventType"
-                    name="eventType"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                    value={eventType}
-                    onChange={(event) => setEventType(event.target.value)}
+            <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200">
+              <div className="sm:mt-0 sm:col-span-1">
+                <label
+                    htmlFor="eventType"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                 >
-                  {
-                    Object.keys(EventNames).map(name =>
-                        <option>{name}</option>
-                    )
-                  }
-                </select>
+                  Event Type
+                </label>
+                  <select
+                      id="eventType"
+                      name="eventType"
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                      value={eventType}
+                      onChange={(event) => setEventType(event.target.value)}
+                  >
+                    {
+                      Object.keys(EventNames).map(name =>
+                          <option>{name}</option>
+                      )
+                    }
+                  </select>
               </div>
-
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
-              <label
-                  htmlFor="translation"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Datatype
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
+              <div className="sm:col-span-2">
+                <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Datatype
+                </label>
                 <select
                     id="dataType"
                     name="dataType"
@@ -325,16 +324,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   }
                 </select>
               </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
-              <label
-                  htmlFor="translation"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Storage
-              </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
+              <div className="sm:col-span-1">
+                <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Storage
+                </label>
                 <select
                     id="dataType"
                     name="dataType"
@@ -350,29 +346,45 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   }
                 </select>
               </div>
-              <label
-                  htmlFor="multiple-disk-max-queue-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Data
-              </label>
-                <input
-                    type="text"
-                    name="data"
-                    id="data"
-                    value={data}
-                    onChange={(e) =>
-                        setData(e.target.value)
-                    }
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                />
-                <button
-                    type="button"
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={() => {}}
+              <div className="sm:col-span-4">
+                <label
+                    htmlFor="multiple-disk-max-queue-number"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                 >
-                  Add to Compound
-                </button>
+                  Data
+                </label>
+                <div className={"flex w-full"}>
+                  <input
+                      type="text"
+                      name="data"
+                      id="data"
+                      value={data}
+                      onChange={(e) =>
+                          setData(e.target.value)
+                      }
+                      className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                  />
+                  <button
+                      type="button"
+                      className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      onClick={() => currentEvent && setCompoundEvents([...compoundEvents, currentEvent])}
+                  >
+                    <PlusIcon className={"h-4 my-auto"}/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className={"flex space-x-3"}>
+              {compoundEvents.map((e, idx) =>
+                  <div className="flex p-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
+                    <p>{JSON.stringify(e)}</p>
+                    <XCircleIcon className="my-auto ml-2 h-5 text-red-500 cursor-pointer" onClick={() => {
+                      const temp = [...compoundEvents];
+                      temp.splice(idx, 1);
+                      setCompoundEvents(temp);
+                    }}/>
+                  </div>
+              )}
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
