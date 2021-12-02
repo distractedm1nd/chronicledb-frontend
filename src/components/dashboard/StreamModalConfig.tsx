@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { DefaultStreamConfig, StreamConfig } from "../../types/types";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {DefaultStreamConfig, EventNames, IEvent, StreamConfig} from "../../types/types";
+import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -7,7 +8,31 @@ export interface IStreamModalConfig {
 }
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
-  let { configState, setConfigState } = props;
+  let {configState, setConfigState} = props;
+  const [eventType, setEventType] = useState<string>("Raw");
+  const [dataType, setDataType] = useState<string>("Integer");
+  const [storage, setStorage] = useState<string>("8");
+  const [data, setData] = useState<string>("");
+  const [currentEvent, setCurrentEvent] = useState<IEvent>();
+  const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
+
+  useEffect(() => {
+    // @ts-ignore
+    let dataOptions = EventNames[eventType];
+    let storageOptions = dataOptions[dataType];
+    if(dataType in dataOptions && storage in storageOptions) {
+      setCurrentEvent({[storageOptions[storage]]: data})
+    } else if (dataType in dataOptions){
+      setStorage(Object.keys(storageOptions)[0]);
+    } else {
+      setDataType(Object.keys(dataOptions)[0]);
+    }
+  }, [eventType, dataType, storage, data])
+
+  useEffect(() => {
+    let eventToSend = compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent;
+    if(eventToSend) setConfigState({...configState, Event: [eventToSend]})
+  }, [currentEvent, compoundEvents])
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -254,6 +279,112 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div> */}
 
+            <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200">
+              <div className="sm:mt-0 sm:col-span-1">
+                <label
+                    htmlFor="eventType"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Event Type
+                </label>
+                  <select
+                      id="eventType"
+                      name="eventType"
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                      value={eventType}
+                      onChange={(event) => setEventType(event.target.value)}
+                  >
+                    {
+                      Object.keys(EventNames).map(name =>
+                          <option>{name}</option>
+                      )
+                    }
+                  </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Datatype
+                </label>
+                <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={dataType}
+                    onChange={(event) => setDataType(event.target.value)}
+                >
+                  {
+                    // @ts-ignore
+                    Object.keys(EventNames[eventType]).map(name =>
+                        <option>{name}</option>
+                    )
+                  }
+                </select>
+              </div>
+              <div className="sm:col-span-1">
+                <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Storage
+                </label>
+                <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={storage}
+                    onChange={(event) => setStorage(event.target.value)}
+                >
+                  {
+                    // @ts-ignore
+                    dataType in EventNames[eventType] && Object.keys(EventNames[eventType][dataType]).map(name =>
+                        <option>{name}</option>
+                    )
+                  }
+                </select>
+              </div>
+              <div className="sm:col-span-4">
+                <label
+                    htmlFor="multiple-disk-max-queue-number"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                >
+                  Data
+                </label>
+                <div className={"flex w-full"}>
+                  <input
+                      type="text"
+                      name="data"
+                      id="data"
+                      value={data}
+                      onChange={(e) =>
+                          setData(e.target.value)
+                      }
+                      className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                  />
+                  <button
+                      type="button"
+                      className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      onClick={() => currentEvent && setCompoundEvents([...compoundEvents, currentEvent])}
+                  >
+                    <PlusIcon className={"h-4 my-auto"}/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className={"flex space-x-3"}>
+              {compoundEvents.map((e, idx) =>
+                  <div className="flex p-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
+                    <p>{JSON.stringify(e)}</p>
+                    <XCircleIcon className="my-auto ml-2 h-5 text-red-500 cursor-pointer" onClick={() => {
+                      const temp = [...compoundEvents];
+                      temp.splice(idx, 1);
+                      setCompoundEvents(temp);
+                    }}/>
+                  </div>
+              )}
+            </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="multiple-disk-max-queue-number"

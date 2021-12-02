@@ -1,4 +1,70 @@
-export type EventType = "Float" | "Integer" | "Compound" | "VarStringList" | "VarCompound" | "ConstStringList" | "VarFloatList" | "ConstFloatList" | "VarIntegerList" | "ConstIntegerList" | "VarString" | "ConstString";
+// export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
+
+export const EventNames = {
+    "Raw": {
+        "Empty": {
+            "Empty": "Empty"
+        },
+        "Unsigned Integer": {
+            8: "U8",
+            16: "U16",
+            32: "U32",
+            64: "U64",
+        },
+        "Integer": {
+            8: "I8",
+            16: "I16",
+            32: "I32",
+            64: "I64",
+        },
+        "Float": {
+            32: "F32",
+            64: "F64",
+        }
+    },
+    "Const": {
+        String: {
+            Constant: "ConstString"
+        },
+        U: {
+            8: "ConstU8List",
+            16: "ConstU16List",
+            32: "ConstU32List",
+            64: "ConstU64List",
+        },
+        I: {
+            8: "ConstI8List",
+            16: "ConstI16List",
+            32: "ConstI32List",
+            64: "ConstI64List",
+        },
+        F: {
+            32: "ConstF32List",
+            64: "ConstF64List",
+        }
+    },
+    "Var": {
+        String: {
+            Variable: "VarString"
+        },
+        U: {
+            8: "VarU8List",
+            16: "VarU16List",
+            32: "VarU32List",
+            64: "VarU64List",
+        },
+        I: {
+            8: "VarI8List",
+            16: "VarI16List",
+            32: "VarI32List",
+            64: "VarI64List",
+        },
+        F: {
+            32: "VarF32List",
+            64: "VarF64List",
+        }
+    }
+}
 
 export enum StreamConfigKey {
     Log = "Log",
@@ -23,7 +89,7 @@ export enum StreamConfigKey {
     MaxDeltaQueue= "Max delta queue"
 }
 
-export type IEvent = {[key in EventType]?: any};
+export type IEvent = {[EventType: string]: any};
 
 export type StreamConfig = {
     Log: boolean
@@ -69,7 +135,7 @@ export const DefaultStreamConfig: StreamConfig = {
     MaxDeltaQueue: 10
 }
 
-export const ip: string = "http://127.0.0.1:8000";
+export const ip: string = "http://192.168.178.69:8000";
 
 export const configString: string= `##########################################################################################
 ##########################################################################################
