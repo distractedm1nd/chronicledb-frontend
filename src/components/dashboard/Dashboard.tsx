@@ -21,6 +21,7 @@ import { ip } from "../../types/types";
 import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
+import InsertEventModal from "./InsertEventModal";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -35,19 +36,21 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-const StreamDropdownItems = [
-  { name: "Query Time Travel", onClick: () => {} },
-  { name: "Insert Ordered", onClick: () => {} },
-  { name: "Insert Ordered Array", onClick: () => {} },
-];
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalState] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
   const [modalBody, setModalBody] = useState("");
   const [modalTitle, setModalTitle] = useState("Loading...");
+
+  const StreamDropdownItems = [
+    { name: "Query Time Travel", onClick: () => {} },
+    { name: "Insert Ordered", onClick: () => setInsertEventModalOpen(true) },
+    { name: "Insert Ordered Array", onClick: () => {} },
+  ];
 
   useEffect(() => {
     fetchStreams();
@@ -85,6 +88,7 @@ export default function Dashboard() {
           open={modalOpen}
           setOpen={(val) => setModalState(val)}
         />
+        <InsertEventModal open={insertEventModalOpen} setOpen={setInsertEventModalOpen} />
         <Modal
           title={modalTitle}
           body={modalBody}
