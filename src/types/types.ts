@@ -1,7 +1,7 @@
-export type EventType = "Float" | "Integer" | "Compound" | "VarStringList" | "VarCompound" | "ConstStringList" | "VarFloatList" | "ConstFloatList" | "VarIntegerList" | "ConstIntegerList" | "VarString" | "ConstString";
+// export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
 
 export const EventNames = {
-    Raw: {
+    "Raw": {
         "Empty": {
             "Empty": "Empty"
         },
@@ -22,7 +22,7 @@ export const EventNames = {
             64: "F64",
         }
     },
-    Const: {
+    "Const": {
         String: {
             Constant: "ConstString"
         },
@@ -43,7 +43,7 @@ export const EventNames = {
             64: "ConstF64List",
         }
     },
-    Var: {
+    "Var": {
         String: {
             Variable: "VarString"
         },
@@ -89,7 +89,7 @@ export enum StreamConfigKey {
     MaxDeltaQueue= "Max delta queue"
 }
 
-export type IEvent = {[key in EventType]?: any};
+export type IEvent = {[EventType: string]: any};
 
 export type StreamConfig = {
     Log: boolean

@@ -12,20 +12,25 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
   const [data, setData] = useState<string>("");
+  const [currentEvent, setCurrentEvent] = useState<IEvent>();
 
-
-  const [dataTypeOptions, setDataTypeOptions] = useState([]);
-  const [storageOptions, setStorageOptions] = useState([]);
 
   useEffect(() => {
     // @ts-ignore
-    setDataTypeOptions(Object.keys(EventNames[eventType]))
-  }, [eventType])
+    let dataOptions = EventNames[eventType];
+    let storageOptions = dataOptions[dataType];
+    if(dataType in dataOptions && storage in storageOptions) {
+      setCurrentEvent({[storageOptions[storage]]: data})
+    } else if (dataType in dataOptions){
+      setStorage(Object.keys(storageOptions)[0]);
+    } else {
+      setDataType(Object.keys(dataOptions)[0]);
+    }
+  }, [eventType, dataType, storage, data])
 
   useEffect(() => {
-    // @ts-ignore
-    setStorageOptions(Object.keys(EventNames[eventType][dataType]))
-  }, [dataType])
+    if(currentEvent) setConfigState({...configState, Event: [currentEvent]})
+  }, [currentEvent])
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -313,7 +318,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onChange={(event) => setDataType(event.target.value)}
                 >
                   {
-                    dataTypeOptions.map(name =>
+                    // @ts-ignore
+                    Object.keys(EventNames[eventType]).map(name =>
                         <option>{name}</option>
                     )
                   }
@@ -337,7 +343,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onChange={(event) => setStorage(event.target.value)}
                 >
                   {
-                    storageOptions.map(name =>
+                    // @ts-ignore
+                    dataType in EventNames[eventType] && Object.keys(EventNames[eventType][dataType]).map(name =>
                         <option>{name}</option>
                     )
                   }
