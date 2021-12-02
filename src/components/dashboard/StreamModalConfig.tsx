@@ -295,20 +295,40 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Logical Block Size
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="number"
-                  name="logical-block-size-number"
-                  id="logical-block-size-number"
-                  value={configState.LogicalBlockSize}
-                  onChange={(e) =>
-                    setConfigState({
-                      ...configState,
-                      MultipleDiskMaxQueue: parseInt(e.target.value),
-                    })
-                  }
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                  placeholder="8192"
-                />
+                <p className="text-sm text-gray-500">
+                  Number of bytes for an uncompressed serialized node.
+                  <br />
+                  Generally, this should match the I/O block size of the data
+                  files.
+                  <br />
+                  Can be an arbitrary numeric value like-wise.
+                  <br />
+                  l := Logical IO Block Size.
+                  <br />
+                  p := Phsysical IO Block Size.
+                  <br />
+                  {"<number>"} := {"<number>"} of bytes.
+                </p>
+                <div className="mt-4 space-y-4">
+                  <input
+                    type="number"
+                    step={"4096"}
+                    name="logical-block-size-number"
+                    id="logical-block-size-number"
+                    value={configState.LogicalBlockSize}
+                    onChange={(e) =>
+                      setConfigState({
+                        ...configState,
+                        LogicalBlockSize: parseInt(e.target.value),
+                      })
+                    }
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    placeholder="8192"
+                  />
+                </div>
+                <div className="border mt-4 border-red-400 rounded-b bg-red-100 max-w-xs px-3 py-2 text-red-700 rounded-md">
+                  <p>WARNING: l and p not supported yet!</p>
+                </div>
               </div>
             </div>
 
@@ -322,20 +342,28 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Size
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  <input
-                    type="number"
-                    name="macro-block-size-number"
-                    id="macro-block-size-number"
-                    value={configState.MacroBlockSize}
-                    onChange={(e) =>
-                      setConfigState({
-                        ...configState,
-                        MacroBlockSize: parseInt(e.target.value),
-                      })
-                    }
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="10"
-                  />
+                  <p className="text-sm text-gray-500">
+                    Number of bytes for a MacroBlock. <br />
+                    Denoted in a multiply of Logical Block Size. <br />
+                    The multiply value must be a decimal number and never 0.
+                  </p>
+                  <div className="mt-4 space-y-4">
+                    <input
+                      type="number"
+                      min={1}
+                      name="macro-block-size-number"
+                      id="macro-block-size-number"
+                      value={configState.MacroBlockSize}
+                      onChange={(e) =>
+                        setConfigState({
+                          ...configState,
+                          MacroBlockSize: parseInt(e.target.value),
+                        })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="10"
+                    />
+                  </div>
                 </div>
                 <label
                   htmlFor="macro-block-spare-number"
@@ -344,21 +372,33 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Spare
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  <input
-                    type="number"
-                    step={"0.1"}
-                    name="macro-block-spare-number"
-                    id="macro-block-spare-number"
-                    value={configState.MacroBlockSpare}
-                    onChange={(e) =>
-                      setConfigState({
-                        ...configState,
-                        MacroBlockSpare: parseFloat(e.target.value),
-                      })
-                    }
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                    placeholder="10"
-                  />
+                  <p className="text-sm text-gray-500">
+                    Percent of spare space in a MacroBlock.
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                  </p>
+                  <div className="mt-4 space-y-4">
+                    <input
+                      type="number"
+                      step={"0.1"}
+                      min={"0"}
+                      max={"1.0"}
+                      name="macro-block-spare-number"
+                      id="macro-block-spare-number"
+                      value={configState.MacroBlockSpare}
+                      onChange={(e) =>
+                        setConfigState({
+                          ...configState,
+                          MacroBlockSpare: parseFloat(e.target.value),
+                        })
+                      }
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="10"
+                    />
+                  </div>
                 </div>
                 <label
                   htmlFor="macro-block-preallocation-number"
