@@ -63,6 +63,57 @@ export const EventNames = {
             32: "VarF32List",
             64: "VarF64List",
         }
+    },
+    
+    Compound:{
+        "Empty": {
+            "Empty": "Empty"
+        },
+        String : {
+            Variable: "VarString",
+            Constant: "ConstString",
+        },
+
+        "Unsigned Integer": {
+            8: "U8",
+            16: "U16",
+            32: "U32",
+            64: "U64",
+        },
+        "Integer": {
+            8: "I8",
+            16: "I16",
+            32: "I32",
+            64: "I64",
+        },
+        "Float": {
+            32: "F32",
+            64: "F64",
+        }
+
+
+    },
+
+    VarCompound:{
+        "Empty": {
+            "Empty": "Empty"
+        },
+        "Unsigned Integer": {
+            8: "U8",
+            16: "U16",
+            32: "U32",
+            64: "U64",
+        },
+        "Integer": {
+            8: "I8",
+            16: "I16",
+            32: "I32",
+            64: "I64",
+        },
+        "Float": {
+            32: "F32",
+            64: "F64",
+        }
     }
 }
 
