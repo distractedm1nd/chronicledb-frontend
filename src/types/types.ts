@@ -26,19 +26,19 @@ export const EventNames = {
         String: {
             Constant: "ConstString"
         },
-        U: {
+        "Unsigned Integer": {
             8: "ConstU8List",
             16: "ConstU16List",
             32: "ConstU32List",
             64: "ConstU64List",
         },
-        I: {
+        "Integer": {
             8: "ConstI8List",
             16: "ConstI16List",
             32: "ConstI32List",
             64: "ConstI64List",
         },
-        F: {
+        "Float": {
             32: "ConstF32List",
             64: "ConstF64List",
         }
@@ -47,72 +47,21 @@ export const EventNames = {
         String: {
             Variable: "VarString"
         },
-        U: {
+        "Unsigned Integer": {
             8: "VarU8List",
             16: "VarU16List",
             32: "VarU32List",
             64: "VarU64List",
         },
-        I: {
+        "Integer": {
             8: "VarI8List",
             16: "VarI16List",
             32: "VarI32List",
             64: "VarI64List",
         },
-        F: {
+        "Float": {
             32: "VarF32List",
             64: "VarF64List",
-        }
-    },
-    
-    Compound:{
-        "Empty": {
-            "Empty": "Empty"
-        },
-        String : {
-            Variable: "VarString",
-            Constant: "ConstString",
-        },
-
-        "Unsigned Integer": {
-            8: "U8",
-            16: "U16",
-            32: "U32",
-            64: "U64",
-        },
-        "Integer": {
-            8: "I8",
-            16: "I16",
-            32: "I32",
-            64: "I64",
-        },
-        "Float": {
-            32: "F32",
-            64: "F64",
-        }
-
-
-    },
-
-    VarCompound:{
-        "Empty": {
-            "Empty": "Empty"
-        },
-        "Unsigned Integer": {
-            8: "U8",
-            16: "U16",
-            32: "U32",
-            64: "U64",
-        },
-        "Integer": {
-            8: "I8",
-            16: "I16",
-            32: "I32",
-            64: "I64",
-        },
-        "Float": {
-            32: "F32",
-            64: "F64",
         }
     }
 }
@@ -186,7 +135,7 @@ export const DefaultStreamConfig: StreamConfig = {
     MaxDeltaQueue: 10
 }
 
-export const ip: string = "http://192.168.178.69:8000";
+export const ip: string = "http://127.0.0.1:8000";
 
 export const configString: string= `##########################################################################################
 ##########################################################################################
