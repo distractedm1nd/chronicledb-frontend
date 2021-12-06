@@ -7,6 +7,11 @@ import {
 } from "../../types/types";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+// @ts-ignore
+import '@themesberg/flowbite';
+
+
+
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -243,6 +248,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="mt-1 relative sm:mt-0 sm:col-span-2">
                 <input
+                  data-tooltip-target="tooltip-default"
                   type="text"
                   name="boot"
                   id="boot"
@@ -257,10 +263,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
                 </div>
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" />
-                </div> 
-                </div>                
+                <div data-tooltip-target="tooltip-default" className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm rounded-lg opacity-300 transition-opacity invisible dark:bg-gray-700">
+                  Tooltip content
+                  <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
+              </div>                
             </div>
             {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
@@ -378,6 +388,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   />
                   <button
                     type="button"
+                    data-tooltip-target="tooltip-default"
                     className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                     onClick={() =>
                       currentEvent &&
@@ -386,6 +397,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   >
                     <PlusIcon className={"h-4 my-auto"} />
                   </button>
+                  <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm rounded-lg opacity-0 duration-300 transition-opacity invisible dark:bg-gray-700">
+                    Tooltip content
+                    <div className="tooltip-arrow" data-popper-arrow></div>
+                  </div>
                 </div>
               </div>
             </div>
