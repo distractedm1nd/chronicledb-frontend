@@ -678,9 +678,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 >
                   Spare
                 </label>
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  
-                  <div className="mt-4 space-y-4">
+                <div className="mt-1 sm:mt-0 sm:col-span-2">                  
+                  <div className="mt-4 space-y-1 items-center">
                     <input
                       type="number"
                       step={"0.1"}
@@ -689,6 +688,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       name="macro-block-spare-number"
                       id="macro-block-spare-number"
                       value={configState.MacroBlockSpare}
+                      onMouseEnter={() => setTooltipStatus(9)} 
+                      onMouseLeave={() => setTooltipStatus(0)}
                       onChange={(e) =>
                         setConfigState({
                           ...configState,
@@ -698,6 +699,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                       placeholder="10"
                     />
+                    {tooltipstatus == 9 && (
+                    <div role="tooltip" className="z-20 mx-4 right-1 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <p className="text-sm text-white">
+                        Percent of spare space in a MacroBlock.
+                      </p>
+                    </div>
+                    )}
                   </div>
                 </div>
                 <label
@@ -734,6 +742,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     name="macro-block-batch-allocation-number"
                     id="macro-block-batch-allocation-number"
                     value={configState.MacroBlockBatchAllocation}
+                    onMouseEnter={() => setTooltipStatus(10)} 
+                    onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) => {
                       console.log(e);
                       let intVal = parseInt(e.target.value);
@@ -760,14 +770,25 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                     placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
                   />
-                  
+                  {tooltipstatus == 10 && (
+                    <div role="tooltip" className="z-20 mx-4 right-1 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <p className="text-sm mt-2 text-white">
+                        Allocates a number of MacroBlocks, when
+                        MacroBlockPreallocation is exhausted.
+                        <br />
+                        0 := Batch allocator disabled.
+                        <br />
+                        n, where n is greater or equal to MacroBlockPreallocation.
+                        </p>
+                    </div>
+                  )}                  
                 </div>
               </div>
             </div>
 
             <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
               <p className="font-bold">Cache Configuration</p>
-              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start pt-3">
+              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
                   htmlFor="macro-block-cache-number"
                   className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -775,23 +796,42 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Macro Blocks
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  <input
+                  <div className="mt-4 flex space-x-10 items-center">
+                    <input 
                     type="number"
                     name="macro-block-cache-number"
                     id="macro-block-cache-number"
                     value={configState.MacroBlocksCache}
+                    onMouseEnter={() => setTooltipStatus(11)} 
+                    onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) =>
                       setConfigState({
                         ...configState,
                         MacroBlocksCache: parseInt(e.target.value),
                       })
-                    }
+                    }                    
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                     placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
                   />
-                  <p className="text-sm mt-2 text-gray-500">
-                    Number of MacroBlocks to keep in memory in LRU i.e. cache.
-                  </p>
+                  {tooltipstatus == 11 && (
+                    <div role="tooltip" className="z-20 mx-4 right-20 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                        <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                          <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                            <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                              <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                              </g>
+                            </g>
+                         </g>
+                       </g>
+                      </svg>
+                      <p className="text-sm mt-2 text-white">
+                        Number of MacroBlocks to keep in memory in LRU i.e. cache.
+                      </p>
+                    </div>
+                  )}                  
+                </div>
                 </div>
                 <label
                   htmlFor="nodes-cache-number"
@@ -800,11 +840,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Nodes
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <div className="mt-4 flex space-y-10">
                   <input
                     type="number"
                     name="nodes-cache-number"
                     id="nodes-cache-number"
                     value={configState.NodesCache}
+                    onMouseEnter={() => setTooltipStatus(12)} 
+                    onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) =>
                       setConfigState({
                         ...configState,
@@ -814,14 +857,19 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                     placeholder={DefaultStreamConfig.NodesCache.toString()}
                   />
-                  <p className="text-sm mt-2 text-gray-500">
-                    Number of Nodes to keep in memory in LRU i.e. cache.
-                  </p>
+                  {tooltipstatus == 12 && (
+                    <div role="tooltip" className="z-20 mx-4 right-1 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <p className="text-sm px-1 py-1 text-white">
+                        Number of Nodes to keep in memory in LRU i.e. cache.
+                      </p>
+                    </div>
+                  )}  
+                </div>
                 </div>
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="compressor"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -835,6 +883,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       id="compressor-none"
                       name="compressor"
                       type="radio"
+                      onMouseEnter={() => setTooltipStatus(13)} 
+                      onMouseLeave={() => setTooltipStatus(0)}
                       onClick={() =>
                         setConfigState({ ...configState, Compressor: "none" })
                       }
@@ -847,10 +897,25 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     >
                       none
                     </label>
+                    {tooltipstatus == 13 && (
+                        <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm py-1 text-white">
+                            Compression disabled.
+                          </p>
+                        </div>
+                    )}
                   </div>
-                  <p className="text-sm mt-2 text-gray-500">
-                    none := Compression disabled.
-                  </p>
                 </div>
                 <div>
                   <div className="flex items-center">
@@ -858,6 +923,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       id="compressor-lz4-no-meta"
                       name="compressor"
                       type="radio"
+                      onMouseEnter={() => setTooltipStatus(14)} 
+                      onMouseLeave={() => setTooltipStatus(0)}
                       onClick={() =>
                         setConfigState({
                           ...configState,
@@ -873,16 +940,32 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     >
                       LZ4 Fast No Meta
                     </label>
+                    {tooltipstatus == 14 && (
+                        <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm mt-2 text-white">
+                            LZ4_fast_no_meta := Official LZ4 library is used with
+                            options: Fast and no Meta size information. <br />
+                            This version is ideal when using fixed sized l-blocks, which
+                            an not overflow. <br />
+                            Additionally, a c-block may never exceed the l-block size by
+                            any means, hence it uses a fixed allocation for a
+                            decompression buffer and may never overflow consequently.
+                            </p>
+                        </div>
+                    )}
                   </div>
-                  <p className="text-sm mt-2 text-gray-500">
-                    LZ4_fast_no_meta := Official LZ4 library is used with
-                    options: Fast and no Meta size information. <br />
-                    This version is ideal when using fixed sized l-blocks, which
-                    can not overflow. <br />
-                    Additionally, a c-block may never exceed the l-block size by
-                    any means, hence it uses a fixed allocation for a
-                    decompression buffer and may never overflow consequently.
-                  </p>
+                  
                 </div>
                 <div>
                   <div className="flex items-center">
@@ -890,6 +973,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       id="compressor-lz4-with-meta"
                       name="compressor"
                       type="radio"
+                      onMouseEnter={() => setTooltipStatus(15)} 
+                      onMouseLeave={() => setTooltipStatus(0)}
                       onClick={() =>
                         setConfigState({
                           ...configState,
@@ -905,26 +990,36 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     >
                       LZ4 Fast With Meta
                     </label>
+                    {tooltipstatus == 15 && (
+                        <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm mt-2 text-white">
+                            LZ4_Fast_With_Meta\t\t\t:= Official LZ4 library is used with
+                            options: Fast and includes Meta size information. <br />
+                            Note: This version will guarantee at any sizes, that the
+                            compressor/decompressor allocates sufficient space, even if
+                            provided with less allocation. This ensures dynamic l-blocks
+                            of any sizes and allows different l-block sizes across the
+                            "cold" vs. "warm" regions. <br />
+                            This guarantee comes with a small penalty, hence should only
+                            be used with caution.<br />
+                            Later it is planned to switch dynamically between
+                            compressors, to ensure cold regions benefit from widerl-blocks and the warm regions stay fast with alignedl-blocks.<br />The system does not support switching between compressors dynamically, yet.
+                          </p>
+                        </div>
+                    )}
                   </div>
-                  <p className="text-sm mt-2 text-gray-500">
-                    LZ4_Fast_With_Meta\t\t\t:= Official LZ4 library is used with
-                    options: Fast and includes Meta size information. <br />
-                    Note: This version will guarantee at any sizes, that the
-                    compressor/decompressor allocates sufficient space, even if
-                    provided with less allocation. This ensures dynamic l-blocks
-                    of any sizes and allows different l-block sizes across the
-                    "cold" vs. "warm" regions. <br />
-                    This guarantee comes with a small penalty, hence should only
-                    be used with caution.
-                    <br />
-                    Later it is planned to switch dynamically between
-                    compressors, to ensure cold regions benefit from wider
-                    l-blocks and the warm regions stay fast with aligned
-                    l-blocks.
-                    <br />
-                    The system does not support switching between compressors
-                    dynamically, yet.
-                  </p>
+                  
                 </div>
               </div>
               {configState.Compressor !== "none" && (
@@ -1000,7 +1095,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               )}
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="river-threads"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -1008,11 +1103,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 River threads
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <div className=" flex items-center">
                 <input
                   type="text"
                   name="river-threads"
                   id="river-threads"
                   value={configState.RiverThreads}
+                  onMouseEnter={() => setTooltipStatus(16)} 
+                  onMouseLeave={() => setTooltipStatus(0)}
                   onChange={(e) => {
                     let val = e.target.value;
                     if (
@@ -1034,16 +1132,31 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   }}
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
-                <p className="text-sm mt-2 text-gray-500">
-                  Number of river threads in the delta. 0 := Pipeline bypassed.
-                  <br />
-                  t := Number of CPU threads.
-                  <br />
-                  c := Number of CPU cores.
-                  <br />d := Default number threads.
-                </p>
+                {tooltipstatus == 16 && (
+                        <div role="tooltip" className="z-20 mx-4 right-1 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm mt-2 text-white">
+                            Number of river threads in the delta. 0 := Pipeline bypassed.<br />
+                            t := Number of CPU threads.<br />
+                            c := Number of CPU cores.<br />
+                            d := Default number threads.
+                          </p>
+                        </div>
+                    )}
+              </div>
               </div>
             </div>
+
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="max-delta-queue"
@@ -1052,11 +1165,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Max delta queue
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <div className="flex items-center">
                 <input
                   type="number"
                   name="max-delta-queue"
                   id="max-delta-queue"
                   value={configState.MaxDeltaQueue}
+                  onMouseEnter={() => setTooltipStatus(17)} 
+                  onMouseLeave={() => setTooltipStatus(0)}
                   onChange={(e) => {
                     let intVal = parseInt(e.target.value);
                     if (
@@ -1076,11 +1192,28 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   placeholder={DefaultStreamConfig.MaxDeltaQueue.toString()}
                 />
-                <p className="text-sm mt-2 text-gray-500">
-                  Number of jobs to queue in the delta before blocking. <br />
-                  Larger queues may enhance performance, but require longer
-                  syncing, when shutdown.
-                </p>
+                {tooltipstatus == 17 && (
+                        <div role="tooltip" className="z-20 mx-4 right-1 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm mt-2 text-white">
+                            Number of river threads in the delta. 0 := Pipeline bypassed.<br />
+                            t := Number of CPU threads.<br />
+                            c := Number of CPU cores.<br />
+                            d := Default number threads.
+                          </p>
+                        </div>
+                    )}
+              </div>
               </div>
             </div>
           </div>
