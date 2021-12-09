@@ -7,11 +7,7 @@ import {
 } from "../../types/types";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
-// @ts-ignore
 import '@themesberg/flowbite';
-
-
-
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -973,3 +969,4 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     </form>
   );
 }
+
