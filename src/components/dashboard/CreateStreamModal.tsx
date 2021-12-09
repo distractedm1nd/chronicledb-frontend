@@ -1,10 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import {Fragment, useEffect, useRef, useState} from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon } from "@heroicons/react/outline";
 import StreamModalConfig from "./StreamModalConfig";
-import {DefaultStreamConfig} from "../../types/types";
-import {createStream} from "../../utils";
+import { DefaultStreamConfig } from "../../types/types";
+import { createStream } from "../../utils";
+import { validateConfigState } from "../../helperFunctions";
+import ErrorComponent from "../ErrorComponent";
 
 type CreateStreamModalProps = {
   open: boolean;
@@ -16,11 +18,12 @@ export default function CreateStreamModal({
   setOpen,
 }: CreateStreamModalProps) {
   const [configState, setConfigState] = useState(DefaultStreamConfig);
+  const [errorMsg, setErrorMsg] = useState("");
   const cancelButtonRef = useRef(null);
 
   useEffect(() => {
     setConfigState(DefaultStreamConfig);
-  }, [open])
+  }, [open]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -75,7 +78,10 @@ export default function CreateStreamModal({
                 </div>
               </div>
               <div className="mt-4">
-                <StreamModalConfig configState={configState} setConfigState={setConfigState} />
+                <StreamModalConfig
+                  configState={configState}
+                  setConfigState={setConfigState}
+                />
               </div>
               <div className="mt-5 sm:mt-4 sm:flex sm:flex-row sm:justify-end space-x-3">
                 {/*<button*/}
@@ -94,16 +100,24 @@ export default function CreateStreamModal({
                   Cancel
                 </button>
                 <button
-                    type="button"
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={() => {
+                  type="button"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  onClick={() => {
+                    setErrorMsg("");
+                    let { isValid, errorMessage } =
+                      validateConfigState(configState);
+                    if (isValid) {
                       createStream(configState, () => setOpen(false));
-                    }}
-                    ref={cancelButtonRef}
+                    } else {
+                      setErrorMsg(errorMessage!);
+                    }
+                  }}
+                  ref={cancelButtonRef}
                 >
                   Create Stream
                 </button>
               </div>
+              {errorMsg && <ErrorComponent errorMessage={errorMsg} />}
             </div>
           </Transition.Child>
         </div>

@@ -1,11 +1,24 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   DefaultStreamConfig,
   EventNames,
   IEvent,
   StreamConfig,
 } from "../../types/types";
-import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
+import {
+  ChevronDownIcon,
+  ExclamationCircleIcon,
+  PlusIcon,
+  XCircleIcon,
+} from "@heroicons/react/solid";
+import { Menu, Transition } from "@headlessui/react";
+import { classNames } from "../../utils";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -18,6 +31,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
   const [data, setData] = useState<string>("");
+  const [errorFields, setErrorFields] = useState<string[]>([]);
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
 
@@ -39,6 +53,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       compoundEvents.length > 1 ? { Compound: compoundEvents } : currentEvent;
     if (eventToSend) setConfigState({ ...configState, Event: [eventToSend] });
   }, [currentEvent, compoundEvents]);
+
+  function classNames(...classes: any) {
+    return classes.filter(Boolean).join(" ");
+  }
 
   return (
     <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -413,26 +431,42 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     name="multiple-disk-max-queue-number"
                     id="multiple-disk-max-queue-number"
                     value={configState.MultipleDiskMaxQueue}
-                    onChange={(e) => {
-                      let inputInt = parseInt(e.target.value);
+                    onBlur={() => {
                       if (
-                        inputInt <
+                        configState.MultipleDiskMaxQueue >=
                         configState.MacroBlocksCache * configState.Data.length
                       ) {
-                        setConfigState({
-                          ...configState,
-                          MultipleDiskMaxQueue: inputInt,
-                        });
-                      } else {
-                        alert(
-                          "This number must be much lower than MacroBlock Cache * number of data files."
-                        );
+                        setErrorFields([
+                          ...errorFields,
+                          "multiple-disk-max-queue-number",
+                        ]);
                       }
                     }}
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    onChange={(e) => {
+                      let newArr = errorFields.filter(
+                        (e) => e !== "multiple-disk-max-queue-number"
+                      );
+                      setErrorFields(newArr);
+                      setConfigState({
+                        ...configState,
+                        MultipleDiskMaxQueue: parseInt(e.target.value),
+                      });
+                    }}
+                    className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md ${
+                      errorFields.includes("multiple-disk-max-queue-number")
+                        ? "border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                        : ""
+                    }`}
                     placeholder="100"
                   />
                 </div>
+                {errorFields.includes("multiple-disk-max-queue-number") && (
+                  <p className="mt-2 text-sm text-red-600" id="email-error">
+                    This number must be lower than{" "}
+                    {configState.MacroBlocksCache * configState.Data.length}{" "}
+                    (MacroBlock Cache * number of data files).
+                  </p>
+                )}
               </div>
             </div>
 
@@ -585,7 +619,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     id="macro-block-batch-allocation-number"
                     value={configState.MacroBlockBatchAllocation}
                     onChange={(e) => {
-                      console.log(e);
                       let intVal = parseInt(e.target.value);
                       let {
                         MacroBlockBatchAllocation,
@@ -865,32 +898,54 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 River threads
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
-                  type="text"
-                  name="river-threads"
-                  id="river-threads"
-                  value={configState.RiverThreads}
-                  onChange={(e) => {
-                    let val = e.target.value;
-                    if (
-                      val === "0" ||
-                      val === "t" ||
-                      val === "c" ||
-                      val === "d"
-                    ) {
-                      setConfigState({
-                        ...configState,
-                        RiverThreads: e.target.value,
-                      });
-                    } else {
-                      // TODO: sollte besser ein dropdown sein, sonst muss mal weitere probleme wie die return taste etc. ausschalten
-                      return alert(
-                        "Please provide a value which is one of the following: 0, t, c, d"
-                      );
-                    }
-                  }}
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                />
+                <Menu as="div" className="relative inline-block text-center">
+                  <div>
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                      {configState.RiverThreads}
+                      <ChevronDownIcon
+                        className="-mr-1 ml-2 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="origin-top-right absolute mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="py-1">
+                        {["0", "t", "c", "d"].map((val) => (
+                          <Menu.Item>
+                            <button
+                              key={val}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setConfigState({
+                                  ...configState,
+                                  RiverThreads: val,
+                                });
+                              }}
+                              className={classNames(
+                                configState.RiverThreads === val
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "block text-center px-4 py-2 text-sm"
+                              )}
+                            >
+                              <p>{val}</p>
+                            </button>
+                          </Menu.Item>
+                        ))}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
                 <p className="text-sm mt-2 text-gray-500">
                   Number of river threads in the delta. 0 := Pipeline bypassed.
                   <br />
@@ -908,36 +963,44 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Max delta queue
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
+              <div className="mt-4 space-y-4">
                 <input
                   type="number"
                   name="max-delta-queue"
                   id="max-delta-queue"
                   value={configState.MaxDeltaQueue}
-                  onChange={(e) => {
-                    let intVal = parseInt(e.target.value);
+                  onBlur={() => {
                     if (
-                      intVal * configState.MultipleDiskMaxQueue <
+                      configState.MaxDeltaQueue *
+                        configState.MultipleDiskMaxQueue >=
                       configState.MacroBlocksCache
                     ) {
-                      setConfigState({
-                        ...configState,
-                        MaxDeltaQueue: intVal,
-                      });
-                    } else {
-                      alert(
-                        "This value * number of disks must be always smaller than MacroBlocksCache."
-                      );
+                      setErrorFields([...errorFields, "max-delta-queue"]);
                     }
                   }}
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                  placeholder={DefaultStreamConfig.MaxDeltaQueue.toString()}
+                  onChange={(e) => {
+                    let newArr = errorFields.filter(
+                      (e) => e !== "max-delta-queue"
+                    );
+                    setErrorFields(newArr);
+                    setConfigState({
+                      ...configState,
+                      MaxDeltaQueue: parseInt(e.target.value),
+                    });
+                  }}
+                  className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md ${
+                    errorFields.includes("max-delta-queue")
+                      ? "border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                      : ""
+                  }`}
+                  placeholder="100"
                 />
-                <p className="text-sm mt-2 text-gray-500">
-                  Number of jobs to queue in the delta before blocking. <br />
-                  Larger queues may enhance performance, but require longer
-                  syncing, when shutdown.
-                </p>
+                {errorFields.includes("max-delta-queue") && (
+                  <p className="mt-2 text-sm text-red-600" id="email-error">
+                    This value * number of disks must be always smaller than
+                    MacroBlocksCache ({configState.MacroBlocksCache}).
+                  </p>
+                )}
               </div>
             </div>
           </div>

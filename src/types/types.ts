@@ -1,143 +1,155 @@
 // export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
 
 export const EventNames = {
-    "Raw": {
-        "Empty": {
-            "Empty": "Empty"
-        },
-        "Unsigned Integer": {
-            8: "U8",
-            16: "U16",
-            32: "U32",
-            64: "U64",
-        },
-        "Integer": {
-            8: "I8",
-            16: "I16",
-            32: "I32",
-            64: "I64",
-        },
-        "Float": {
-            32: "F32",
-            64: "F64",
-        }
+  Raw: {
+    Empty: {
+      Empty: "Empty",
     },
-    "Const": {
-        String: {
-            Constant: "ConstString"
-        },
-        U: {
-            8: "ConstU8List",
-            16: "ConstU16List",
-            32: "ConstU32List",
-            64: "ConstU64List",
-        },
-        I: {
-            8: "ConstI8List",
-            16: "ConstI16List",
-            32: "ConstI32List",
-            64: "ConstI64List",
-        },
-        F: {
-            32: "ConstF32List",
-            64: "ConstF64List",
-        }
+    "Unsigned Integer": {
+      8: "U8",
+      16: "U16",
+      32: "U32",
+      64: "U64",
     },
-    "Var": {
-        String: {
-            Variable: "VarString"
-        },
-        U: {
-            8: "VarU8List",
-            16: "VarU16List",
-            32: "VarU32List",
-            64: "VarU64List",
-        },
-        I: {
-            8: "VarI8List",
-            16: "VarI16List",
-            32: "VarI32List",
-            64: "VarI64List",
-        },
-        F: {
-            32: "VarF32List",
-            64: "VarF64List",
-        }
-    }
-}
+    Integer: {
+      8: "I8",
+      16: "I16",
+      32: "I32",
+      64: "I64",
+    },
+    Float: {
+      32: "F32",
+      64: "F64",
+    },
+  },
+  Const: {
+    String: {
+      Constant: "ConstString",
+    },
+    U: {
+      8: "ConstU8List",
+      16: "ConstU16List",
+      32: "ConstU32List",
+      64: "ConstU64List",
+    },
+    I: {
+      8: "ConstI8List",
+      16: "ConstI16List",
+      32: "ConstI32List",
+      64: "ConstI64List",
+    },
+    F: {
+      32: "ConstF32List",
+      64: "ConstF64List",
+    },
+  },
+  Var: {
+    String: {
+      Variable: "VarString",
+    },
+    U: {
+      8: "VarU8List",
+      16: "VarU16List",
+      32: "VarU32List",
+      64: "VarU64List",
+    },
+    I: {
+      8: "VarI8List",
+      16: "VarI16List",
+      32: "VarI32List",
+      64: "VarI64List",
+    },
+    F: {
+      32: "VarF32List",
+      64: "VarF64List",
+    },
+  },
+};
 
 export enum StreamConfigKey {
-    Log = "Log",
-    Debug = "Debug",
-    Data= "Data",
-    Translation= "Translation",
-    Boot = "Boot",
-    RightFlank=  "Right flank",
-    MultipleDiskMaxQueue= "Multiple disk max queue",
-    Event="Event",
-    LightweightIndex="Lightweight index",
-    LogicalBlockSize= "LogicalBlock size",
-    MacroBlockSize= "MacroBlock size",
-    MacroBlockSpare= "MacroBlock spare",
-    MacroBlockPreallocation= "MacroBlock preallocation",
-    MacroBlockBatchAllocation= "MacroBlock batch allocation",
-    MacroBlocksCache= "MacroBlocks cache",
-    NodesCache= "Nodes cache",
-    Compressor= "Compressor",
-    CompressorExtras= "Compressor extras",
-    RiverThreads= "River threads",
-    MaxDeltaQueue= "Max delta queue"
+  Log = "Log",
+  Debug = "Debug",
+  Data = "Data",
+  Translation = "Translation",
+  Boot = "Boot",
+  RightFlank = "Right flank",
+  MultipleDiskMaxQueue = "Multiple disk max queue",
+  Event = "Event",
+  LightweightIndex = "Lightweight index",
+  LogicalBlockSize = "LogicalBlock size",
+  MacroBlockSize = "MacroBlock size",
+  MacroBlockSpare = "MacroBlock spare",
+  MacroBlockPreallocation = "MacroBlock preallocation",
+  MacroBlockBatchAllocation = "MacroBlock batch allocation",
+  MacroBlocksCache = "MacroBlocks cache",
+  NodesCache = "Nodes cache",
+  Compressor = "Compressor",
+  CompressorExtras = "Compressor extras",
+  RiverThreads = "River threads",
+  MaxDeltaQueue = "Max delta queue",
 }
 
-export type IEvent = {[EventType: string]: any};
+export type IEvent = { [EventType: string]: any };
 
 export type StreamConfig = {
-    Log: boolean
-    Debug: boolean
-    Data: [string]
-    Translation: string
-    Boot: string
-    MultipleDiskMaxQueue: number
-    Event: [IEvent]
-    LightweightIndex: {"aggregate": any, "projector_sequence": "Mono" | "Empty"}
-    LogicalBlockSize: number
-    MacroBlockSize: "l" | "p" | number
-    MacroBlockSpare: number
-    MacroBlockPreallocation: number
-    MacroBlockBatchAllocation: number
-    MacroBlocksCache: number
-    NodesCache: number
-    Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta"
-    CompressorExtras: {"I32": number | "None"}
-    RiverThreads: number | string
-    MaxDeltaQueue: number
-}
+  Log: boolean;
+  Debug: boolean;
+  Data: [string];
+  Translation: string;
+  Boot: string;
+  MultipleDiskMaxQueue: number;
+  Event: [IEvent];
+  LightweightIndex: { aggregate: any; projector_sequence: "Mono" | "Empty" };
+  LogicalBlockSize: number;
+  MacroBlockSize: "l" | "p" | number;
+  MacroBlockSpare: number;
+  MacroBlockPreallocation: number;
+  MacroBlockBatchAllocation: number;
+  MacroBlocksCache: number;
+  NodesCache: number;
+  Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta";
+  CompressorExtras: { I32: number | "None" };
+  RiverThreads: number | string;
+  MaxDeltaQueue: number;
+};
 
 export const DefaultStreamConfig: StreamConfig = {
-    Log: false,
-    Debug: false,
-    Data: ["data0"],
-    Boot: ".boot",
-    Translation: "translation",
-    MultipleDiskMaxQueue: 100,
-    Event: [{"VarCompound":[{"U64":0},{"I64":0},{"F64":0.0},{"VarString":"Hallo-Welt"}]}],
-    LightweightIndex: {"aggregate":{"SMA":{"cnt":0,"sum":0.0,"min":0.0,"max":0.0}},"projector_sequence":"Mono"},
-    LogicalBlockSize: 8192,
-    MacroBlockSize: 10,
-    MacroBlockSpare: 0.1,
-    MacroBlockPreallocation: 300,
-    MacroBlockBatchAllocation: 300,
-    MacroBlocksCache: 2500,
-    NodesCache: 3000,
-    Compressor: "LZ4_Fast_No_Meta",
-    CompressorExtras:  {"I32":12},
-    RiverThreads: "t",
-    MaxDeltaQueue: 10
-}
+  Log: false,
+  Debug: false,
+  Data: ["data0"],
+  Boot: ".boot",
+  Translation: "translation",
+  MultipleDiskMaxQueue: 100,
+  Event: [
+    {
+      VarCompound: [
+        { U64: 0 },
+        { I64: 0 },
+        { F64: 0.0 },
+        { VarString: "Hallo-Welt" },
+      ],
+    },
+  ],
+  LightweightIndex: {
+    aggregate: { SMA: { cnt: 0, sum: 0.0, min: 0.0, max: 0.0 } },
+    projector_sequence: "Mono",
+  },
+  LogicalBlockSize: 8192,
+  MacroBlockSize: 10,
+  MacroBlockSpare: 0.1,
+  MacroBlockPreallocation: 300,
+  MacroBlockBatchAllocation: 300,
+  MacroBlocksCache: 2500,
+  NodesCache: 3000,
+  Compressor: "LZ4_Fast_No_Meta",
+  CompressorExtras: { I32: 12 },
+  RiverThreads: "t",
+  MaxDeltaQueue: 10,
+};
 
-export const ip: string = "http://192.168.178.69:8000";
+export const ip: string = "http://79.214.133.126:8000";
 
-export const configString: string= `##########################################################################################
+export const configString: string = `##########################################################################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################
