@@ -39,6 +39,7 @@ const userNavigation = [
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentStream, setCurrentStream] = useState<number>(0);
   const [modalOpen, setModalState] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -47,9 +48,9 @@ export default function Dashboard() {
   const [modalTitle, setModalTitle] = useState("Loading...");
 
   const StreamDropdownItems = [
-    { name: "Query Time Travel", onClick: () => {} },
-    { name: "Insert Ordered", onClick: () => setInsertEventModalOpen(true) },
-    { name: "Insert Ordered Array", onClick: () => {} },
+    { name: "Query Time Travel", onClick: (streamId: number) => {} },
+    { name: "Insert Ordered", onClick: (streamId: number) => {setCurrentStream(streamId); setInsertEventModalOpen(true);}},
+    { name: "Insert Ordered Array", onClick: (streamId: number) => {} },
   ];
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function Dashboard() {
           open={modalOpen}
           setOpen={(val) => setModalState(val)}
         />
-        <InsertEventModal open={insertEventModalOpen} setOpen={setInsertEventModalOpen} />
+        <InsertEventModal open={insertEventModalOpen} setOpen={setInsertEventModalOpen} currentStream={currentStream}/>
         <Modal
           title={modalTitle}
           body={modalBody}
@@ -470,7 +471,7 @@ export default function Dashboard() {
                                         <Menu.Item key={item.name}>
                                           {({ active }) => (
                                             <button
-                                              onClick={item.onClick}
+                                              onClick={() => item.onClick(stream[0])}
                                               className={classNames(
                                                 active
                                                   ? "bg-gray-100 text-gray-900"

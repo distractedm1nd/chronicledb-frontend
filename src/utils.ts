@@ -37,10 +37,10 @@ export function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
 }
 // Question: How should insert_ordered_array be formatted?
-export const insertOrdered = (streamId: number, event: IEvent, callback: () => void) => {
+export const insertOrdered = (streamId: number, timestamp: number, event: IEvent, callback: () => void) => {
     fetch(`${ip}/insert_ordered/${streamId}`, {
         method: "POST",
-        body: `{"t1": 0, "payload": ${JSON.stringify(event).replaceAll("\"[", "[").replaceAll("]\"", "]")}}`,
+        body: `{"t1": ${timestamp}, "payload": ${JSON.stringify(event).replaceAll("\"[", "[").replaceAll("]\"", "]")}}`,
     })
         .then((response) => response.text())
         .then((result) => console.log(result))
