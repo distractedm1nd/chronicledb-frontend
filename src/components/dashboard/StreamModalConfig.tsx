@@ -1205,14 +1205,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                                     </g>
                                 </g>
                           </svg>
-                          <p className="text-sm mt-2 text-white">
-                            Number of river threads in the delta. 0 := Pipeline bypassed.<br />
-                            t := Number of CPU threads.<br />
-                            c := Number of CPU cores.<br />
-                            d := Default number threads.
-                          </p>
+                          <p className="text-sm mt-2 text-gray-500">
+                            Number of jobs to queue in the delta before blocking. <br />
+                            Larger queues may enhance performance, but require longer
+                            syncing, when shutdown.
+                            </p>
                         </div>
-                    )}
+                 )}
               </div>
               </div>
             </div>
