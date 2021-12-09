@@ -9,7 +9,9 @@ import {
 } from "../../types/types";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import { Switch } from '@headlessui/react'
 import _ from "lodash";
+import {classNames} from "../../utils";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -79,36 +81,31 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
 
           <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
             <div role="group" aria-labelledby="label-notifications">
-              <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                <div>
-                  <div
-                    className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
-                    id="label-notifications"
-                  >
-                    Log
-                  </div>
-                </div>
-                <div className="sm:col-span-2">
+              <div className="sm:grid sm:grid-cols-2 sm:gap-2 sm:items-baseline">
+                <div className="sm:col-span-1 mx-auto">
                     <div className="mt-4 space-y-4">
-                      <div className="flex items-center">
-                        <input
-                          id="log-false"
-                          name="log-state"
-                          type="radio"
-                          onClick={() =>
-                            setConfigState({ ...configState, Log: false })
-                          }
-                          onMouseEnter={() => setTooltipStatus(4)}
-                          onMouseLeave={() => setTooltipStatus(0)}
-                          checked={!configState.Log}
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        />
-                        <label
-                          htmlFor="log-false"
-                          className="ml-3 block text-sm font-medium text-gray-700"
+                      <Switch.Group as="div" className={"flex items-center"}>
+                        <Switch.Label as="span" className="mr-3">
+                          <span className="text-sm font-medium text-gray-900">Log </span>
+                        </Switch.Label>
+                        <Switch
+                            checked={configState.Log}
+                            onChange={() => setConfigState({...configState, Log: !configState.Log})}
+                            className={classNames(
+                                configState.Log ? 'bg-indigo-600' : 'bg-gray-200',
+                                'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                            )}
                         >
-                          false
-                        </label>
+                          <span
+                              aria-hidden="true"
+                              className={classNames(
+                                  configState.Log ? 'translate-x-5' : 'translate-x-0',
+                                  'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+                              )}
+                          />
+                        </Switch>
+                      </Switch.Group>
+                      <div className="flex items-center">
                         {tooltipstatus == 4 && (
                         <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
                           <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -126,56 +123,33 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         </div>
                         )}
                       </div>
-                      <div className="flex items-center">
-                        <input
-                          id="log-true"
-                          name="log-state"
-                          type="radio"
-                          onClick={() =>
-                            setConfigState({ ...configState, Log: true })
-                          }
-                          checked={configState.Log}
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        />
-                        <label
-                          htmlFor="log-true"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          true
-                        </label>
-                      </div>
                     </div>
                 </div>
-              </div>
-            </div>
-
-            <div role="group" aria-labelledby="label-notifications">
-              <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                <div>
-                  <div
-                    className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
-                    id="label-notifications"
-                  >
-                    Debug
-                  </div>
-                </div>
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-1 mx-auto">
                   <div className="max-w-lg">
                     <div className="mt-4 space-y-4">
-                      <div className="flex items-center">
-                        <input
-                          id="debug-false"
-                          name="debug-state"
-                          type="radio"
-                          onClick={() =>
-                            setConfigState({ ...configState, Debug: false })
-                          }
-                          onMouseEnter={() => setTooltipStatus(5)}
-                          onMouseLeave={() => setTooltipStatus(0)}
-                          checked={!configState.Debug}
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        />
-                        {tooltipstatus == 5 && (
+                      <Switch.Group as="div" className={"flex items-center"}>
+                        <Switch.Label as="span" className="mr-3">
+                          <span className="text-sm font-medium text-gray-900">Debug </span>
+                        </Switch.Label>
+                        <Switch
+                            checked={configState.Debug}
+                            onChange={() => setConfigState({...configState, Debug: !configState.Debug})}
+                            className={classNames(
+                                configState.Debug ? 'bg-indigo-600' : 'bg-gray-200',
+                                'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                            )}
+                        >
+                          <span
+                              aria-hidden="true"
+                              className={classNames(
+                                  configState.Debug ? 'translate-x-5' : 'translate-x-0',
+                                  'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+                              )}
+                          />
+                        </Switch>
+                      </Switch.Group>
+                      {tooltipstatus == 5 && (
                         <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
                           <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
@@ -190,32 +164,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           </svg>
                           <p className="text-sm font-medium text-white ">All the dynamic TAB+Index optimized sizes are discarded and the minimum size for the nodes is used instead, if set to true.</p>
                         </div>
-                        )}
-                        <label
-                          htmlFor="debug-false"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          false
-                        </label>
-                      </div>
-                      <div className="flex items-center">
-                        <input
-                          id="debug-true"
-                          name="debug-state"
-                          type="radio"
-                          onClick={() =>
-                            setConfigState({ ...configState, Debug: true })
-                          }
-                          checked={configState.Debug}
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        />
-                        <label
-                          htmlFor="debug-true"
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          true
-                        </label>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -225,12 +174,40 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="data"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
+                className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
+                onMouseEnter={()=> setTooltipStatus(3)}
+                onMouseLeave={()=> setTooltipStatus(0)}
+                >
                 Data
+                <div className="cursor-pointer ml-2">
+                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                {tooltipstatus == 3 && (
+                    <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                        <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                          <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                            <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                              <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                      <p className="text-sm font-medium text-white ">
+                        Data files.
+                      </p>
+                      <p className="text-sm font-medium text-white " >data = C:\dataFile1 .</p>
+                      <p className="text-sm font-medium text-white " >data = I:\dataFile2 .</p>
+                      <p className="text-sm font-medium text-white " >data = H:\dataFile3 .</p>
+                      <p className="text-sm font-medium text-white " >Data = I:\data .</p>
+                      <p className="text-sm font-medium text-white " >Data = data1.</p>
+                    </div>
+                )}
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="mt-1 relative sm:mt-0 sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+                <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
                     name="data"
@@ -240,39 +217,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onChange={(e) =>
                       setConfigState({ ...configState, Data: [e.target.value] })
                     }
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   />
-                </div>
-                <div
-                  className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
-                  onMouseEnter={()=> setTooltipStatus(3)}
-                  onMouseLeave={()=> setTooltipStatus(0)} >
-                    <div className="cursor-pointer">
-                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </div>
-                    {tooltipstatus == 3 && (
-                      <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
-                        <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
-                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
-                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
-                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                          </svg>
-                        <p className="text-sm font-medium text-white ">
-                          Data files.
-                        </p>
-                        <p className="text-sm font-medium text-white " >data = C:\dataFile1 .</p>
-                        <p className="text-sm font-medium text-white " >data = I:\dataFile2 .</p>
-                        <p className="text-sm font-medium text-white " >data = H:\dataFile3 .</p>
-                        <p className="text-sm font-medium text-white " >Data = I:\data .</p>
-                        <p className="text-sm font-medium text-white " >Data = data1.</p>
-                      </div>
-                    )}{" "}
                 </div>
               </div>
             </div>
@@ -284,8 +230,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Translation
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-              <div className="mt-1 relative sm:mt-0 sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
                     name="translation"
@@ -298,13 +244,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Translation: e.target.value,
                       })
                     }
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   />
                   </div>
                   <div
-                  className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
-                  onMouseEnter={()=> setTooltipStatus(2)}
-                  onMouseLeave={()=> setTooltipStatus(0)} >
+                    className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                    onMouseEnter={()=> setTooltipStatus(2)}
+                    onMouseLeave={()=> setTooltipStatus(0)}
+                  >
                     <div className="cursor-pointer">
                     <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
@@ -336,8 +283,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Boot
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="mt-1 relative sm:mt-0 sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+                <div className="mt-1 relative sm:mt-0">
                 <input
                   data-tooltip-target="tooltip-default"
                   type="text"
@@ -351,7 +298,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       Boot: e.target.value,
                     })
                   }
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                 />
                 </div>
                 <div
