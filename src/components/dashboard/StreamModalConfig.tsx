@@ -1,13 +1,16 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
+  BloomFilter,
   DefaultStreamConfig,
   EventNames,
+  HashFunction,
   IEvent,
   StreamConfig,
 } from "../../types/types";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import '@themesberg/flowbite';
+import _ from "lodash";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -23,6 +26,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
 
+  const [lightweightIndexType, setLightweightIndexType] = useState<"SMA" | "BloomFilter">("SMA");
+  const [currentSMA, setCurrentSMA] = useState<{cnt: number, sum: number, min: number, max: number}>({cnt: 0, sum: 0, min: 0, max: 0});
+  const [currentBloomFilter, setCurrentBloomFilter] = useState<{count: number, k: number}>({count: 0, k: 0});
+  const [currentHashFunctions, setCurrentHashFunctions] = useState<HashFunction[]>([]);
+
   useEffect(() => {
     // @ts-ignore
     let dataOptions = EventNames[eventType];
@@ -35,6 +43,23 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       setDataType(Object.keys(dataOptions)[0]);
     }
   }, [eventType, dataType, storage, data]);
+
+  useEffect(() => {
+    console.log(currentHashFunctions.length, currentBloomFilter.k, currentHashFunctions)
+    if(currentBloomFilter.k == 0) {
+      setCurrentHashFunctions([])
+    }
+    else if(currentHashFunctions.length > currentBloomFilter.k) {
+      setCurrentHashFunctions(currentHashFunctions.splice(currentBloomFilter.k - 1))
+    }
+    else if(currentHashFunctions.length < currentBloomFilter.k && currentBloomFilter.k) {
+      var temp = [...currentHashFunctions]
+      for (let index = 0; index < currentBloomFilter.k - currentHashFunctions.length; index++) {
+        temp.push({a: 0, b: 0})
+      }
+      setCurrentHashFunctions(temp);
+    }
+  }, [currentBloomFilter])
 
   useEffect(() => {
     let eventToSend =
@@ -414,6 +439,191 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   />
                 </div>
               ))}
+            </div>
+            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+              <p className="font-bold">Lightweight Indexes</p>
+              {/* TODO: Add Indexes to array */}
+              <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
+                <div className="sm:col-span-4">
+                  <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Index Type
+                  </label>
+                  <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={lightweightIndexType}
+                    onChange={(event) => event.target.value === "SMA" ? setLightweightIndexType(event.target.value) : setLightweightIndexType("BloomFilter")}
+                  >
+                    <option>SMA</option>
+                    <option>BloomFilter</option>
+                  </select>
+                </div>
+                {lightweightIndexType === "BloomFilter" ?
+                  <React.Fragment>
+                    <div className="sm:mt-0 sm:col-span-2">
+                      <label
+                        htmlFor="bitcount"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Bit Count
+                      </label>
+                      <input
+                        id="bitcount"
+                        type="number"
+                        name="bitcount"
+                        value={currentBloomFilter?.count}
+                        onChange={(event) => currentBloomFilter && setCurrentBloomFilter({...currentBloomFilter, count: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="sm:mt-0 sm:col-span-2">
+                      <label
+                        htmlFor="hfcount"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Hash Function Count (k)
+                      </label>
+                      <input
+                        id="hfcount"
+                        type="number"
+                        name="hfcount"
+                        value={currentBloomFilter?.k}
+                        onChange={(event) => currentBloomFilter && setCurrentBloomFilter({...currentBloomFilter, k: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </React.Fragment>
+                  :
+                  <React.Fragment>
+                    <div className="sm:mt-0 sm:col-span-1">
+                      <label
+                        htmlFor="smacnt"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Count
+                      </label>
+                      <input
+                        id="smacnt"
+                        type="number"
+                        name="smacnt"
+                        value={currentSMA?.cnt}
+                        onChange={(event) => currentSMA && setCurrentSMA({...currentSMA, cnt: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="sm:mt-0 sm:col-span-1">
+                      <label
+                        htmlFor="smasum"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Sum
+                      </label>
+                      <input
+                        id="smasum"
+                        type="number"
+                        name="smasum"
+                        value={currentSMA?.sum}
+                        onChange={(event) => currentSMA && setCurrentSMA({...currentSMA, sum: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="sm:mt-0 sm:col-span-1">
+                      <label
+                        htmlFor="smamin"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Min
+                      </label>
+                      <input
+                        id="smamin"
+                        type="number"
+                        name="smamin"
+                        value={currentSMA?.min}
+                        onChange={(event) => currentSMA && setCurrentSMA({...currentSMA, min: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="sm:mt-0 sm:col-span-1">
+                      <label
+                        htmlFor="smamax"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Max
+                      </label>
+                      <input
+                        id="smamax"
+                        type="number"
+                        name="smamax"
+                        value={currentSMA?.max}
+                        onChange={(event) => currentSMA && setCurrentSMA({...currentSMA, max: parseInt(event.target.value) || 0})}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </React.Fragment>
+                }
+              </div>
+                <div className={"flex flex-col"}>
+                  {currentBloomFilter?.k > 0 && <p className="font-bold">Hash Function Configuration</p>}
+                  {currentHashFunctions.map((e, idx) => (
+                    <div className="flex my-auto">
+                      <div className="w-full">
+                        <label
+                          htmlFor="a"
+                          className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        >
+                          a
+                        </label>
+                          <input
+                            id="a"
+                            key={idx}
+                            type="text"
+                            name="a"
+                            value={e.a}
+                            onChange={(event) => {
+                              var temp = [...currentHashFunctions];
+                              temp.splice(idx, 1, {a: parseInt(event.target.value) || 0, b: e.b})
+                              setCurrentHashFunctions(temp);
+                            }}
+                            className="w-full block pl-3 py-2 mr-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                          />
+                      </div>
+                      <div className="w-full ml-2">
+                        <label
+                          htmlFor="b"
+                          className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        >
+                          b
+                        </label>
+                        <input
+                          id="b"
+                          key={idx}
+                          type="text"
+                          name="b"
+                          value={e.b}
+                          onChange={(event) => {
+                            var temp = [...currentHashFunctions];
+                            temp.splice(idx, 1, {b: parseInt(event.target.value) || 0, a: e.a})
+                            setCurrentHashFunctions(temp);
+                          }}
+                          className="w-full block pl-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        />
+                      </div>
+                      <XCircleIcon
+                        className="ml-2 relative my-auto top-3 w-10 text-red-500 cursor-pointer transform transition duration-100 hover:scale-110"
+                        onClick={() => {
+                          const temp = [...currentHashFunctions];
+                          temp.splice(idx, 1);
+                          setCurrentHashFunctions(temp);
+                          setCurrentBloomFilter({...currentBloomFilter, k: currentBloomFilter.k - 1});
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
