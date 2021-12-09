@@ -9,7 +9,6 @@ import {
 } from "../../types/types";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/solid";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import '@themesberg/flowbite';
 import _ from "lodash";
 
 export interface IStreamModalConfig {
@@ -25,6 +24,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [data, setData] = useState<any>();
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
+  const [tooltipstatus, setTooltipStatus] = useState(0);
 
   const [lightweightIndexType, setLightweightIndexType] = useState<"SMA" | "BloomFilter">("SMA");
   const [currentSMA, setCurrentSMA] = useState<{cnt: number, sum: number, min: number, max: number}>({cnt: 0, sum: 0, min: 0, max: 0});
@@ -89,11 +89,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   </div>
                 </div>
                 <div className="sm:col-span-2">
-                  <div className="max-w-lg">
-                    <p className="text-sm text-gray-500">
-                      Enables logs across the system, if log set to true.
-                      Otherwise logs are disabled.
-                    </p>
                     <div className="mt-4 space-y-4">
                       <div className="flex items-center">
                         <input
@@ -103,6 +98,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           onClick={() =>
                             setConfigState({ ...configState, Log: false })
                           }
+                          onMouseEnter={() => setTooltipStatus(4)}
+                          onMouseLeave={() => setTooltipStatus(0)}
                           checked={!configState.Log}
                           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                         />
@@ -112,6 +109,22 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         >
                           false
                         </label>
+                        {tooltipstatus == 4 && (
+                        <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm font-medium text-white ">Enables logs across the system, if log set to true. Otherwise logs are disabled.</p>
+                        </div>
+                        )}
                       </div>
                       <div className="flex items-center">
                         <input
@@ -132,7 +145,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         </label>
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -149,16 +161,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 </div>
                 <div className="sm:col-span-2">
                   <div className="max-w-lg">
-                    <p className="text-sm text-gray-500">
-                      All the dynamic TAB + Index optimized sizes are discarded
-                      and the minimum size for the nodes is used instead, if set
-                      to true. These minimum sizes are:
-                      <br />
-                      Index Data Size := 3 Keys / Node.
-                      <br />
-                      Leaf Data Size := 2 Events / Node. <br />
-                      Otherwise, calculates the most suitable TAB + Index sizes.
-                    </p>
                     <div className="mt-4 space-y-4">
                       <div className="flex items-center">
                         <input
@@ -168,9 +170,27 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           onClick={() =>
                             setConfigState({ ...configState, Debug: false })
                           }
+                          onMouseEnter={() => setTooltipStatus(5)}
+                          onMouseLeave={() => setTooltipStatus(0)}
                           checked={!configState.Debug}
                           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                         />
+                        {tooltipstatus == 5 && (
+                        <div role="tooltip" className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                          <p className="text-sm font-medium text-white ">All the dynamic TAB+Index optimized sizes are discarded and the minimum size for the nodes is used instead, if set to true.</p>
+                        </div>
+                        )}
                         <label
                           htmlFor="debug-false"
                           className="ml-3 block text-sm font-medium text-gray-700"
@@ -223,8 +243,36 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" />
+                <div
+                  className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                  onMouseEnter={()=> setTooltipStatus(3)}
+                  onMouseLeave={()=> setTooltipStatus(0)} >
+                    <div className="cursor-pointer">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </div>
+                    {tooltipstatus == 3 && (
+                      <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
+                        <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                        <p className="text-sm font-medium text-white ">
+                          Data files.
+                        </p>
+                        <p className="text-sm font-medium text-white " >data = C:\dataFile1 .</p>
+                        <p className="text-sm font-medium text-white " >data = I:\dataFile2 .</p>
+                        <p className="text-sm font-medium text-white " >data = H:\dataFile3 .</p>
+                        <p className="text-sm font-medium text-white " >Data = I:\data .</p>
+                        <p className="text-sm font-medium text-white " >Data = data1.</p>
+                      </div>
+                    )}{" "}
                 </div>
               </div>
             </div>
@@ -253,9 +301,31 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   />
                   </div>
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="false" />
-                </div> 
+                  <div
+                  className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                  onMouseEnter={()=> setTooltipStatus(2)}
+                  onMouseLeave={()=> setTooltipStatus(0)} >
+                    <div className="cursor-pointer">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </div>
+                    {tooltipstatus == 2 && (
+                      <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
+                        <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                        <p className="text-sm font-medium text-white ">Translation file.</p>
+                        <p className="text-sm font-medium text-white " >This is used to serialize the rightFlank on a clean system shutdown.</p>
+                      </div>
+                    )}{" "}
+                </div>
                 </div>
             </div>
 
@@ -284,12 +354,30 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
                 </div>
-                <div data-tooltip-target="tooltip-default" className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto">
+                <div
+                  className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                  onMouseEnter={()=> setTooltipStatus(1)}
+                  onMouseLeave={()=> setTooltipStatus(0)} >
+                    <div className="cursor-pointer">
                     <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
-                <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm rounded-lg opacity-300 transition-opacity invisible dark:bg-gray-700">
-                  Tooltip content
-                  <div className="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+                    {tooltipstatus == 1 && (
+                      <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
+                        <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                                    <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                        <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                          </svg>
+                        <p className="text-sm font-medium text-white ">Boot file</p>
+                        <p className="text-sm font-medium text-white " >This is used to e.g. recover the system and contains information for loaders, such as NodeID counter and root NodeID.</p>
+                      </div>
+                    )}{" "}
                 </div>
               </div>                
             </div>
@@ -407,9 +495,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                     className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   />
-                  <button
+                  <div className="has-tooltip">
+                    <button
                     type="button"
-                    data-tooltip-target="tooltip-default"
                     className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                     onClick={() =>
                       currentEvent &&
@@ -417,10 +505,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                   >
                     <PlusIcon className={"h-4 my-auto"} />
-                  </button>
-                  <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm rounded-lg opacity-0 duration-300 transition-opacity invisible dark:bg-gray-700">
-                    Tooltip content
-                    <div className="tooltip-arrow" data-popper-arrow></div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -625,24 +710,22 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   ))}
                 </div>
             </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="multiple-disk-max-queue-number"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Multiple Disk Queue Checkpoint
               </label>
-              <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <p className="text-sm text-gray-500">
-                  The number of MacroBlocks allowed to be queued on disk writer
-                  thread(s).
-                </p>
-                <div className="mt-4 space-y-4">
+              <div className="mt-1 sm:mt-0 sm:col-span-2" >
+                <div className="mt-4 flex space-x-20 items-center">
                   <input
                     type="number"
                     name="multiple-disk-max-queue-number"
                     id="multiple-disk-max-queue-number"
                     value={configState.MultipleDiskMaxQueue}
+                    onMouseEnter={() => setTooltipStatus(6)}
+                    onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) => {
                       let inputInt = parseInt(e.target.value);
                       if (
@@ -662,11 +745,27 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                     placeholder="100"
                   />
+                  {tooltipstatus == 6 && (
+                  <div role="tooltip" className="z-20 mx-4 mb-2 right-1 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                    <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                      <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                        <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                          <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                              <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                    <p className="text-sm font-medium text-white ">The number of MacroBlocks allowed to be queued on disk writer thread(s).</p>
+                  </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="logical-block-size-number"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -674,27 +773,15 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 Logical Block Size
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <p className="text-sm text-gray-500">
-                  Number of bytes for an uncompressed serialized node.
-                  <br />
-                  Generally, this should match the I/O block size of the data
-                  files.
-                  <br />
-                  Can be an arbitrary numeric value like-wise.
-                  <br />
-                  l := Logical IO Block Size.
-                  <br />
-                  p := Phsysical IO Block Size.
-                  <br />
-                  {"<number>"} := {"<number>"} of bytes.
-                </p>
-                <div className="mt-4 space-y-4">
+                <div className="mt-4 flex space-x-10 items-center ">
                   <input
                     type="number"
                     step={"4096"}
                     name="logical-block-size-number"
                     id="logical-block-size-number"
                     value={configState.LogicalBlockSize}
+                    onMouseEnter={() => setTooltipStatus(7)}
+                    onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) =>
                       setConfigState({
                         ...configState,
@@ -704,6 +791,34 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                     placeholder="8192"
                   />
+                  {tooltipstatus == 7 && (
+                  <div role="tooltip" className="z-20 mx-4 right-1 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                    <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                      <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                        <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                          <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                            <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                              <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                    <p className="text-sm text-white">
+                      Number of bytes for an uncompressed serialized node.
+                      <br />
+                      Generally, this should match the I/O block size of the data files.
+                      <br />
+                      Can be an arbitrary numeric value like-wise.
+                      <br />
+                      l := Logical IO Block Size.
+                      <br />
+                      p := Phsysical IO Block Size.
+                      <br />
+                      {"<number>"} := {"<number>"} of bytes.
+                      </p>
+                      </div>
+                  )}
                 </div>
                 <div className="border mt-4 border-red-400 rounded-b bg-red-100 max-w-xs px-3 py-2 text-red-700 rounded-md">
                   <p>WARNING: l and p not supported yet!</p>
@@ -713,7 +828,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
 
             <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
               <p className={"font-bold"}>Macro Block Configuration</p>
-              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-start pt-3">
+              <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
                   htmlFor="macro-block-size-number"
                   className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -721,19 +836,15 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Size
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  <p className="text-sm text-gray-500">
-                    {/* TODO: Validation */}
-                    Number of bytes for a MacroBlock. <br />
-                    Denoted in a multiply of Logical Block Size. <br />
-                    The multiply value must be a decimal number and never 0.
-                  </p>
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-4 flex space-x-10 items-center">
                     <input
                       type="number"
                       min={1}
                       name="macro-block-size-number"
                       id="macro-block-size-number"
                       value={configState.MacroBlockSize}
+                      onMouseEnter={() => setTooltipStatus(8)}
+                      onMouseLeave={() => setTooltipStatus(0)}
                       onChange={(e) =>
                         setConfigState({
                           ...configState,
@@ -743,6 +854,27 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                       placeholder="10"
                     />
+                    {tooltipstatus == 8 && (
+                    <div role="tooltip" className="z-20 mx-4 right-20 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
+                      <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                        <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                          <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                            <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                              <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                              </g>
+                            </g>
+                         </g>
+                       </g>
+                      </svg>
+                      <p className="text-sm text-white">
+                        {/* TODO: Validation */}
+                        Number of bytes for a MacroBlock. <br />
+                        Denoted in a multiply of Logical Block Size. <br />
+                        The multiply value must be a decimal number and never 0.
+                      </p>
+                    </div>
+                    )}
                   </div>
                 </div>
                 <label
@@ -752,14 +884,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   Spare
                 </label>
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                  <p className="text-sm text-gray-500">
-                    Percent of spare space in a MacroBlock.
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                  </p>
+
                   <div className="mt-4 space-y-4">
                     <input
                       type="number"
@@ -840,14 +965,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
                     placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
                   />
-                  <p className="text-sm mt-2 text-gray-500">
-                    Allocates a number of MacroBlocks, when
-                    MacroBlockPreallocation is exhausted.
-                    <br />
-                    0 := Batch allocator disabled.
-                    <br />
-                    n, where n is greater or equal to MacroBlockPreallocation.
-                  </p>
+
                 </div>
               </div>
             </div>
@@ -1179,4 +1297,3 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     </form>
   );
 }
-
