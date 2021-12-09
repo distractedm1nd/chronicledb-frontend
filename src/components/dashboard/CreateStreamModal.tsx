@@ -5,6 +5,8 @@ import { CogIcon } from "@heroicons/react/outline";
 import StreamModalConfig from "./StreamModalConfig";
 import {DefaultStreamConfig} from "../../types/types";
 import {createStream} from "../../utils";
+import '@themesberg/flowbite';
+
 
 type CreateStreamModalProps = {
   open: boolean;
@@ -94,7 +96,7 @@ export default function CreateStreamModal({
                 >
                   Cancel
                 </button>
-                <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm rounded-lg opacity-300 transition-opacity invisible dark:bg-gray-700">
+                <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block rounded-lg bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm duration-300 invisible dark:bg-gray-700">
                   Tooltip content
                   <div className="tooltip-arrow" data-popper-arrow></div>
                 </div>
