@@ -192,38 +192,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               <label
                 htmlFor="data"
                 className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
-                onMouseEnter={()=> setTooltipStatus(3)}
-                onMouseLeave={()=> setTooltipStatus(0)}
                 >
                 Data
-                <div className="cursor-pointer ml-2">
-                  <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
-                {tooltipstatus == 3 && (
-                    <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded" >
-                      <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-                        <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                          <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
-                            <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
-                              <g id="Group-2" transform="translate(24.000000, 0.000000)">
-                                <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
-                              </g>
-                            </g>
-                          </g>
-                        </g>
-                      </svg>
-                      <p className="text-sm font-medium text-white ">
-                        Data files.
-                      </p>
-                      <p className="text-sm font-medium text-white " >data = C:\dataFile1 .</p>
-                      <p className="text-sm font-medium text-white " >data = I:\dataFile2 .</p>
-                      <p className="text-sm font-medium text-white " >data = H:\dataFile3 .</p>
-                      <p className="text-sm font-medium text-white " >Data = I:\data .</p>
-                      <p className="text-sm font-medium text-white " >Data = data1.</p>
-                    </div>
-                )}
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
@@ -236,6 +208,38 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                     className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   />
+                  <div
+                      className= "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                      onMouseEnter={()=> setTooltipStatus(3)}
+                      onMouseLeave={()=> setTooltipStatus(0)}
+                  >
+                    <div className="cursor-pointer">
+                      <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </div>
+                    {tooltipstatus == 3 && (
+                        <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
+                          <svg className="absolute left-0 -ml-2 bottom-0 top-0 h-full" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
+                              <g id="Tooltips-" transform="translate(-874.000000, -1029.000000)" fill="#000000">
+                                <g id="Group-3-Copy-16" transform="translate(850.000000, 975.000000)">
+                                  <g id="Group-2" transform="translate(24.000000, 0.000000)">
+                                    <polygon id="Triangle" transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) " points="4.5 57.5 12.5 66.5 -3.5 66.5" />
+                                  </g>
+                                </g>
+                              </g>
+                            </g>
+                          </svg>
+                          <p className="text-sm font-medium text-white ">
+                            Data files.
+                          </p>
+                          <p className="text-sm font-medium text-white " >data = C:\dataFile1 .</p>
+                          <p className="text-sm font-medium text-white " >data = I:\dataFile2 .</p>
+                          <p className="text-sm font-medium text-white " >data = H:\dataFile3 .</p>
+                          <p className="text-sm font-medium text-white " >Data = I:\data .</p>
+                          <p className="text-sm font-medium text-white " >Data = data1.</p>
+                        </div>
+                    )}{" "}
+                  </div>
                 </div>
               </div>
             </div>
@@ -247,7 +251,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Translation
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
               <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
@@ -300,7 +304,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Boot
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
                 <input
                   data-tooltip-target="tooltip-default"
@@ -323,7 +327,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   onMouseEnter={()=> setTooltipStatus(1)}
                   onMouseLeave={()=> setTooltipStatus(0)} >
                     <div className="cursor-pointer">
-                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
                     {tooltipstatus == 1 && (
                       <div role="tooltip" className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded" >
