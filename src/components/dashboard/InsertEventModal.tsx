@@ -9,10 +9,12 @@ import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
 type InsertEventModalProps = {
     open: boolean;
     setOpen: (state: boolean) => void;
+    currentStream: any;
 };
 
-const InsertEventModal = ({open, setOpen}: InsertEventModalProps) => {
+const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps) => {
     const cancelButtonRef = useRef(null);
+    const [timestamp, setTimestamp] = useState<number>(0);
     const [eventType, setEventType] = useState<string>("Raw");
     const [dataType, setDataType] = useState<string>("Integer");
     const [storage, setStorage] = useState<string>("8");
@@ -74,11 +76,29 @@ const InsertEventModal = ({open, setOpen}: InsertEventModalProps) => {
                                     as="h3"
                                     className="text-lg font-medium text-gray-900"
                                 >
-                                    Insert Event
+                                    Insert Event in Stream {currentStream}
                                 </Dialog.Title>
                             </div>
                         </div>
                         <div className="mt-4">
+                            <label
+                                htmlFor="eventType"
+                                className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                            >
+                                Timestamp
+                            </label>
+                            <div className={"flex w-full"}>
+                                <input
+                                    type="text"
+                                    name="data"
+                                    id="data"
+                                    value={timestamp}
+                                    onChange={(e) =>
+                                        setTimestamp(parseInt(e.target.value) || 0)
+                                    }
+                                    className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                                />
+                            </div>
                             <form className="mt-2 space-y-8 divide-y divide-gray-200">
                                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                                     <div>
@@ -216,7 +236,13 @@ const InsertEventModal = ({open, setOpen}: InsertEventModalProps) => {
                                 type="button"
                                 className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                                 onClick={() => {
-                                    currentEvent && insertOrdered(0, compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent, () => setOpen(false));
+                                    currentEvent && 
+                                        insertOrdered(
+                                            currentStream,
+                                            timestamp,
+                                            compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent,
+                                            () => setOpen(false)
+                                        );
                                 }}
                                 ref={cancelButtonRef}
                             >

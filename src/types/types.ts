@@ -89,6 +89,24 @@ export enum StreamConfigKey {
     MaxDeltaQueue= "Max delta queue"
 }
 
+export type SMA = {
+    cnt: number
+    sum: number
+    min: number
+    max: number
+}
+
+export type HashFunction = {
+    a: number
+    b: number
+}
+
+export type BloomFilter = {
+    bit_set: {bit_array: number[]}
+    hash_functions: HashFunction[]
+}
+
+
 export type IEvent = {[EventType: string]: any};
 
 export type StreamConfig = {
@@ -99,7 +117,7 @@ export type StreamConfig = {
     Boot: string
     MultipleDiskMaxQueue: number
     Event: [IEvent]
-    LightweightIndex: {"aggregate": any, "projector_sequence": "Mono" | "Empty"}
+    LightweightIndex: {"aggregate": {"SMA": SMA} | {"BloomFilter": BloomFilter}, "projector_sequence": "Mono" | "Empty" | {"Slice": number[]}}
     LogicalBlockSize: number
     MacroBlockSize: "l" | "p" | number
     MacroBlockSpare: number
