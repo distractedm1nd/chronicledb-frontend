@@ -300,82 +300,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               <label
                 htmlFor="data"
                 className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
-                onMouseEnter={() => setTooltipStatus(3)}
-                onMouseLeave={() => setTooltipStatus(0)}
               >
                 Data
-                <div className="cursor-pointer ml-2">
-                  <QuestionMarkCircleIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                {tooltipstatus == 3 && (
-                  <div
-                    role="tooltip"
-                    className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded"
-                  >
-                    <svg
-                      className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                      width="9px"
-                      height="16px"
-                      viewBox="0 0 9 16"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                    >
-                      <g
-                        id="Page-1"
-                        stroke="none"
-                        strokeWidth={1}
-                        fill="none"
-                        fillRule="evenodd"
-                      >
-                        <g
-                          id="Tooltips-"
-                          transform="translate(-874.000000, -1029.000000)"
-                          fill="#000000"
-                        >
-                          <g
-                            id="Group-3-Copy-16"
-                            transform="translate(850.000000, 975.000000)"
-                          >
-                            <g
-                              id="Group-2"
-                              transform="translate(24.000000, 0.000000)"
-                            >
-                              <polygon
-                                id="Triangle"
-                                transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                              />
-                            </g>
-                          </g>
-                        </g>
-                      </g>
-                    </svg>
-                    <p className="text-sm font-medium text-white ">
-                      Data files.
-                    </p>
-                    <p className="text-sm font-medium text-white ">
-                      data = C:\dataFile1 .
-                    </p>
-                    <p className="text-sm font-medium text-white ">
-                      data = I:\dataFile2 .
-                    </p>
-                    <p className="text-sm font-medium text-white ">
-                      data = H:\dataFile3 .
-                    </p>
-                    <p className="text-sm font-medium text-white ">
-                      Data = I:\data .
-                    </p>
-                    <p className="text-sm font-medium text-white ">
-                      Data = data1.
-                    </p>
-                  </div>
-                )}
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
@@ -388,6 +316,82 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                     className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   />
+                  <div
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
+                    onMouseEnter={() => setTooltipStatus(3)}
+                    onMouseLeave={() => setTooltipStatus(0)}
+                  >
+                    <div className="cursor-pointer">
+                      <QuestionMarkCircleIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {tooltipstatus == 3 && (
+                      <div
+                        role="tooltip"
+                        className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded"
+                      >
+                        <svg
+                          className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
+                          width="9px"
+                          height="16px"
+                          viewBox="0 0 9 16"
+                          version="1.1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                        >
+                          <g
+                            id="Page-1"
+                            stroke="none"
+                            strokeWidth={1}
+                            fill="none"
+                            fillRule="evenodd"
+                          >
+                            <g
+                              id="Tooltips-"
+                              transform="translate(-874.000000, -1029.000000)"
+                              fill="#000000"
+                            >
+                              <g
+                                id="Group-3-Copy-16"
+                                transform="translate(850.000000, 975.000000)"
+                              >
+                                <g
+                                  id="Group-2"
+                                  transform="translate(24.000000, 0.000000)"
+                                >
+                                  <polygon
+                                    id="Triangle"
+                                    transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
+                                    points="4.5 57.5 12.5 66.5 -3.5 66.5"
+                                  />
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </svg>
+                        <p className="text-sm font-medium text-white ">
+                          Data files.
+                        </p>
+                        <p className="text-sm font-medium text-white ">
+                          data = C:\dataFile1 .
+                        </p>
+                        <p className="text-sm font-medium text-white ">
+                          data = I:\dataFile2 .
+                        </p>
+                        <p className="text-sm font-medium text-white ">
+                          data = H:\dataFile3 .
+                        </p>
+                        <p className="text-sm font-medium text-white ">
+                          Data = I:\data .
+                        </p>
+                        <p className="text-sm font-medium text-white ">
+                          Data = data1.
+                        </p>
+                      </div>
+                    )}{" "}
+                  </div>
                 </div>
               </div>
             </div>
@@ -399,7 +403,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Translation
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
                   <input
                     type="text"
@@ -491,7 +495,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               >
                 Boot
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-2">
+              <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
                   <input
                     data-tooltip-target="tooltip-default"
@@ -520,60 +524,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       aria-hidden="true"
                     />
                   </div>
-                  {tooltipstatus == 1 && (
-                    <div
-                      role="tooltip"
-                      className="z-20 -mt-0 w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-900 p-4 rounded"
-                    >
-                      <svg
-                        className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                        width="9px"
-                        height="16px"
-                        viewBox="0 0 9 16"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                      >
-                        <g
-                          id="Page-1"
-                          stroke="none"
-                          strokeWidth={1}
-                          fill="none"
-                          fillRule="evenodd"
-                        >
-                          <g
-                            id="Tooltips-"
-                            transform="translate(-874.000000, -1029.000000)"
-                            fill="#000000"
-                          >
-                            <g
-                              id="Group-3-Copy-16"
-                              transform="translate(850.000000, 975.000000)"
-                            >
-                              <g
-                                id="Group-2"
-                                transform="translate(24.000000, 0.000000)"
-                              >
-                                <polygon
-                                  id="Triangle"
-                                  transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                  points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                                />
-                              </g>
-                            </g>
-                          </g>
-                        </g>
-                      </svg>
-                      <p className="text-sm font-medium text-white ">
-                        Boot file
-                      </p>
-                      <p className="text-sm font-medium text-white ">
-                        This is used to e.g. recover the system and contains
-                        information for loaders, such as NodeID counter and root
-                        NodeID.
-                      </p>
-                    </div>
-                  )}{" "}
                 </div>
               </div>
             </div>
@@ -601,125 +551,128 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div> */}
 
-            <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200">
-              <div className="sm:mt-0 sm:col-span-1">
-                <label
-                  htmlFor="eventType"
-                  className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                >
-                  Event Type
-                </label>
-                <select
-                  id="eventType"
-                  name="eventType"
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  value={eventType}
-                  onChange={(event) => setEventType(event.target.value)}
-                >
-                  {Object.keys(EventNames).map((name) => (
-                    <option>{name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="translation"
-                  className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                >
-                  Datatype
-                </label>
-                <select
-                  id="dataType"
-                  name="dataType"
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  value={dataType}
-                  onChange={(event) => setDataType(event.target.value)}
-                >
-                  {
-                    // @ts-ignore
-                    Object.keys(EventNames[eventType]).map((name) => (
+            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+              <p className="font-bold">Events</p>
+              <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
+                <div className="sm:mt-0 sm:col-span-1">
+                  <label
+                    htmlFor="eventType"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Event Type
+                  </label>
+                  <select
+                    id="eventType"
+                    name="eventType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={eventType}
+                    onChange={(event) => setEventType(event.target.value)}
+                  >
+                    {Object.keys(EventNames).map((name) => (
                       <option>{name}</option>
-                    ))
-                  }
-                </select>
-              </div>
-              <div className="sm:col-span-1">
-                <label
-                  htmlFor="translation"
-                  className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                >
-                  Storage
-                </label>
-                <select
-                  id="dataType"
-                  name="dataType"
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  value={storage}
-                  onChange={(event) => setStorage(event.target.value)}
-                >
-                  {
-                    // @ts-ignore
-                    dataType in EventNames[eventType] &&
+                    ))}
+                  </select>
+                </div>
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Datatype
+                  </label>
+                  <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={dataType}
+                    onChange={(event) => setDataType(event.target.value)}
+                  >
+                    {
                       // @ts-ignore
-                      Object.keys(EventNames[eventType][dataType]).map(
-                        (name) => <option>{name}</option>
-                      )
-                  }
-                </select>
-              </div>
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="data"
-                  className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                >
-                  Data
-                </label>
-                <div className={"flex w-full"}>
-                  <input
-                    type="text"
-                    name="data"
-                    id="data"
-                    value={data}
-                    onChange={(e) => {
-                      var y: number = parseFloat(e.target.value);
-                      if (Number.isNaN(y)) {
-                        console.log(e.target.value);
-                        setData(e.target.value);
-                      } else {
-                        setData(y);
-                      }
-                    }}
-                    className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                  />
-                  <div className="has-tooltip">
-                    <button
-                      type="button"
-                      className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                      onClick={() =>
-                        currentEvent &&
-                        setCompoundEvents([...compoundEvents, currentEvent])
-                      }
-                    >
-                      <PlusIcon className={"h-4 my-auto"} />
-                    </button>
+                      Object.keys(EventNames[eventType]).map((name) => (
+                        <option>{name}</option>
+                      ))
+                    }
+                  </select>
+                </div>
+                <div className="sm:col-span-1">
+                  <label
+                    htmlFor="translation"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Storage
+                  </label>
+                  <select
+                    id="dataType"
+                    name="dataType"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={storage}
+                    onChange={(event) => setStorage(event.target.value)}
+                  >
+                    {
+                      // @ts-ignore
+                      dataType in EventNames[eventType] &&
+                        // @ts-ignore
+                        Object.keys(EventNames[eventType][dataType]).map(
+                          (name) => <option>{name}</option>
+                        )
+                    }
+                  </select>
+                </div>
+                <div className="sm:col-span-4">
+                  <label
+                    htmlFor="data"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Data
+                  </label>
+                  <div className={"flex w-full"}>
+                    <input
+                      type="text"
+                      name="data"
+                      id="data"
+                      value={data}
+                      onChange={(e) => {
+                        var y: number = parseFloat(e.target.value);
+                        if (Number.isNaN(y)) {
+                          console.log(e.target.value);
+                          setData(e.target.value);
+                        } else {
+                          setData(y);
+                        }
+                      }}
+                      className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                    />
+                    <div className="has-tooltip">
+                      <button
+                        type="button"
+                        className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        onClick={() =>
+                          currentEvent &&
+                          setCompoundEvents([...compoundEvents, currentEvent])
+                        }
+                      >
+                        <PlusIcon className={"h-4 my-auto"} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className={"flex space-x-3"}>
-              {compoundEvents.map((e, idx) => (
-                <div className="flex p-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
-                  <p>{JSON.stringify(e)}</p>
-                  <XCircleIcon
-                    className="my-auto ml-2 h-5 text-red-500 cursor-pointer"
-                    onClick={() => {
-                      const temp = [...compoundEvents];
-                      temp.splice(idx, 1);
-                      setCompoundEvents(temp);
-                    }}
-                  />
-                </div>
-              ))}
+              <div className={"flex space-x-3"}>
+                {compoundEvents.map((e, idx) => (
+                  <div className="flex p-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
+                    <p>{JSON.stringify(e)}</p>
+                    <XCircleIcon
+                      className="my-auto ml-2 h-5 text-red-500 cursor-pointer"
+                      onClick={() => {
+                        const temp = [...compoundEvents];
+                        temp.splice(idx, 1);
+                        setCompoundEvents(temp);
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="sm:border-t sm:border-gray-200 sm:pt-5">
               <p className="font-bold">Lightweight Indexes</p>
