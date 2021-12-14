@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [currentStream, setCurrentStream] = useState<number>(0);
   const [modalOpen, setModalState] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);
+  const [extraStreamInfo, setExtraStreamInfo] = useState<{[key in number]: any}>({});
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
   const [modalBody, setModalBody] = useState("");
@@ -57,6 +58,10 @@ export default function Dashboard() {
     fetchStreams();
   }, [modalOpen]);
 
+  useEffect(() => {
+    availableStreams.forEach(stream => {fetchMinKey(stream[0]); fetchMaxKey(stream[0])});
+  }, [availableStreams])
+
   const fetchStreams = () => {
     fetch(`${ip}/show_streams`)
       .then((response) => response.json())
@@ -71,6 +76,24 @@ export default function Dashboard() {
       .then((response) => response.text())
       .then((result) => setModalBody(result))
       .catch((error) => console.log("error", error));
+  };
+
+  const fetchMinKey = (streamId: number) => {
+    fetch(`${ip}/min_key/${streamId}`)
+        .then(res => res.text())
+        .then(res => setExtraStreamInfo(
+            {...extraStreamInfo, 0: {...extraStreamInfo[streamId], "min_key": res}}
+        )
+    )
+  };
+
+  const fetchMaxKey = (streamId: number) => {
+    fetch(`${ip}/max_key/${streamId}`)
+        .then(res => res.text())
+        .then(res => setExtraStreamInfo(
+                {...extraStreamInfo, 0: {...extraStreamInfo[streamId], "max_key": res}}
+            )
+        )
   };
 
   const fetchSystemInfo = () => {
@@ -383,6 +406,12 @@ export default function Dashboard() {
                         <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Info
                         </th>
+                        <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Min Key
+                        </th>
+                        <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Max Key
+                        </th>
                         <th className="pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                           <span className="lg:pl-2">Actions</span>
                         </th>
@@ -429,6 +458,12 @@ export default function Dashboard() {
                             >
                               Show Info
                             </button>
+                          </td>
+                          <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
+                            {extraStreamInfo[stream[0]] && "min_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"]}
+                          </td>
+                          <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
+                            {extraStreamInfo[stream[0]] && "max_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"] || "Undefined"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-normal">
                             <span className="relative inline-flex shadow-sm rounded-md">
