@@ -1,5 +1,8 @@
 // export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
 
+import { type } from "os"
+import { TypeOfTag } from "typescript"
+
 export const EventNames = {
   "Raw": {
       "Empty": {
@@ -89,25 +92,39 @@ export enum StreamConfigKey {
   MaxDeltaQueue = "Max delta queue",
 }
 
-export type SMA = {
-    cnt: number
-    sum: number
-    min: number
-    max: number
-}
+
 
 export type HashFunction = {
-    a: number
-    b: number
-}
-
-export type BloomFilter = {
-    bit_set: {bit_array: number[]}
-    hash_functions: HashFunction[]
+        a: number,
+        b: number,
 }
 
 
 export type IEvent = { [EventType: string]: any };
+
+
+export type Aggregate = SMA | BloomFilter
+
+export type BloomFilter = {
+    "BloomFilter" : {
+        bit_set: {bit_array: number[]},
+        hash_functions: HashFunction[],
+    }
+}
+
+export type SMA = {
+    "SMA": {
+        cnt: number,
+        sum: number,
+        min: number,
+        max: number,
+}}
+
+
+export type LightweightIndex = {
+    "aggregate": Aggregate,
+    "projector_sequence": "Mono" | "Empty" | {"Slice":number[]},
+}
 
 export type StreamConfig = {
     Log: boolean;
@@ -117,7 +134,7 @@ export type StreamConfig = {
     Boot: string;
     MultipleDiskMaxQueue: number;
     Event: [IEvent];
-    LightweightIndex: {"aggregate": {"SMA": SMA} | {"BloomFilter": BloomFilter}, "projector_sequence": "Mono" | "Empty" | {"Slice": number[]}};
+    LightweightIndex:LightweightIndex;
     LogicalBlockSize: number;
     MacroBlockSize: "l" | "p" | number;
     MacroBlockSpare: number;
@@ -126,7 +143,7 @@ export type StreamConfig = {
     MacroBlocksCache: number;
     NodesCache: number;
     Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta";
-    CompressorExtras: {"I32": number | "None"};
+    CompressorExtras: {"Lz4Level": number | "None"};
     RiverThreads: number | string;
     MaxDeltaQueue: number;
 };
@@ -160,7 +177,7 @@ export const DefaultStreamConfig: StreamConfig = {
   MacroBlocksCache: 2500,
   NodesCache: 3000,
   Compressor: "LZ4_Fast_No_Meta",
-  CompressorExtras: { I32: 12 },
+  CompressorExtras: { Lz4Level: 12 },
   RiverThreads: "t",
   MaxDeltaQueue: 10,
 };

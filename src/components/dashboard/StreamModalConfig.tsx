@@ -11,6 +11,7 @@ import {
   EventNames,
   HashFunction,
   IEvent,
+  LightweightIndex,
   StreamConfig,
 } from "../../types/types";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
@@ -24,6 +25,7 @@ import {
 } from "@heroicons/react/solid";
 import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
+import { count } from "console";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -40,7 +42,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
   const [tooltipstatus, setTooltipStatus] = useState(0);
-
+  const [currentIndex, setIndex] = useState<LightweightIndex>();
   const [lightweightIndexType, setLightweightIndexType] = useState<
     "SMA" | "BloomFilter"
   >("SMA");
@@ -49,14 +51,45 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     sum: number;
     min: number;
     max: number;
-  }>({ cnt: 0, sum: 0, min: 0, max: 0 });
+    avg: number;
+  }>({ cnt: 0, sum: 0, min: 0, max: 0 , avg:0});
   const [currentBloomFilter, setCurrentBloomFilter] = useState<{
     count: number;
     k: number;
   }>({ count: 0, k: 0 });
-  const [currentHashFunctions, setCurrentHashFunctions] = useState<
-    HashFunction[]
+  const [currentHashFunctions, setCurrentHashFunctions] = useState<HashFunction[]
   >([]);
+  const [currentProjector, setCurrentProjector] = useState<"Mono" |"Empty" | {"Slice":number[]}>("Mono");
+  const [bloomFilter, setBloomFilter] = useState<{
+    bit_set: {bit_array: number[]},
+    hash_functions: HashFunction[],
+  }>({
+    bit_set: {bit_array: [0]},
+    hash_functions: currentHashFunctions,
+  });
+
+  useEffect(() => {
+    var bitArray:number[]=[0];
+    if (bloomFilter.bit_set.bit_array.length < currentBloomFilter.count) {
+      for (let step= bloomFilter.bit_set.bit_array.length; step<currentBloomFilter.count; step++) {
+        console.log("entering the loop. ")
+        bloomFilter.bit_set.bit_array.push(0);
+        console.log(bloomFilter.bit_set.bit_array);
+      }
+    }
+    
+    if (bloomFilter.hash_functions.length < currentBloomFilter.k) {
+      console.log("setting BloomFilter hash functions");
+      bloomFilter.hash_functions = currentHashFunctions;
+      console.log(bloomFilter);
+    }
+    let aggregate = lightweightIndexType === "BloomFilter" ? { "BloomFilter":bloomFilter} :{"SMA" : currentSMA};
+    let projector_sequence = currentProjector;
+    if (aggregate && projector_sequence) {
+      console.log("setting the Index");
+      setIndex({aggregate,projector_sequence})
+    }
+  },[currentBloomFilter,currentHashFunctions,lightweightIndexType,currentProjector,bloomFilter,currentSMA])
 
   useEffect(() => {
     // @ts-ignore
@@ -71,11 +104,12 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     }
   }, [eventType, dataType, storage, data]);
 
+
   useEffect(() => {
     console.log(
       currentHashFunctions.length,
       currentBloomFilter.k,
-      currentHashFunctions
+      currentHashFunctions,
     );
     if (currentBloomFilter.k == 0) {
       setCurrentHashFunctions([]);
@@ -98,6 +132,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       setCurrentHashFunctions(temp);
     }
   }, [currentBloomFilter]);
+
+  useEffect(() => {
+    if (currentIndex) {
+      console.log("setting Index in Stream");
+      setConfigState({...configState, LightweightIndex:currentIndex});
+      console.log(currentIndex);
+    }
+  },[currentIndex])
 
   useEffect(() => {
     let eventToSend =
@@ -301,7 +343,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 htmlFor="data"
                 className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
               >
-                Data
+                Data file
               </label>
               <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
@@ -746,94 +788,50 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
+                    <div className="sm:mt-0 sm:col-span-2">
+                      <label
+                        htmlFor="hfcount"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Projector Sequence
+                      </label>
+                      <input
+                        id="hfcount"
+                        type="number"
+                        name="hfcount"
+                        value={1}
+                        onChange={(event) => {
+                          var projectorArray:number[]=[]
+                          projectorArray.push(parseInt(event.target.value))
+                          setCurrentProjector({
+                            "Slice" : projectorArray
+                          })
+                        }}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
-                    <div className="sm:mt-0 sm:col-span-1">
+                    <div className="sm:mt-0 sm:col-span-4">
                       <label
-                        htmlFor="smacnt"
+                        htmlFor="hfcount"
                         className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                       >
-                        Count
+                        Projector Sequence
                       </label>
                       <input
-                        id="smacnt"
+                        id="hfcount"
                         type="number"
-                        name="smacnt"
-                        value={currentSMA?.cnt}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            cnt: parseInt(event.target.value) || 0,
+                        name="hfcount"
+                        value={0}
+                        onChange={(event) => {
+                          var projectorArray:number[]=[]
+                          projectorArray.push(parseInt(event.target.value))
+                          setCurrentProjector({
+                            "Slice" : projectorArray
                           })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smasum"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Sum
-                      </label>
-                      <input
-                        id="smasum"
-                        type="number"
-                        name="smasum"
-                        value={currentSMA?.sum}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            sum: parseInt(event.target.value) || 0,
-                          })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smamin"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Min
-                      </label>
-                      <input
-                        id="smamin"
-                        type="number"
-                        name="smamin"
-                        value={currentSMA?.min}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            min: parseInt(event.target.value) || 0,
-                          })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smamax"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Max
-                      </label>
-                      <input
-                        id="smamax"
-                        type="number"
-                        name="smamax"
-                        value={currentSMA?.max}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            max: parseInt(event.target.value) || 0,
-                          })
-                        }
+                        }}
                         className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -1686,10 +1684,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         onClick={() =>
                           setConfigState({
                             ...configState,
-                            CompressorExtras: { I32: "None" },
+                            CompressorExtras: { Lz4Level: "None" },
                           })
                         }
-                        checked={configState.CompressorExtras.I32 === "None"}
+                        checked={configState.CompressorExtras.Lz4Level === "None"}
                         className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                       />
                       <label
@@ -1708,11 +1706,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           setConfigState({
                             ...configState,
                             CompressorExtras: {
-                              I32: DefaultStreamConfig.CompressorExtras.I32,
+                              Lz4Level: DefaultStreamConfig.CompressorExtras.Lz4Level,
                             },
                           })
                         }
-                        checked={!(configState.CompressorExtras.I32 === "None")}
+                        checked={!(configState.CompressorExtras.Lz4Level === "None")}
                         className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                       />
                       <label
@@ -1723,17 +1721,17 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           type="number"
                           name="compressor-extras-int"
                           id="compressor-extras-int"
-                          value={configState.CompressorExtras.I32}
+                          value={configState.CompressorExtras.Lz4Level}
                           onChange={(e) =>
                             setConfigState({
                               ...configState,
                               CompressorExtras: {
-                                I32: parseInt(e.target.value),
+                                Lz4Level: parseInt(e.target.value),
                               },
                             })
                           }
                           className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                          placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
+                          placeholder={DefaultStreamConfig.CompressorExtras.Lz4Level.toString()}
                         />
                       </label>
                     </div>
