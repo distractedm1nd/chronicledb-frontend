@@ -59,7 +59,7 @@ export default function Dashboard() {
   }, [modalOpen]);
 
   useEffect(() => {
-    availableStreams.forEach(stream => {fetchMinKey(stream[0]); fetchMaxKey(stream[0])});
+    fetchExtraStreamInfo(availableStreams);
   }, [availableStreams])
 
   const fetchStreams = () => {
@@ -78,22 +78,25 @@ export default function Dashboard() {
       .catch((error) => console.log("error", error));
   };
 
-  const fetchMinKey = (streamId: number) => {
-    fetch(`${ip}/min_key/${streamId}`)
-        .then(res => res.text())
-        .then(res => setExtraStreamInfo(
-            {...extraStreamInfo, 0: {...extraStreamInfo[streamId], "min_key": res}}
-        )
-    )
-  };
+  const fetchExtraStreamInfo = async (streams: any[]) => {
+    let extraInfo: {[key in number]: object} = {};
+    for (const stream of streams) {
+      const streamId = stream[0];
+      let min_key, max_key;
+      min_key = await fetchStreamAttribute(streamId, "min_key");
+      max_key = await fetchStreamAttribute(streamId, "max_key");
 
-  const fetchMaxKey = (streamId: number) => {
-    fetch(`${ip}/max_key/${streamId}`)
-        .then(res => res.text())
-        .then(res => setExtraStreamInfo(
-                {...extraStreamInfo, 0: {...extraStreamInfo[streamId], "max_key": res}}
-            )
-        )
+      extraInfo[streamId] = {
+        "max_key": max_key,
+        "min_key": min_key
+      }
+    }
+
+    setExtraStreamInfo(extraInfo);
+  }
+
+  const fetchStreamAttribute = async (streamId: number, attribute: string) => {
+    return await fetch(`${ip}/${attribute}/${streamId}`).then(res => res.text());
   };
 
   const fetchSystemInfo = () => {
@@ -460,10 +463,10 @@ export default function Dashboard() {
                             </button>
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
-                            {extraStreamInfo[stream[0]] && "min_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"]}
+                            {extraStreamInfo[stream[0]] && "min_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"] || "Undefined"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
-                            {extraStreamInfo[stream[0]] && "max_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"] || "Undefined"}
+                            {extraStreamInfo[stream[0]] && "max_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["max_key"] || "Undefined"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-normal">
                             <span className="relative inline-flex shadow-sm rounded-md">
