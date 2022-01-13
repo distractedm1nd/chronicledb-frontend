@@ -49,6 +49,7 @@ export default function Dashboard() {
   const [modalTitle, setModalTitle] = useState("Loading...");
 
   const StreamDropdownItems = [
+    { name: "Show Right Flank", onClick: (streamId: number) => {fetchRightFlank(streamId)} },
     { name: "Query Time Travel", onClick: (streamId: number) => {} },
     { name: "Insert Ordered", onClick: (streamId: number) => {setCurrentStream(streamId); setInsertEventModalOpen(true);}},
     { name: "Insert Ordered Array", onClick: (streamId: number) => {} },
@@ -82,13 +83,15 @@ export default function Dashboard() {
     let extraInfo: {[key in number]: object} = {};
     for (const stream of streams) {
       const streamId = stream[0];
-      let min_key, max_key;
+      let min_key, max_key, tree_height;
       min_key = await fetchStreamAttribute(streamId, "min_key");
       max_key = await fetchStreamAttribute(streamId, "max_key");
+      tree_height = await fetchTreeHeight(streamId);
 
       extraInfo[streamId] = {
         "max_key": max_key,
-        "min_key": min_key
+        "min_key": min_key,
+        "tree_height": tree_height
       }
     }
 
@@ -98,6 +101,19 @@ export default function Dashboard() {
   const fetchStreamAttribute = async (streamId: number, attribute: string) => {
     return await fetch(`${ip}/${attribute}/${streamId}`).then(res => res.text());
   };
+
+  const fetchTreeHeight = async(streamId: number) => {
+    return await fetch(`${ip}/tree_height/${streamId}`).then(res => res.text());
+  }
+
+  const fetchRightFlank = async(streamId: number) => {
+    setModalTitle("Right Flank: " + streamId);
+    setInfoModalOpen(true);
+    fetch(`${ip}/show_right_flank/${streamId}`)
+        .then((response) => response.text())
+        .then((result) => setModalBody(result))
+        .catch((error) => console.log("error", error));
+  }
 
   const fetchSystemInfo = () => {
     setModalTitle("System Info");
@@ -410,6 +426,9 @@ export default function Dashboard() {
                           Info
                         </th>
                         <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tree Height
+                        </th>
+                        <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Min Key
                         </th>
                         <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -461,6 +480,9 @@ export default function Dashboard() {
                             >
                               Show Info
                             </button>
+                          </td>
+                          <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
+                            {extraStreamInfo[stream[0]] && "tree_height" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["tree_height"] || "Undefined"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-right text-gray-700 text-xs font-normal">
                             {extraStreamInfo[stream[0]] && "min_key" in extraStreamInfo[stream[0]] && extraStreamInfo[stream[0]]["min_key"] || "Undefined"}
