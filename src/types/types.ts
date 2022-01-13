@@ -86,7 +86,8 @@ export enum StreamConfigKey {
   MacroBlockBatchAllocation = "MacroBlock batch allocation",
   MacroBlocksCache = "MacroBlocks cache",
   NodesCache = "Nodes cache",
-  Compressor = "Compressor",
+  LeafCompressor = "Leaf Compressor",
+  IndexCompressor = "Index Compressor",
   CompressorExtras = "Compressor extras",
   RiverThreads = "River threads",
   MaxDeltaQueue = "Max delta queue",
@@ -126,6 +127,12 @@ export type LightweightIndex = {
     "projector_sequence": "Mono" | "Empty" | {"Slice":number[]},
 }
 
+export type extrasCollection = compressorExtras[]
+
+export type compressorExtras =  {"Sprintz": [boolean,number,boolean]} | {"Lz4Level": number} | "None";
+
+export type compressor = "None" | "LZ4_Fast_No_Meta" |"LZ4_Fast_With_Meta" | "Sprintz";
+
 export type StreamConfig = {
     Log: boolean;
     Debug: boolean;
@@ -142,8 +149,9 @@ export type StreamConfig = {
     MacroBlockBatchAllocation: number;
     MacroBlocksCache: number;
     NodesCache: number;
-    Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta";
-    CompressorExtras: {"Lz4Level": number | "None"};
+    LeafCompressor: string;
+    IndexCompressor: string;
+    CompressorExtras: extrasCollection;
     RiverThreads: number | string;
     MaxDeltaQueue: number;
 };
@@ -154,7 +162,7 @@ export const DefaultStreamConfig: StreamConfig = {
   Data: ["data0"],
   Boot: ".boot",
   Translation: "translation",
-  MultipleDiskMaxQueue: 100,
+  MultipleDiskMaxQueue: 10,
   Event: [
     {
       VarCompound: [
@@ -167,17 +175,18 @@ export const DefaultStreamConfig: StreamConfig = {
   ],
   LightweightIndex: {
     aggregate: { SMA: { cnt: 0, sum: 0.0, min: 0.0, max: 0.0 } },
-    projector_sequence: "Mono",
+    projector_sequence: {"Slice":[0]},
   },
-  LogicalBlockSize: 8192,
+  LogicalBlockSize: 32768,
   MacroBlockSize: 10,
   MacroBlockSpare: 0.1,
   MacroBlockPreallocation: 300,
   MacroBlockBatchAllocation: 300,
   MacroBlocksCache: 2500,
-  NodesCache: 3000,
-  Compressor: "LZ4_Fast_No_Meta",
-  CompressorExtras: { Lz4Level: 12 },
+  NodesCache: 10000,
+  LeafCompressor:"None",
+  IndexCompressor: "None",
+  CompressorExtras: ['None','None'],
   RiverThreads: "t",
   MaxDeltaQueue: 10,
 };
