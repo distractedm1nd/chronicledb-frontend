@@ -28,6 +28,7 @@ import {
 import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
 import { count } from "console";
+import { config } from "process";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -36,11 +37,8 @@ export interface IStreamModalConfig {
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
   let { configState, setConfigState } = props;
-  const [indexCompressor, setIndexCompressor] = useState<string>("None");
-  const [leafCompressor, setLeafCompressor] = useState<string>("None");
   const [leafCompressorExtras, setLeafCompressorExtras] = useState<compressorExtras>("None");
   const [indexCompressorExtras, setIndexCompressorExtras] = useState<compressorExtras>("None");
-  const [compressorExtras, setCompressorExtras] = useState<[compressorExtras,compressorExtras]>(["None","None"]);
   const [lz4LevelCompressor, setLz4LevelCompressor] = useState<number>(12);
   const [eventType, setEventType] = useState<string>("Raw");
   const [dataType, setDataType] = useState<string>("Integer");
@@ -79,21 +77,17 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     var bitArray:number[]=[0];
     if (bloomFilter.bit_set.bit_array.length < currentBloomFilter.count) {
       for (let step= bloomFilter.bit_set.bit_array.length; step<currentBloomFilter.count; step++) {
-        console.log("entering the loop. ")
         bloomFilter.bit_set.bit_array.push(0);
-        console.log(bloomFilter.bit_set.bit_array);
       }
     }
     
     if (bloomFilter.hash_functions.length < currentBloomFilter.k) {
-      console.log("setting BloomFilter hash functions");
       bloomFilter.hash_functions = currentHashFunctions;
-      console.log(bloomFilter);
     }
     let aggregate = lightweightIndexType === "BloomFilter" ? { "BloomFilter":bloomFilter} :{"SMA" : currentSMA};
     let projector_sequence = currentProjector;
     if (aggregate && projector_sequence) {
-      console.log("setting the Index");
+
       setIndex({aggregate,projector_sequence})
     }
   },[currentBloomFilter,currentHashFunctions,lightweightIndexType,currentProjector,bloomFilter,currentSMA])
@@ -111,13 +105,27 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     }
   }, [eventType, dataType, storage, data]);
 
+  useEffect(() => {
+    console.log("Analyzing Compressor: ");
+    console.log("the after value of Compressor: " + configState.LeafCompressor + " " + configState.IndexCompressor);
+
+    if(configState.LeafCompressor === "LZ4_Fast_No_Meta")
+
+    if (indexCompressorExtras || leafCompressorExtras) {
+      console.log("Analyzing Extra Compressors: ");
+      setConfigState({
+        ...configState,
+        CompressorExtras: [leafCompressorExtras,indexCompressorExtras]
+      });
+
+      console.log("Extras : " + configState.CompressorExtras)
+    }
+
+    console.log(configState);
+  },[indexCompressorExtras,leafCompressorExtras])
+
 
   useEffect(() => {
-    console.log(
-      currentHashFunctions.length,
-      currentBloomFilter.k,
-      currentHashFunctions,
-    );
     if (currentBloomFilter.k == 0) {
       setCurrentHashFunctions([]);
     } else if (currentHashFunctions.length > currentBloomFilter.k) {
@@ -142,9 +150,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
 
   useEffect(() => {
     if (currentIndex) {
-      console.log("setting Index in Stream");
       setConfigState({...configState, LightweightIndex:currentIndex});
-      console.log(currentIndex);
     }
   },[currentIndex])
 
@@ -1436,12 +1442,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     id="leafCrompressor"
                     name="leafCompressor"
                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                    value={leafCompressor}
+                    value={configState.LeafCompressor}
                     onChange={(event) => {
-                      setLeafCompressor(event.target.value);
                       setConfigState({
                         ...configState,
-                        LeafCompressor: leafCompressor,
+                        LeafCompressor : event.target.value,
                       });
                     }                        
                   }
@@ -1463,13 +1468,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     id="indexCompressor"
                     name="indexCompressor"
                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                    value={indexCompressor}
+                    value={configState.IndexCompressor}
                     onChange={(event) => {
-                      //@ts-ignore
-                      setIndexCompressor(event.target.value);
                       setConfigState({
                         ...configState,
-                        IndexCompressor: indexCompressor,
+                        IndexCompressor : event.target.value,
                       });
                     }}
                   >
@@ -1479,7 +1482,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     <option>Sprintz</option>
                   </select>
                 </div>
-                {leafCompressor === "LZ4_Fast_No_Meta" || leafCompressor === "LZ4_Fast_With_Meta" ? (
+                {configState.LeafCompressor === "LZ4_Fast_No_Meta" || configState.LeafCompressor === "LZ4_Fast_With_Meta" ? (
                   <React.Fragment>
                     <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
@@ -1487,36 +1490,31 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       </div>
                       <input
                         type="number"
-                        name="lz4Level"
-                        id="lz4Level"
+                        name="lz4Level-leafCompressor"
+                        id="lz4Level-leafCompressor"
                         value={lz4LevelCompressor}
                         className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
-                        placeholder="12"
                         onChange={(event) => {
-                          setLz4LevelCompressor(parseInt(event.target.value));
-                          setLeafCompressorExtras({"Lz4Level": lz4LevelCompressor})
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: [leafCompressorExtras,indexCompressorExtras]
-                          })
+                          setLz4LevelCompressor(parseInt(event.target.value))
+                          setLeafCompressorExtras({"Lz4Level": parseInt(event.target.value)});
                         }} 
                       />
                     </div>
                   </React.Fragment>
                 ):(<React.Fragment>
-                  {leafCompressor === "Sprintz" ? (
+                  {configState.LeafCompressor === "Sprintz" ? (
                   <React.Fragment>
                     <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                       <label
-                      htmlFor="Sprintz"
+                      htmlFor="Sprintz-leafCompressor"
                       className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
                       >
                         Sprintz Extras
                       </label>
                       <input
                         type="text"
-                        name="Sprintz"
-                        id="Sprintz"
+                        name="Sprintz-leafCompressor"
+                        id="Sprintz-leaf-Compressor"
                         className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
                         placeholder="i.e. (true,12,false)"
                         value="true,12,false"
@@ -1528,7 +1526,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   )}
                   </React.Fragment>)
                 }
-                {indexCompressor === "LZ4_Fast_No_Meta" || indexCompressor === "LZ4_Fast_With_Meta" ? (
+                {configState.IndexCompressor === "LZ4_Fast_No_Meta" || configState.IndexCompressor === "LZ4_Fast_With_Meta" ? (
                   <React.Fragment>
                     <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
@@ -1536,36 +1534,31 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       </div>
                       <input
                         type="number"
-                        name="lz4Level"
-                        id="lz4Level"
+                        name="lz4Level-indexCompressor"
+                        id="lz4Level-indexCompressor"
                         className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
-                        placeholder="12"
                         value={lz4LevelCompressor}
                         onChange={(event) => {
                           setLz4LevelCompressor(parseInt(event.target.value));
-                          setIndexCompressorExtras({"Lz4Level":lz4LevelCompressor});
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: [leafCompressorExtras,indexCompressorExtras]
-                          })
+                          setIndexCompressorExtras({"Lz4Level": parseInt(event.target.value)});
                         }}
                       />
                     </div>
                   </React.Fragment>
                 ):(<React.Fragment>
-                  {indexCompressor === "Sprintz" ? (
+                  {configState.IndexCompressor === "Sprintz" ? (
                   <React.Fragment>
                     <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                       <label
-                      htmlFor="Sprintz"
+                      htmlFor="Sprintz-indexCompressor"
                       className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
                       >
                         Sprintz Extras
                       </label>
                       <input
                         type="text"
-                        name="Sprintz"
-                        id="Sprintz"
+                        name="Sprintz-indexCompressor"
+                        id="Sprintz-indexCompressor"
                         className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
                         placeholder="i.e. (true,12,false)"
                       />
