@@ -39,7 +39,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   let { configState, setConfigState } = props;
   const [leafCompressorExtras, setLeafCompressorExtras] = useState<compressorExtras>("None");
   const [indexCompressorExtras, setIndexCompressorExtras] = useState<compressorExtras>("None");
-  const [lz4LevelCompressor, setLz4LevelCompressor] = useState<number>(12);
+  const [leafLz4LevelCompressor, setLeafLz4LevelCompressor] = useState<number>(12);
+  const [IndexLz4LevelCompressor, setIndexLz4LevelCompressor] = useState<number>(12);
+  const [leafSprintzValue, setLeafSprintzValue] = useState<string>("true,12,false");
+  const [indexSprintzValue, setIndexSprintzValue] = useState<string>("true,12,false");
   const [eventType, setEventType] = useState<string>("Raw");
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
@@ -108,8 +111,6 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   useEffect(() => {
     console.log("Analyzing Compressor: ");
     console.log("the after value of Compressor: " + configState.LeafCompressor + " " + configState.IndexCompressor);
-
-    if(configState.LeafCompressor === "LZ4_Fast_No_Meta")
 
     if (indexCompressorExtras || leafCompressorExtras) {
       console.log("Analyzing Extra Compressors: ");
@@ -1492,10 +1493,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         type="number"
                         name="lz4Level-leafCompressor"
                         id="lz4Level-leafCompressor"
-                        value={lz4LevelCompressor}
+                        value={leafLz4LevelCompressor}
                         className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
                         onChange={(event) => {
-                          setLz4LevelCompressor(parseInt(event.target.value))
+                          setLeafLz4LevelCompressor(parseInt(event.target.value))
                           setLeafCompressorExtras({"Lz4Level": parseInt(event.target.value)});
                         }} 
                       />
@@ -1516,8 +1517,37 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="Sprintz-leafCompressor"
                         id="Sprintz-leaf-Compressor"
                         className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-                        placeholder="i.e. (true,12,false)"
-                        value="true,12,false"
+                        value={leafSprintzValue}
+                        onChange={(event) => {
+                          setLeafSprintzValue(event.target.value);
+                          console.log("Sprintz input value: " + event.target.value);
+                          let sprintzKeys = event.target.value.split(',');
+                          console.log("Sprintz keys array: " + sprintzKeys);
+                          let sprintzValues = [];
+                          if (sprintzKeys.length === 3) {
+                            
+                            for (let i = 0; i < sprintzKeys.length; i++) {
+                              switch (sprintzKeys[i]) {
+                                case "true":
+                                  sprintzValues.push(true)
+                                  break;
+
+                                case "false":
+                                  sprintzValues.push(false);
+                                  break;
+                              
+                                default:
+                                  sprintzValues.push(parseInt(sprintzKeys[i]))
+                                  break;
+                              }
+                            }
+                          }
+                          console.log("Sprintz values array: "+ sprintzValues);
+                          //@ts-ignore
+                          setLeafCompressorExtras({"Sprintz": sprintzValues});
+                          console.log("executed setLeafCompressorExtras function")
+                        }
+                        }
                       />
                     </div>
                   </React.Fragment>):(
@@ -1537,9 +1567,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="lz4Level-indexCompressor"
                         id="lz4Level-indexCompressor"
                         className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
-                        value={lz4LevelCompressor}
+                        value={IndexLz4LevelCompressor}
                         onChange={(event) => {
-                          setLz4LevelCompressor(parseInt(event.target.value));
+                          setIndexLz4LevelCompressor(parseInt(event.target.value));
                           setIndexCompressorExtras({"Lz4Level": parseInt(event.target.value)});
                         }}
                       />
@@ -1560,7 +1590,37 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="Sprintz-indexCompressor"
                         id="Sprintz-indexCompressor"
                         className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-                        placeholder="i.e. (true,12,false)"
+                        value={indexSprintzValue}
+                        onChange={(event) => {
+                          setIndexSprintzValue(event.target.value);
+                          console.log("Sprintz input value: " + event.target.value);
+                          let sprintzKeys = event.target.value.split(',');
+                          console.log("Sprintz keys array: " + sprintzKeys);
+                          let sprintzValues = [];
+                          if (sprintzKeys.length === 3) {
+                            
+                            for (let i = 0; i < sprintzKeys.length; i++) {
+                              switch (sprintzKeys[i]) {
+                                case "true":
+                                  sprintzValues.push(true)
+                                  break;
+
+                                case "false":
+                                  sprintzValues.push(false);
+                                  break;
+                              
+                                default:
+                                  sprintzValues.push(parseInt(sprintzKeys[i]))
+                                  break;
+                              }
+                            }
+                          }
+                          console.log("Sprintz values array: "+ sprintzValues);
+                          //@ts-ignore
+                          setIndexCompressorExtras({"Sprintz": sprintzValues});
+                          console.log("executed setLeafCompressorExtras function")
+                        }
+                        }
                       />
                     </div>
                   </React.Fragment>):(
