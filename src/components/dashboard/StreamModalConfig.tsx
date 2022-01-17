@@ -75,6 +75,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     bit_set: {bit_array: [0]},
     hash_functions: currentHashFunctions,
   });
+  const [sliceProjector, setSliceProjector] = useState<string>("1,1")
 
   useEffect(() => {
     var bitArray:number[]=[0];
@@ -109,19 +110,12 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   }, [eventType, dataType, storage, data]);
 
   useEffect(() => {
-    console.log("Analyzing Compressor: ");
-    console.log("the after value of Compressor: " + configState.LeafCompressor + " " + configState.IndexCompressor);
-
     if (indexCompressorExtras || leafCompressorExtras) {
-      console.log("Analyzing Extra Compressors: ");
       setConfigState({
         ...configState,
         CompressorExtras: [leafCompressorExtras,indexCompressorExtras]
       });
-
-      console.log("Extras : " + configState.CompressorExtras)
     }
-
     console.log(configState);
   },[indexCompressorExtras,leafCompressorExtras])
 
@@ -812,12 +806,18 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       </label>
                       <input
                         id="hfcount"
-                        type="number"
+                        type="text"
                         name="hfcount"
-                        value={1}
+                        value={sliceProjector}
                         onChange={(event) => {
+                          setSliceProjector(event.target.value);
                           var projectorArray:number[]=[]
-                          projectorArray.push(parseInt(event.target.value))
+                          var keys = event.target.value.split(",")
+
+                          for (let i = 0; i < keys.length; i++) {
+                            projectorArray.push(parseInt(keys[i]))
+                          }
+
                           setCurrentProjector({
                             "Slice" : projectorArray
                           })
@@ -837,12 +837,18 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       </label>
                       <input
                         id="hfcount"
-                        type="number"
+                        type="text"
                         name="hfcount"
-                        value={0}
+                        value={sliceProjector}
                         onChange={(event) => {
+                          setSliceProjector(event.target.value);
                           var projectorArray:number[]=[]
-                          projectorArray.push(parseInt(event.target.value))
+                          var keys = event.target.value.split(",")
+
+                          for (let i = 0; i < keys.length; i++) {
+                            projectorArray.push(parseInt(keys[i]))
+                          }
+
                           setCurrentProjector({
                             "Slice" : projectorArray
                           })
@@ -1520,9 +1526,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         value={leafSprintzValue}
                         onChange={(event) => {
                           setLeafSprintzValue(event.target.value);
-                          console.log("Sprintz input value: " + event.target.value);
                           let sprintzKeys = event.target.value.split(',');
-                          console.log("Sprintz keys array: " + sprintzKeys);
                           let sprintzValues = [];
                           if (sprintzKeys.length === 3) {
                             
@@ -1542,10 +1546,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                               }
                             }
                           }
-                          console.log("Sprintz values array: "+ sprintzValues);
                           //@ts-ignore
                           setLeafCompressorExtras({"Sprintz": sprintzValues});
-                          console.log("executed setLeafCompressorExtras function")
                         }
                         }
                       />
@@ -1593,9 +1595,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         value={indexSprintzValue}
                         onChange={(event) => {
                           setIndexSprintzValue(event.target.value);
-                          console.log("Sprintz input value: " + event.target.value);
                           let sprintzKeys = event.target.value.split(',');
-                          console.log("Sprintz keys array: " + sprintzKeys);
                           let sprintzValues = [];
                           if (sprintzKeys.length === 3) {
                             
@@ -1615,10 +1615,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                               }
                             }
                           }
-                          console.log("Sprintz values array: "+ sprintzValues);
                           //@ts-ignore
                           setIndexCompressorExtras({"Sprintz": sprintzValues});
-                          console.log("executed setLeafCompressorExtras function")
                         }
                         }
                       />

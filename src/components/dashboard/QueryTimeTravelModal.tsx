@@ -7,6 +7,7 @@ import {DefaultStreamConfig, EventNames, IEvent} from "../../types/types";
 import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
 import Modal from "../Modal";
 import { ip } from "../../types/types";
+import TableModal from "../TableModal";
 
 type QueryTimeTravelModalProps = {
     open: boolean;
@@ -21,19 +22,24 @@ const QueryTimeTravelModal = ({open, setOpen, currentStream}: QueryTimeTravelMod
     const [margin, setMargin] = useState<string>("Exclusive");
     const [intervalStart, setIntervalStart] = useState<number>(0);
     const [intervalEnd, setIntervalEnd] = useState<number>(1);
-    const [modalBody, setModalBody] = useState("");
+    const [modalBody, setModalBody] = useState<string>("[]");
     const [modalTitle, setModalTitle] = useState("Loading...");
-    const [infoModalOpen, setInfoModalOpen] = useState(false);
+    const [infoTableModalOpen, setInfoTableModalOpen] = useState(false);
 
     const queryTimeTravel =(streamId: number, margin: string, start: number, end:number) => {
         setModalTitle("Query Time Travel: Stream " + streamId )
-        setInfoModalOpen(true);
+        setInfoTableModalOpen(true);
         fetch(`${ip}/query_time_travel/${streamId}`, {
             method:"POST",
             body: `{"${margin}": {"start":${start},"end": ${end}}}`,
         })
         .then((response) => response.text())
-        .then((result) => setModalBody(result))
+        .then((result) => {
+            setModalBody(result);
+            console.log(result);
+            //console.log(JSON.parse(result));
+        }
+        )
         .catch((error) => console.log("error", error))
     }
     
@@ -41,12 +47,12 @@ const QueryTimeTravelModal = ({open, setOpen, currentStream}: QueryTimeTravelMod
 
     return (
         <div>
-            <Modal
+            <TableModal
                 title={modalTitle}
                 body={modalBody}
                 buttonTitle={"Close"}
-                open={infoModalOpen}
-                setOpen={setInfoModalOpen}
+                open={infoTableModalOpen}
+                setOpen={setInfoTableModalOpen}
             />
             <Transition.Root show={open} as={Fragment}>
                 <Dialog
