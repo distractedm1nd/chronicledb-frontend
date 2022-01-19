@@ -1,5 +1,8 @@
 // export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
 
+import { type } from "os"
+import { TypeOfTag } from "typescript"
+
 export const EventNames = {
   "Raw": {
       "Empty": {
@@ -83,31 +86,52 @@ export enum StreamConfigKey {
   MacroBlockBatchAllocation = "MacroBlock batch allocation",
   MacroBlocksCache = "MacroBlocks cache",
   NodesCache = "Nodes cache",
-  Compressor = "Compressor",
+  LeafCompressor = "Leaf Compressor",
+  IndexCompressor = "Index Compressor",
   CompressorExtras = "Compressor extras",
   RiverThreads = "River threads",
   MaxDeltaQueue = "Max delta queue",
 }
 
-export type SMA = {
-    cnt: number
-    sum: number
-    min: number
-    max: number
-}
+
 
 export type HashFunction = {
-    a: number
-    b: number
-}
-
-export type BloomFilter = {
-    bit_set: {bit_array: number[]}
-    hash_functions: HashFunction[]
+        a: number,
+        b: number,
 }
 
 
 export type IEvent = { [EventType: string]: any };
+
+
+export type Aggregate = SMA | BloomFilter
+
+export type BloomFilter = {
+    "BloomFilter" : {
+        bit_set: {bit_array: number[]},
+        hash_functions: HashFunction[],
+    }
+}
+
+export type SMA = {
+    "SMA": {
+        cnt: number,
+        sum: number,
+        min: number,
+        max: number,
+}}
+
+
+export type LightweightIndex = {
+    "aggregate": Aggregate,
+    "projector_sequence": "Mono" | "Empty" | {"Slice":number[]},
+}
+
+export type extrasCollection = compressorExtras[]
+
+export type compressorExtras =  {"Sprintz": [boolean,number,boolean]} | {"Lz4Level": number} | "None";
+
+export type compressor = "None" | "LZ4_Fast_No_Meta" |"LZ4_Fast_With_Meta" | "Sprintz";
 
 export type StreamConfig = {
     Log: boolean;
@@ -117,7 +141,7 @@ export type StreamConfig = {
     Boot: string;
     MultipleDiskMaxQueue: number;
     Event: [IEvent];
-    LightweightIndex: {"aggregate": {"SMA": SMA} | {"BloomFilter": BloomFilter}, "projector_sequence": "Mono" | "Empty" | {"Slice": number[]}};
+    LightweightIndex:LightweightIndex;
     LogicalBlockSize: number;
     MacroBlockSize: "l" | "p" | number;
     MacroBlockSpare: number;
@@ -125,8 +149,9 @@ export type StreamConfig = {
     MacroBlockBatchAllocation: number;
     MacroBlocksCache: number;
     NodesCache: number;
-    Compressor: "none" | "LZ4_Fast_No_Meta" | "LZ4_Fast_With_Meta";
-    CompressorExtras: {"I32": number | "None"};
+    LeafCompressor: string;
+    IndexCompressor: string;
+    CompressorExtras: extrasCollection;
     RiverThreads: number | string;
     MaxDeltaQueue: number;
 };
@@ -137,7 +162,7 @@ export const DefaultStreamConfig: StreamConfig = {
   Data: ["data0"],
   Boot: ".boot",
   Translation: "translation",
-  MultipleDiskMaxQueue: 100,
+  MultipleDiskMaxQueue: 10,
   Event: [
     {
       VarCompound: [
@@ -150,17 +175,18 @@ export const DefaultStreamConfig: StreamConfig = {
   ],
   LightweightIndex: {
     aggregate: { SMA: { cnt: 0, sum: 0.0, min: 0.0, max: 0.0 } },
-    projector_sequence: "Mono",
+    projector_sequence: {"Slice":[0]},
   },
-  LogicalBlockSize: 8192,
+  LogicalBlockSize: 32768,
   MacroBlockSize: 10,
   MacroBlockSpare: 0.1,
   MacroBlockPreallocation: 300,
   MacroBlockBatchAllocation: 300,
   MacroBlocksCache: 2500,
-  NodesCache: 3000,
-  Compressor: "LZ4_Fast_No_Meta",
-  CompressorExtras: { I32: 12 },
+  NodesCache: 10000,
+  LeafCompressor:"None",
+  IndexCompressor: "None",
+  CompressorExtras: ['None','None'],
   RiverThreads: "t",
   MaxDeltaQueue: 10,
 };

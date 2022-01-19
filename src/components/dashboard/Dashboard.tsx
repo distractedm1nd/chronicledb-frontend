@@ -22,6 +22,7 @@ import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
 import InsertEventModal from "./InsertEventModal";
+import QueryTimeTravelModal from "./QueryTimeTravelModal";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -45,12 +46,13 @@ export default function Dashboard() {
   const [extraStreamInfo, setExtraStreamInfo] = useState<{[key in number]: any}>({});
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
+  const [queryTimeTravelModalOpen, setQueryTimeTravelModalOpen] = useState(false);
   const [modalBody, setModalBody] = useState("");
   const [modalTitle, setModalTitle] = useState("Loading...");
 
   const StreamDropdownItems = [
     { name: "Show Right Flank", onClick: (streamId: number) => {fetchRightFlank(streamId)} },
-    { name: "Query Time Travel", onClick: (streamId: number) => {} },
+    { name: "Query Time Travel", onClick: (streamId: number) => {setCurrentStream(streamId); setQueryTimeTravelModalOpen(true) } },
     { name: "Insert Ordered", onClick: (streamId: number) => {setCurrentStream(streamId); setInsertEventModalOpen(true);}},
     { name: "Insert Ordered Array", onClick: (streamId: number) => {} },
   ];
@@ -78,6 +80,15 @@ export default function Dashboard() {
       .then((result) => setModalBody(result))
       .catch((error) => console.log("error", error));
   };
+
+  const fetchQueryTimeTravel = (streamId: number) => {
+    setModalTitle("Query Time Travel: " + streamId);
+    setQueryTimeTravelModalOpen(true);
+    fetch(`${ip}/query_time_travel/${streamId}`)
+    .then((response) => response.text())
+    .then((result) => setModalBody(result))
+    .catch((error) => console.log("error", error));
+  }
 
   const fetchExtraStreamInfo = async (streams: any[]) => {
     let extraInfo: {[key in number]: object} = {};
@@ -132,6 +143,7 @@ export default function Dashboard() {
           setOpen={(val) => setModalState(val)}
         />
         <InsertEventModal open={insertEventModalOpen} setOpen={setInsertEventModalOpen} currentStream={currentStream}/>
+        <QueryTimeTravelModal open={queryTimeTravelModalOpen} setOpen={setQueryTimeTravelModalOpen} currentStream={currentStream}/>
         <Modal
           title={modalTitle}
           body={modalBody}

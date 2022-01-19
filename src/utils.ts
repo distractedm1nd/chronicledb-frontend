@@ -5,7 +5,9 @@ export const nameof = <T>(name: keyof T) => name;
 export const configToINI = (config: StreamConfig): string => {
     let body: string = "";
     for (const [key, value] of Object.entries(config)) {
-        if(Array.isArray(value)) {
+        if (key == "CompressorExtras") {
+            body += `${StreamConfigKey[key]} = ${interpolate(value)}\n`;
+        } else if(Array.isArray(value)) {
             value.forEach(x => {
                 // @ts-ignore
                 body += `${StreamConfigKey[key]} = ${interpolate(x)}\n`;

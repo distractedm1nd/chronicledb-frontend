@@ -7,10 +7,13 @@ import React, {
 } from "react";
 import {
   BloomFilter,
+  compressor,
+  compressorExtras,
   DefaultStreamConfig,
   EventNames,
   HashFunction,
   IEvent,
+  LightweightIndex,
   StreamConfig,
 } from "../../types/types";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
@@ -24,6 +27,8 @@ import {
 } from "@heroicons/react/solid";
 import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
+import { count } from "console";
+import { config } from "process";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -32,6 +37,12 @@ export interface IStreamModalConfig {
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
   let { configState, setConfigState } = props;
+  const [leafCompressorExtras, setLeafCompressorExtras] = useState<compressorExtras>("None");
+  const [indexCompressorExtras, setIndexCompressorExtras] = useState<compressorExtras>("None");
+  const [leafLz4LevelCompressor, setLeafLz4LevelCompressor] = useState<number>(12);
+  const [IndexLz4LevelCompressor, setIndexLz4LevelCompressor] = useState<number>(12);
+  const [leafSprintzValue, setLeafSprintzValue] = useState<string>("true,12,false");
+  const [indexSprintzValue, setIndexSprintzValue] = useState<string>("true,12,false");
   const [eventType, setEventType] = useState<string>("Raw");
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
@@ -40,7 +51,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
   const [tooltipstatus, setTooltipStatus] = useState(0);
-
+  const [currentIndex, setIndex] = useState<LightweightIndex>();
   const [lightweightIndexType, setLightweightIndexType] = useState<
     "SMA" | "BloomFilter"
   >("SMA");
@@ -49,14 +60,41 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     sum: number;
     min: number;
     max: number;
-  }>({ cnt: 0, sum: 0, min: 0, max: 0 });
+  }>({ cnt: 0, sum: 0, min: 0, max: 0});
   const [currentBloomFilter, setCurrentBloomFilter] = useState<{
     count: number;
     k: number;
   }>({ count: 0, k: 0 });
-  const [currentHashFunctions, setCurrentHashFunctions] = useState<
-    HashFunction[]
+  const [currentHashFunctions, setCurrentHashFunctions] = useState<HashFunction[]
   >([]);
+  const [currentProjector, setCurrentProjector] = useState<"Mono" |"Empty" | {"Slice":number[]}>({"Slice":[0]});
+  const [bloomFilter, setBloomFilter] = useState<{
+    bit_set: {bit_array: number[]},
+    hash_functions: HashFunction[],
+  }>({
+    bit_set: {bit_array: [0]},
+    hash_functions: currentHashFunctions,
+  });
+  const [sliceProjector, setSliceProjector] = useState<string>("1,1")
+
+  useEffect(() => {
+    var bitArray:number[]=[0];
+    if (bloomFilter.bit_set.bit_array.length < currentBloomFilter.count) {
+      for (let step= bloomFilter.bit_set.bit_array.length; step<currentBloomFilter.count; step++) {
+        bloomFilter.bit_set.bit_array.push(0);
+      }
+    }
+    
+    if (bloomFilter.hash_functions.length < currentBloomFilter.k) {
+      bloomFilter.hash_functions = currentHashFunctions;
+    }
+    let aggregate = lightweightIndexType === "BloomFilter" ? { "BloomFilter":bloomFilter} :{"SMA" : currentSMA};
+    let projector_sequence = currentProjector;
+    if (aggregate && projector_sequence) {
+
+      setIndex({aggregate,projector_sequence})
+    }
+  },[currentBloomFilter,currentHashFunctions,lightweightIndexType,currentProjector,bloomFilter,currentSMA])
 
   useEffect(() => {
     // @ts-ignore
@@ -72,11 +110,17 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   }, [eventType, dataType, storage, data]);
 
   useEffect(() => {
-    console.log(
-      currentHashFunctions.length,
-      currentBloomFilter.k,
-      currentHashFunctions
-    );
+    if (indexCompressorExtras || leafCompressorExtras) {
+      setConfigState({
+        ...configState,
+        CompressorExtras: [leafCompressorExtras,indexCompressorExtras]
+      });
+    }
+    console.log(configState);
+  },[indexCompressorExtras,leafCompressorExtras])
+
+
+  useEffect(() => {
     if (currentBloomFilter.k == 0) {
       setCurrentHashFunctions([]);
     } else if (currentHashFunctions.length > currentBloomFilter.k) {
@@ -98,6 +142,12 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       setCurrentHashFunctions(temp);
     }
   }, [currentBloomFilter]);
+
+  useEffect(() => {
+    if (currentIndex) {
+      setConfigState({...configState, LightweightIndex:currentIndex});
+    }
+  },[currentIndex])
 
   useEffect(() => {
     let eventToSend =
@@ -301,7 +351,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 htmlFor="data"
                 className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
               >
-                Data
+                Data file
               </label>
               <div className="mt-1 relative rounded-md shadow-sm sm:col-span-1">
                 <div className="mt-1 relative sm:mt-0">
@@ -674,6 +724,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 ))}
               </div>
             </div>
+            
             <div className="sm:border-t sm:border-gray-200 sm:pt-5">
               <p className="font-bold">Lightweight Indexes</p>
               {/* TODO: Add Indexes to array */}
@@ -746,94 +797,62 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
+                    <div className="sm:mt-0 sm:col-span-2">
+                      <label
+                        htmlFor="hfcount"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                      >
+                        Projector Sequence
+                      </label>
+                      <input
+                        id="hfcount"
+                        type="text"
+                        name="hfcount"
+                        value={sliceProjector}
+                        onChange={(event) => {
+                          setSliceProjector(event.target.value);
+                          var projectorArray:number[]=[]
+                          var keys = event.target.value.split(",")
+
+                          for (let i = 0; i < keys.length; i++) {
+                            projectorArray.push(parseInt(keys[i]))
+                          }
+
+                          setCurrentProjector({
+                            "Slice" : projectorArray
+                          })
+                        }}
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
-                    <div className="sm:mt-0 sm:col-span-1">
+                    <div className="sm:mt-0 sm:col-span-4">
                       <label
-                        htmlFor="smacnt"
+                        htmlFor="hfcount"
                         className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                       >
-                        Count
+                        Projector Sequence
                       </label>
                       <input
-                        id="smacnt"
-                        type="number"
-                        name="smacnt"
-                        value={currentSMA?.cnt}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            cnt: parseInt(event.target.value) || 0,
+                        id="hfcount"
+                        type="text"
+                        name="hfcount"
+                        value={sliceProjector}
+                        onChange={(event) => {
+                          setSliceProjector(event.target.value);
+                          var projectorArray:number[]=[]
+                          var keys = event.target.value.split(",")
+
+                          for (let i = 0; i < keys.length; i++) {
+                            projectorArray.push(parseInt(keys[i]))
+                          }
+
+                          setCurrentProjector({
+                            "Slice" : projectorArray
                           })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smasum"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Sum
-                      </label>
-                      <input
-                        id="smasum"
-                        type="number"
-                        name="smasum"
-                        value={currentSMA?.sum}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            sum: parseInt(event.target.value) || 0,
-                          })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smamin"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Min
-                      </label>
-                      <input
-                        id="smamin"
-                        type="number"
-                        name="smamin"
-                        value={currentSMA?.min}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            min: parseInt(event.target.value) || 0,
-                          })
-                        }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div className="sm:mt-0 sm:col-span-1">
-                      <label
-                        htmlFor="smamax"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
-                      >
-                        Max
-                      </label>
-                      <input
-                        id="smamax"
-                        type="number"
-                        name="smamax"
-                        value={currentSMA?.max}
-                        onChange={(event) =>
-                          currentSMA &&
-                          setCurrentSMA({
-                            ...currentSMA,
-                            max: parseInt(event.target.value) || 0,
-                          })
-                        }
+                        }}
                         className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -1416,330 +1435,199 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
-                htmlFor="compressor"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-              >
-                Compressor
-              </label>
-              <div className="mt-4 space-y-4 col-span-2">
-                <div>
-                  <div className="flex items-center">
-                    <input
-                      id="compressor-none"
-                      name="compressor"
-                      type="radio"
-                      onMouseEnter={() => setTooltipStatus(13)}
-                      onMouseLeave={() => setTooltipStatus(0)}
-                      onClick={() =>
-                        setConfigState({ ...configState, Compressor: "none" })
-                      }
-                      checked={configState.Compressor === "none"}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                    />
-                    <label
-                      htmlFor="compressor-none"
-                      className="ml-3 block text-sm font-medium text-gray-700"
-                    >
-                      none
-                    </label>
-                    {tooltipstatus == 13 && (
-                      <div
-                        role="tooltip"
-                        className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded"
-                      >
-                        <svg
-                          className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                          width="9px"
-                          height="16px"
-                          viewBox="0 0 9 16"
-                          version="1.1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g
-                            id="Page-1"
-                            stroke="none"
-                            strokeWidth={1}
-                            fill="none"
-                            fillRule="evenodd"
-                          >
-                            <g
-                              id="Tooltips-"
-                              transform="translate(-874.000000, -1029.000000)"
-                              fill="#000000"
-                            >
-                              <g
-                                id="Group-3-Copy-16"
-                                transform="translate(850.000000, 975.000000)"
-                              >
-                                <g
-                                  id="Group-2"
-                                  transform="translate(24.000000, 0.000000)"
-                                >
-                                  <polygon
-                                    id="Triangle"
-                                    transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                    points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                                  />
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                        <p className="text-sm py-1 text-white">
-                          Compression disabled.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <input
-                      id="compressor-lz4-no-meta"
-                      name="compressor"
-                      type="radio"
-                      onMouseEnter={() => setTooltipStatus(14)}
-                      onMouseLeave={() => setTooltipStatus(0)}
-                      onClick={() =>
-                        setConfigState({
-                          ...configState,
-                          Compressor: "LZ4_Fast_No_Meta",
-                        })
-                      }
-                      checked={configState.Compressor === "LZ4_Fast_No_Meta"}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                    />
-                    <label
-                      htmlFor="compressor-lz4-no-meta"
-                      className="ml-3 block text-sm font-medium text-gray-700"
-                    >
-                      LZ4 Fast No Meta
-                    </label>
-                    {tooltipstatus == 14 && (
-                      <div
-                        role="tooltip"
-                        className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded"
-                      >
-                        <svg
-                          className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                          width="9px"
-                          height="16px"
-                          viewBox="0 0 9 16"
-                          version="1.1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g
-                            id="Page-1"
-                            stroke="none"
-                            strokeWidth={1}
-                            fill="none"
-                            fillRule="evenodd"
-                          >
-                            <g
-                              id="Tooltips-"
-                              transform="translate(-874.000000, -1029.000000)"
-                              fill="#000000"
-                            >
-                              <g
-                                id="Group-3-Copy-16"
-                                transform="translate(850.000000, 975.000000)"
-                              >
-                                <g
-                                  id="Group-2"
-                                  transform="translate(24.000000, 0.000000)"
-                                >
-                                  <polygon
-                                    id="Triangle"
-                                    transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                    points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                                  />
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                        <p className="text-sm mt-2 text-white">
-                          LZ4_fast_no_meta := Official LZ4 library is used with
-                          options: Fast and no Meta size information. <br />
-                          This version is ideal when using fixed sized l-blocks,
-                          which an not overflow. <br />
-                          Additionally, a c-block may never exceed the l-block
-                          size by any means, hence it uses a fixed allocation
-                          for a decompression buffer and may never overflow
-                          consequently.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <input
-                      id="compressor-lz4-with-meta"
-                      name="compressor"
-                      type="radio"
-                      onMouseEnter={() => setTooltipStatus(15)}
-                      onMouseLeave={() => setTooltipStatus(0)}
-                      onClick={() =>
-                        setConfigState({
-                          ...configState,
-                          Compressor: "LZ4_Fast_With_Meta",
-                        })
-                      }
-                      checked={configState.Compressor === "LZ4_Fast_With_Meta"}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                    />
-                    <label
-                      htmlFor="compressor-lz4-with-meta"
-                      className="ml-3 block text-sm font-medium text-gray-700"
-                    >
-                      LZ4 Fast With Meta
-                    </label>
-                    {tooltipstatus == 15 && (
-                      <div
-                        role="tooltip"
-                        className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded"
-                      >
-                        <svg
-                          className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
-                          width="9px"
-                          height="16px"
-                          viewBox="0 0 9 16"
-                          version="1.1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g
-                            id="Page-1"
-                            stroke="none"
-                            strokeWidth={1}
-                            fill="none"
-                            fillRule="evenodd"
-                          >
-                            <g
-                              id="Tooltips-"
-                              transform="translate(-874.000000, -1029.000000)"
-                              fill="#000000"
-                            >
-                              <g
-                                id="Group-3-Copy-16"
-                                transform="translate(850.000000, 975.000000)"
-                              >
-                                <g
-                                  id="Group-2"
-                                  transform="translate(24.000000, 0.000000)"
-                                >
-                                  <polygon
-                                    id="Triangle"
-                                    transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
-                                    points="4.5 57.5 12.5 66.5 -3.5 66.5"
-                                  />
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                        <p className="text-sm mt-2 text-white">
-                          LZ4_Fast_With_Meta\t\t\t:= Official LZ4 library is
-                          used with options: Fast and includes Meta size
-                          information. <br />
-                          Note: This version will guarantee at any sizes, that
-                          the compressor/decompressor allocates sufficient
-                          space, even if provided with less allocation. This
-                          ensures dynamic l-blocks of any sizes and allows
-                          different l-block sizes across the "cold" vs. "warm"
-                          regions. <br />
-                          This guarantee comes with a small penalty, hence
-                          should only be used with caution.
-                          <br />
-                          Later it is planned to switch dynamically between
-                          compressors, to ensure cold regions benefit from
-                          widerl-blocks and the warm regions stay fast with
-                          alignedl-blocks.
-                          <br />
-                          The system does not support switching between
-                          compressors dynamically, yet.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {configState.Compressor !== "none" && (
-                <>
+            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+              <p className="font-bold">Compressors</p>
+              <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start">
+                <div className="sm:mt-0 sm:col-span-2">
                   <label
-                    htmlFor="compressor-extras"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                    htmlFor="leafCompressor"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                   >
-                    Compressor extras
+                    Leaf Compressor
                   </label>
-                  <div className="mt-4 space-y-4 col-span-2">
-                    <div className="flex items-center">
+                  <select
+                    id="leafCrompressor"
+                    name="leafCompressor"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={configState.LeafCompressor}
+                    onChange={(event) => {
+                      setConfigState({
+                        ...configState,
+                        LeafCompressor : event.target.value,
+                      });
+                    }                        
+                  }
+                  >
+                    <option>None</option>
+                    <option>LZ4_Fast_No_Meta</option>
+                    <option>LZ4_Fast_With_Meta</option>
+                    <option>Sprintz</option>
+                  </select>
+                </div>
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="indexCompressor"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                  >
+                    Index Compressor
+                  </label>
+                  <select
+                    id="indexCompressor"
+                    name="indexCompressor"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={configState.IndexCompressor}
+                    onChange={(event) => {
+                      setConfigState({
+                        ...configState,
+                        IndexCompressor : event.target.value,
+                      });
+                    }}
+                  >
+                    <option>None</option>
+                    <option>LZ4_Fast_No_Meta</option>
+                    <option>LZ4_Fast_With_Meta</option>
+                    <option>Sprintz</option>
+                  </select>
+                </div>
+                {configState.LeafCompressor === "LZ4_Fast_No_Meta" || configState.LeafCompressor === "LZ4_Fast_With_Meta" ? (
+                  <React.Fragment>
+                    <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                        <span className="text-gray-500 sm:text-sm">Lz4Level</span>
+                      </div>
                       <input
-                        id="compressor-extras-none"
-                        name="compressor-extras"
-                        type="radio"
-                        onClick={() =>
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: { I32: "None" },
-                          })
-                        }
-                        checked={configState.CompressorExtras.I32 === "None"}
-                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        type="number"
+                        name="lz4Level-leafCompressor"
+                        id="lz4Level-leafCompressor"
+                        value={leafLz4LevelCompressor}
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
+                        onChange={(event) => {
+                          setLeafLz4LevelCompressor(parseInt(event.target.value))
+                          setLeafCompressorExtras({"Lz4Level": parseInt(event.target.value)});
+                        }} 
                       />
-                      <label
-                        htmlFor="compressor-extras-none"
-                        className="ml-3 block text-sm font-medium text-gray-700"
-                      >
-                        none
-                      </label>
                     </div>
-                    <div className="flex items-center">
-                      <input
-                        id="compressor-extras-int"
-                        name="compressor-extras"
-                        type="radio"
-                        onClick={() =>
-                          setConfigState({
-                            ...configState,
-                            CompressorExtras: {
-                              I32: DefaultStreamConfig.CompressorExtras.I32,
-                            },
-                          })
-                        }
-                        checked={!(configState.CompressorExtras.I32 === "None")}
-                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                      />
+                  </React.Fragment>
+                ):(<React.Fragment>
+                  {configState.LeafCompressor === "Sprintz" ? (
+                  <React.Fragment>
+                    <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                       <label
-                        htmlFor="compressor-extras-int"
-                        className="ml-3 block text-sm font-medium text-gray-700"
+                      htmlFor="Sprintz-leafCompressor"
+                      className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
                       >
-                        <input
-                          type="number"
-                          name="compressor-extras-int"
-                          id="compressor-extras-int"
-                          value={configState.CompressorExtras.I32}
-                          onChange={(e) =>
-                            setConfigState({
-                              ...configState,
-                              CompressorExtras: {
-                                I32: parseInt(e.target.value),
-                              },
-                            })
+                        Sprintz Extras
+                      </label>
+                      <input
+                        type="text"
+                        name="Sprintz-leafCompressor"
+                        id="Sprintz-leaf-Compressor"
+                        className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                        value={leafSprintzValue}
+                        onChange={(event) => {
+                          setLeafSprintzValue(event.target.value);
+                          let sprintzKeys = event.target.value.split(',');
+                          let sprintzValues = [];
+                          if (sprintzKeys.length === 3) {
+                            
+                            for (let i = 0; i < sprintzKeys.length; i++) {
+                              switch (sprintzKeys[i]) {
+                                case "true":
+                                  sprintzValues.push(true)
+                                  break;
+
+                                case "false":
+                                  sprintzValues.push(false);
+                                  break;
+                              
+                                default:
+                                  sprintzValues.push(parseInt(sprintzKeys[i]))
+                                  break;
+                              }
+                            }
                           }
-                          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
-                          placeholder={DefaultStreamConfig.CompressorExtras.I32.toString()}
-                        />
-                      </label>
+                          //@ts-ignore
+                          setLeafCompressorExtras({"Sprintz": sprintzValues});
+                        }
+                        }
+                      />
                     </div>
-                  </div>
-                </>
-              )}
+                  </React.Fragment>):(
+                    <React.Fragment>
+                    </React.Fragment>
+                  )}
+                  </React.Fragment>)
+                }
+                {configState.IndexCompressor === "LZ4_Fast_No_Meta" || configState.IndexCompressor === "LZ4_Fast_With_Meta" ? (
+                  <React.Fragment>
+                    <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                        <span className="text-gray-500 sm:text-sm">Lz4Level</span>
+                      </div>
+                      <input
+                        type="number"
+                        name="lz4Level-indexCompressor"
+                        id="lz4Level-indexCompressor"
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
+                        value={IndexLz4LevelCompressor}
+                        onChange={(event) => {
+                          setIndexLz4LevelCompressor(parseInt(event.target.value));
+                          setIndexCompressorExtras({"Lz4Level": parseInt(event.target.value)});
+                        }}
+                      />
+                    </div>
+                  </React.Fragment>
+                ):(<React.Fragment>
+                  {configState.IndexCompressor === "Sprintz" ? (
+                  <React.Fragment>
+                    <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+                      <label
+                      htmlFor="Sprintz-indexCompressor"
+                      className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                      >
+                        Sprintz Extras
+                      </label>
+                      <input
+                        type="text"
+                        name="Sprintz-indexCompressor"
+                        id="Sprintz-indexCompressor"
+                        className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                        value={indexSprintzValue}
+                        onChange={(event) => {
+                          setIndexSprintzValue(event.target.value);
+                          let sprintzKeys = event.target.value.split(',');
+                          let sprintzValues = [];
+                          if (sprintzKeys.length === 3) {
+                            
+                            for (let i = 0; i < sprintzKeys.length; i++) {
+                              switch (sprintzKeys[i]) {
+                                case "true":
+                                  sprintzValues.push(true)
+                                  break;
+
+                                case "false":
+                                  sprintzValues.push(false);
+                                  break;
+                              
+                                default:
+                                  sprintzValues.push(parseInt(sprintzKeys[i]))
+                                  break;
+                              }
+                            }
+                          }
+                          //@ts-ignore
+                          setIndexCompressorExtras({"Sprintz": sprintzValues});
+                        }
+                        }
+                      />
+                    </div>
+                  </React.Fragment>):(
+                    <React.Fragment>
+                    </React.Fragment>
+                  )}
+                  </React.Fragment>)
+                }
+              </div>
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">

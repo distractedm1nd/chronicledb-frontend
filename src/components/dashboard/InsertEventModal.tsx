@@ -18,7 +18,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
     const [eventType, setEventType] = useState<string>("Raw");
     const [dataType, setDataType] = useState<string>("Integer");
     const [storage, setStorage] = useState<string>("8");
-    const [data, setData] = useState<string>("");
+    const [data, setData] = useState<any>("");
     const [currentEvent, setCurrentEvent] = useState<IEvent>();
     const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
 
@@ -182,7 +182,15 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                             id="data"
                                                             value={data}
                                                             onChange={(e) =>
-                                                                setData(e.target.value)
+                                                                {
+                                                                    var y: number = parseFloat(e.target.value);
+                                                                    if (Number.isNaN(y)) {
+                                                                      console.log(e.target.value);
+                                                                      setData(e.target.value);
+                                                                    } else {
+                                                                      setData(y);
+                                                                    }
+                                                                  }
                                                             }
                                                             className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                                         />
@@ -244,6 +252,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                             () => setOpen(false)
                                         );
                                 }}
+
                                 ref={cancelButtonRef}
                             >
                                 Insert Event
