@@ -194,7 +194,7 @@ export const DefaultStreamConfig: StreamConfig = {
   MaxDeltaQueue: 10,
 };
 
-export const ip: string = "http://192.168.158.63:8000";
+export const ip: string = "http://localhost:8000";
 export const api: string = "http://localhost:3001";
 
 export const configString: string = `##########################################################################################

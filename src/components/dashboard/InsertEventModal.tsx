@@ -19,6 +19,8 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
     const [dataType, setDataType] = useState<string>("Integer");
     const [storage, setStorage] = useState<string>("8");
     const [data, setData] = useState<any>("");
+    const [dataList, setDataList] = useState<number[]>([]);
+    const [rawData, setRawData] = useState<number>(360);
     const [currentEvent, setCurrentEvent] = useState<IEvent>();
     const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
 
@@ -26,14 +28,20 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
         // @ts-ignore
         let dataOptions = EventNames[eventType];
         let storageOptions = dataOptions[dataType];
-        if(dataType in dataOptions && storage in storageOptions) {
-            setCurrentEvent({[storageOptions[storage]]: data})
-        } else if (dataType in dataOptions){
-            setStorage(Object.keys(storageOptions)[0]);
+        if (dataType in dataOptions && storage in storageOptions) {
+          if ((eventType === "Var" || eventType === "Const") && dataType != "String") {
+            setCurrentEvent({ [storageOptions[storage]]: dataList });
+          } else if (eventType === "Raw") {
+            setCurrentEvent({ [storageOptions[storage]]: rawData });
+          } else if (dataType === "String") {
+            setCurrentEvent({ [storageOptions[storage]]: data });
+          }
+        } else if (dataType in dataOptions) {
+          setStorage(Object.keys(storageOptions)[0]);
         } else {
-            setDataType(Object.keys(dataOptions)[0]);
+          setDataType(Object.keys(dataOptions)[0]);
         }
-    }, [eventType, dataType, storage, data])
+      }, [eventType, dataType, storage, data]);
 
     return <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -180,17 +188,22 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                             type="text"
                                                             name="data"
                                                             id="data"
-                                                            value={data}
-                                                            onChange={(e) =>
-                                                                {
-                                                                    var y: number = parseFloat(e.target.value);
-                                                                    if (Number.isNaN(y)) {
-                                                                      console.log(e.target.value);
-                                                                      setData(e.target.value);
-                                                                    } else {
-                                                                      setData(y);
-                                                                    }
-                                                                  }
+                                                            value={data.toString()}
+                                                            onChange={(event) => {
+                                                                setData(event.target.value);
+                                                                var y:number = parseFloat(event.target.value)
+                                                                if (!Number.isNaN(y)) {
+                                                                setRawData(y)
+                                                                }
+                                                                var dataArray: number[] = [];
+                                                                var keys = event.target.value.split(",");
+
+                                                                for (let i = 0; i < keys.length; i++) {
+                                                                dataArray.push(parseFloat(keys[i]));
+                                                                }
+
+                                                                setDataList(dataArray);
+                                                            }
                                                             }
                                                             className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                                         />
