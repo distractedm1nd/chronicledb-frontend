@@ -1,5 +1,3 @@
-// export type EventType = "U8" | "U16" | "U32" | "U64" | "I8" | "I16" | "I32" | "I64" | "F32" | "F64" | "ConstString" | "ConstU8List" | "Const"
-
 import { type } from "os";
 import { TypeOfTag } from "typescript";
 
@@ -99,6 +97,8 @@ export type HashFunction = {
 };
 
 export type IEvent = { [EventType: string]: any };
+
+export type stream = {"t1":number, "payload":IEvent | IEvent[] | undefined}
 
 export type Aggregate = SMA | BloomFilter;
 

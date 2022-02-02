@@ -17,6 +17,7 @@ import Modal from "../Modal";
 import InsertEventModal from "./InsertEventModal";
 import QueryTimeTravelModal from "./QueryTimeTravelModal";
 import { UserContext } from "../../App";
+import InsertArrayModal from "./InsertArrayModal";
 
 export default function Dashboard() {
   const user = useContext(UserContext);
@@ -28,6 +29,7 @@ export default function Dashboard() {
   }>({});
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
+  const [insertArrayModalOpen, setInsertArrayModalOpen] = useState(false);
   const [queryTimeTravelModalOpen, setQueryTimeTravelModalOpen] =
     useState(false);
   const [modalBody, setModalBody] = useState("");
@@ -54,7 +56,11 @@ export default function Dashboard() {
         setInsertEventModalOpen(true);
       },
     },
-    { name: "Insert Ordered Array", onClick: (streamId: number) => {} },
+    { name: "Insert Array Ordered", 
+    onClick: (streamId: number) => {
+      setCurrentStream(streamId);
+      setInsertArrayModalOpen(true);
+    } },
   ];
 
   useEffect(() => {
@@ -151,6 +157,11 @@ export default function Dashboard() {
       <InsertEventModal
         open={insertEventModalOpen}
         setOpen={setInsertEventModalOpen}
+        currentStream={currentStream}
+      />
+      <InsertArrayModal
+        open={insertArrayModalOpen}
+        setOpen={setInsertArrayModalOpen}
         currentStream={currentStream}
       />
       <QueryTimeTravelModal
