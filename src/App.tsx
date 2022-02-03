@@ -176,14 +176,14 @@ function App(props: any) {
         <div className="border-r border-gray-200 dark:border-gray-900 pt-5 flex flex-col flex-grow bg-white dark:bg-gray-800 overflow-y-auto">
           <div className="flex-shrink-0 px-4 flex justify-center items-center">
             <img
-              className="h-16 w-auto"
+              className="dark:bg-gray-700 py-2 px-4 rounded-xl"
               src={UniLogo}
               alt="Logo der Philipps Universität Marburg"
             />
           </div>
           <Menu as="div" className="px-3 relative inline-block text-left pt-6">
             <div>
-              <Menu.Button className="group w-full bg-gray-100 dark:bg-gray-700 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
+              <Menu.Button className="group w-full bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
                 <span className="flex w-full justify-between items-center">
                   <span className="flex min-w-0 items-center justify-between space-x-3">
                     <img
