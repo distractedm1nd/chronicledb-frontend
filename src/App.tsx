@@ -33,7 +33,7 @@ const navigation = [
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign out", href: "/logout" },
 ];
 
 export const UserContext = React.createContext({
@@ -73,8 +73,7 @@ function App(props: any) {
       navigate("/login");
       return;
     }
-    // TODO: add token logic
-    setUser({ username: state.username, roles: state.roles, token: "" });
+    setUser({ username: state.username, roles: state.roles, token: state.token});
   }, []);
 
   return (
