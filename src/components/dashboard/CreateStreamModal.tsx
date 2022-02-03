@@ -8,6 +8,7 @@ import { createStream } from "../../utils";
 import { validateConfigState } from "../../helperFunctions";
 import ErrorComponent from "../ErrorComponent";
 import '@themesberg/flowbite';
+import { useLocalStorage } from "../../useLocalStorage";
 
 
 type CreateStreamModalProps = {
@@ -22,6 +23,15 @@ export default function CreateStreamModal({
   const [configState, setConfigState] = useState(DefaultStreamConfig);
   const [errorMsg, setErrorMsg] = useState("");
   const cancelButtonRef = useRef(null);
+  const [theme, setTheme] = useLocalStorage("theme","light");
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [theme])
 
   useEffect(() => {
     setConfigState(DefaultStreamConfig);
@@ -62,7 +72,7 @@ export default function CreateStreamModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
               <div className="flex items-center justify-start mb-4">
                 <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                   <CogIcon
@@ -73,7 +83,7 @@ export default function CreateStreamModal({
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg leading-6 font-medium text-gray-900"
+                    className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100"
                   >
                     Configure stream
                   </Dialog.Title>
@@ -96,7 +106,7 @@ export default function CreateStreamModal({
                 <button
                   type="button"
                   data-tooltip-target ="tooltip-default"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={() => setOpen(false)}
                   ref={cancelButtonRef}
                 >
@@ -108,7 +118,7 @@ export default function CreateStreamModal({
                 </div>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={() => {
                     setErrorMsg("");
                     let { isValid, errorMessage } =

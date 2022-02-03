@@ -190,8 +190,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div>
           <div>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              These are the default settings for your stream.
+            <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-100">
+              Stream default settings
             </p>
           </div>
 
@@ -202,7 +202,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   <div className="mt-4 space-y-4">
                     <Switch.Group as="div" className={"flex items-center"}>
                       <Switch.Label as="span" className="mr-3">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           Log{" "}
                         </span>
                       </Switch.Label>
@@ -215,7 +215,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           })
                         }
                         className={classNames(
-                          configState.Log ? "bg-indigo-600" : "bg-gray-200",
+                          configState.Log ? "bg-indigo-600" : "bg-gray-200 dark:bg-gray-300",
                           "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         )}
                       >
@@ -232,7 +232,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       {tooltipstatus == 4 && (
                         <div
                           role="tooltip"
-                          className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 p-4 rounded"
+                          className="z-20 mx-4 w-64 absolute transition duration-150 ease-in-out shadow-lg bg-gray-900 dark:bg-gray-200 p-4 rounded"
                         >
                           <svg
                             className="absolute left-0 -ml-2 bottom-0 top-0 h-full"
@@ -287,7 +287,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     <div className="mt-4 space-y-4">
                       <Switch.Group as="div" className={"flex items-center"}>
                         <Switch.Label as="span" className="mr-3">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             Debug{" "}
                           </span>
                         </Switch.Label>
@@ -375,7 +375,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="data"
-                className="flex text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
+                className="flex text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
               >
                 Data file
               </label>
@@ -390,7 +390,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onChange={(e) =>
                       setConfigState({ ...configState, Data: [e.target.value] })
                     }
-                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                   />
                   <div
                     className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
@@ -399,7 +399,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   >
                     <div className="cursor-pointer">
                       <QuestionMarkCircleIcon
-                        className="h-5 w-5 text-gray-400"
+                        className="h-5 w-5 text-gray-400 dark:text-gray-200"
                         aria-hidden="true"
                       />
                     </div>
@@ -475,7 +475,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
               <label
                 htmlFor="translation"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
               >
                 Translation
               </label>
@@ -493,7 +493,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Translation: e.target.value,
                       })
                     }
-                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                   />
                 </div>
                 <div
@@ -503,7 +503,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 >
                   <div className="cursor-pointer">
                     <QuestionMarkCircleIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="h-5 w-5 text-gray-400 dark:text-gray-200"
                       aria-hidden="true"
                     />
                   </div>
@@ -567,7 +567,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
               <label
                 htmlFor="translation"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
               >
                 Boot
               </label>
@@ -586,7 +586,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Boot: e.target.value,
                       })
                     }
-                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500 rounded-md"
                   />
                 </div>
                 <div
@@ -596,7 +596,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 >
                   <div className="cursor-pointer">
                     <QuestionMarkCircleIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="h-5 w-5 text-gray-400 dark:text-gray-200"
                       aria-hidden="true"
                     />
                   </div>
@@ -628,19 +628,19 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             </div> */}
 
             <div className="sm:border-t sm:border-gray-200 sm:pt-5">
-              <p className="font-bold">Events</p>
+              <p className="font-bold dark:text-gray-100">Events</p>
               <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
                 <div className="sm:mt-0 sm:col-span-1">
                   <label
                     htmlFor="eventType"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white rounded-md dark:bg-gray-700 -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:text-gray-200"
                   >
                     Event Type
                   </label>
                   <select
                     id="eventType"
                     name="eventType"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={eventType}
                     onChange={(event) => setEventType(event.target.value)}
                   >
@@ -652,14 +652,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="translation"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                   >
                     Datatype
                   </label>
                   <select
                     id="dataType"
                     name="dataType"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={dataType}
                     onChange={(event) => setDataType(event.target.value)}
                   >
@@ -674,14 +674,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 <div className="sm:col-span-1">
                   <label
                     htmlFor="translation"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                   >
                     Storage
                   </label>
                   <select
                     id="dataType"
                     name="dataType"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={storage}
                     onChange={(event) => setStorage(event.target.value)}
                   >
@@ -698,7 +698,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 <div className="sm:col-span-4">
                   <label
                     htmlFor="data"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                   >
                     Data
                   </label>
@@ -723,7 +723,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
 
                         setDataList(dataArray);
                       }}
-                      className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 block w-full shadow-sm dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                     />
                     <div className="has-tooltip">
                       <button
@@ -740,10 +740,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   </div>
                 </div>
               </div>
-              <div className={"flex space-x-3"}>
+              <div className={"flex space-x-3 mt-2"}>
                 {compoundEvents.map((e, idx) => (
-                  <div className="flex p-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
-                    <p>{JSON.stringify(e)}</p>
+                  <div className="flex p-2 bg-gray-100 dark:bg-gray-500 rounded-md transform transition duration-100 hover:scale-110">
+                    <p className="dark:text-gray-100">{JSON.stringify(e)}</p>
                     <XCircleIcon
                       className="my-auto ml-2 h-5 text-red-500 cursor-pointer"
                       onClick={() => {
@@ -758,20 +758,20 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             </div>
 
             <div className="sm:border-t sm:border-gray-200 sm:pt-5">
-              <p className="font-bold">Lightweight Indexes</p>
+              <p className="font-bold dark:text-gray-100">Lightweight Indexes</p>
               {/* TODO: Add Indexes to array */}
               <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
                 <div className="sm:col-span-4">
                   <label
                     htmlFor="translation"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                   >
                     Index Type
                   </label>
                   <select
                     id="dataType"
                     name="dataType"
-                    className="mt-1 block w-full pl-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 py-2 text-base border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     value={lightweightIndexType}
                     onChange={(event) =>
                       event.target.value === "SMA"
@@ -788,7 +788,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     <div className="sm:mt-0 sm:col-span-2">
                       <label
                         htmlFor="bitcount"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-4 left-2 bg-white dark:bg-gray-700 rounded-md dark:text-gray-100 -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                       >
                         Bit Count
                       </label>
@@ -804,13 +804,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             count: parseInt(event.target.value) || 0,
                           })
                         }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       />
                     </div>
                     <div className="sm:mt-0 sm:col-span-2">
                       <label
                         htmlFor="hfcount"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                       >
                         Hash Function Count (k)
                       </label>
@@ -826,13 +826,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             k: parseInt(event.target.value) || 0,
                           })
                         }
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       />
                     </div>
                     <div className="sm:mt-0 sm:col-span-2">
                       <label
                         htmlFor="hfcount"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                       >
                         Projector Sequence
                       </label>
@@ -854,7 +854,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             Slice: projectorArray,
                           });
                         }}
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                       />
                     </div>
                   </React.Fragment>
@@ -863,7 +863,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     <div className="sm:mt-0 sm:col-span-4">
                       <label
                         htmlFor="hfcount"
-                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                       >
                         Projector Sequence
                       </label>
@@ -885,7 +885,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             Slice: projectorArray,
                           });
                         }}
-                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="mt-1 block pl-3 py-2 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                       />
                     </div>
                   </React.Fragment>
@@ -893,14 +893,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
               <div className={"flex flex-col"}>
                 {currentBloomFilter?.k > 0 && (
-                  <p className="font-bold">Hash Function Configuration</p>
+                  <p className="font-bold dark:text-gray-100">Hash Function Configuration</p>
                 )}
                 {currentHashFunctions.map((e, idx) => (
                   <div className="flex my-auto">
                     <div className="w-full">
                       <label
                         htmlFor="a"
-                        className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       >
                         a
                       </label>
@@ -918,13 +918,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           });
                           setCurrentHashFunctions(temp);
                         }}
-                        className="w-full block pl-3 py-2 mr-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="w-full block pl-3 py-2 mr-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       />
                     </div>
                     <div className="w-full ml-2">
                       <label
                         htmlFor="b"
-                        className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                        className="relative top-3 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                       >
                         b
                       </label>
@@ -942,7 +942,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           });
                           setCurrentHashFunctions(temp);
                         }}
-                        className="w-full block pl-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="w-full block pl-3 py-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-500 dark:text-gray-100 dark:bg-gray-700 rounded-md"
                       />
                     </div>
                     <XCircleIcon
@@ -964,7 +964,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="multiple-disk-max-queue-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
               >
                 Multiple Disk Queue Checkpoint
               </label>
@@ -1000,7 +1000,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         ]);
                       }
                     }}
-                    className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md ${
+                    className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md ${
                       errorFields.includes("multiple-disk-max-queue-number")
                         ? "border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
                         : ""
@@ -1071,7 +1071,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="logical-block-size-number"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
               >
                 Logical Block Size
               </label>
@@ -1091,7 +1091,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         LogicalBlockSize: parseInt(e.target.value),
                       })
                     }
-                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                    className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     placeholder="8192"
                   />
                   {tooltipstatus == 7 && (
@@ -1162,11 +1162,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             </div>
 
             <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
-              <p className={"font-bold"}>Macro Block Configuration</p>
+              <p className={"font-bold dark:text-gray-100"}>Macro Block Configuration</p>
               <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
                   htmlFor="macro-block-size-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Size
                 </label>
@@ -1186,7 +1186,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           MacroBlockSize: parseInt(e.target.value),
                         })
                       }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       placeholder="10"
                     />
                     {tooltipstatus == 8 && (
@@ -1246,7 +1246,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 </div>
                 <label
                   htmlFor="macro-block-spare-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Spare
                 </label>
@@ -1268,7 +1268,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           MacroBlockSpare: parseFloat(e.target.value),
                         })
                       }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       placeholder="10"
                     />
                     {tooltipstatus == 9 && (
@@ -1285,7 +1285,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 </div>
                 <label
                   htmlFor="macro-block-preallocation-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Preallocation
                 </label>
@@ -1301,13 +1301,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         MacroBlockPreallocation: parseInt(e.target.value),
                       })
                     }
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     placeholder={configState.MacroBlockPreallocation.toString()}
                   />
                 </div>
                 <label
                   htmlFor="macro-block-batch-allocation-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Batch Allocation
                 </label>
@@ -1342,7 +1342,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         });
                       }
                     }}
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     placeholder={DefaultStreamConfig.MacroBlockBatchAllocation.toString()}
                   />
                 </div>
@@ -1350,11 +1350,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             </div>
 
             <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
-              <p className="font-bold">Cache Configuration</p>
+              <p className="font-bold dark:text-gray-100">Cache Configuration</p>
               <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
                   htmlFor="macro-block-cache-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Macro Blocks
                 </label>
@@ -1373,7 +1373,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           MacroBlocksCache: parseInt(e.target.value),
                         })
                       }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       placeholder={DefaultStreamConfig.MacroBlocksCache.toString()}
                     />
                     {tooltipstatus == 11 && (
@@ -1430,7 +1430,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 </div>
                 <label
                   htmlFor="nodes-cache-number"
-                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
                 >
                   Nodes
                 </label>
@@ -1449,7 +1449,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           NodesCache: parseInt(e.target.value),
                         })
                       }
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 rounded-md"
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-2 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       placeholder={DefaultStreamConfig.NodesCache.toString()}
                     />
                     {tooltipstatus == 12 && (
@@ -1468,19 +1468,19 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             </div>
 
             <div className="sm:border-t sm:border-gray-200 sm:pt-5">
-              <p className="font-bold">Compressors</p>
+              <p className="font-bold dark:text-gray-100">Compressors</p>
               <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start">
                 <div className="sm:mt-0 sm:col-span-2">
                   <label
                     htmlFor="leafCompressor"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white dark:text-gray-100 dark:bg-gray-700 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                   >
                     Leaf Compressor
                   </label>
                   <select
                     id="leafCrompressor"
                     name="leafCompressor"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     value={configState.LeafCompressor}
                     onChange={(event) => {
                       setConfigState({
@@ -1498,14 +1498,14 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="indexCompressor"
-                    className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                    className="relative top-4 left-2 bg-white dark:text-gray-100 dark:bg-gray-700 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                   >
                     Index Compressor
                   </label>
                   <select
                     id="indexCompressor"
                     name="indexCompressor"
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm  dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     value={configState.IndexCompressor}
                     onChange={(event) => {
                       setConfigState({
@@ -1525,7 +1525,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   <React.Fragment>
                     <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-sm">
+                        <span className="text-gray-500 dark:text-gray-100 sm:text-sm">
                           Lz4Level
                         </span>
                       </div>
@@ -1534,7 +1534,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="lz4Level-leafCompressor"
                         id="lz4Level-leafCompressor"
                         value={leafLz4LevelCompressor}
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                         onChange={(event) => {
                           setLeafLz4LevelCompressor(
                             parseInt(event.target.value)
@@ -1550,10 +1550,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   <React.Fragment>
                     {configState.LeafCompressor === "Sprintz" ? (
                       <React.Fragment>
-                        <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+                        <div className="sm:col-span-2 relative border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                           <label
                             htmlFor="Sprintz-leafCompressor"
-                            className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                            className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white dark:text-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-900"
                           >
                             Sprintz Extras
                           </label>
@@ -1561,7 +1561,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             type="text"
                             name="Sprintz-leafCompressor"
                             id="Sprintz-leaf-Compressor"
-                            className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                            className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 dark:bg-gray-700  placeholder-gray-500 focus:ring-0 sm:text-sm"
                             value={leafSprintzValue}
                             onChange={(event) => {
                               setLeafSprintzValue(event.target.value);
@@ -1604,7 +1604,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   <React.Fragment>
                     <div className="sm:col-span-2 mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-sm">
+                        <span className="text-gray-500 dark:text-gray-100 sm:text-sm">
                           Lz4Level
                         </span>
                       </div>
@@ -1612,7 +1612,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         type="number"
                         name="lz4Level-indexCompressor"
                         id="lz4Level-indexCompressor"
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 rounded-md"
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-18 sm:pl-16 sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                         value={IndexLz4LevelCompressor}
                         onChange={(event) => {
                           setIndexLz4LevelCompressor(
@@ -1629,10 +1629,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                   <React.Fragment>
                     {configState.IndexCompressor === "Sprintz" ? (
                       <React.Fragment>
-                        <div className="sm:col-span-2 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+                        <div className="sm:col-span-2 relative border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                           <label
                             htmlFor="Sprintz-indexCompressor"
-                            className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                            className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white dark:text-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-900"
                           >
                             Sprintz Extras
                           </label>
@@ -1640,7 +1640,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             type="text"
                             name="Sprintz-indexCompressor"
                             id="Sprintz-indexCompressor"
-                            className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                            className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-500 focus:ring-0 sm:text-sm"
                             value={indexSprintzValue}
                             onChange={(event) => {
                               setIndexSprintzValue(event.target.value);
@@ -1684,7 +1684,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
               <label
                 htmlFor="river-threads"
-                className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
               >
                 River threads
               </label>
@@ -1694,7 +1694,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onMouseEnter={() => setTooltipStatus(16)}
                     onMouseLeave={() => setTooltipStatus(0)}
                   >
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                       {configState.RiverThreads}
                       <ChevronDownIcon
                         className="-mr-1 ml-2 h-5 w-5"
@@ -1712,7 +1712,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="origin-top-right absolute mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="origin-top-right absolute mt-2 w-16 rounded-md shadow-lg bg-white dark:bg-gray-700 dark:text-gray-100 ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="py-1">
                         {["0", "t", "c", "d"].map((val) => (
                           <Menu.Item>
@@ -1727,8 +1727,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                               }}
                               className={classNames(
                                 configState.RiverThreads === val
-                                  ? "bg-gray-100 text-gray-900"
-                                  : "text-gray-700",
+                                  ? "bg-gray-100 dark:bg-gray-500 dark:text-gray-100 text-gray-900"
+                                  : "text-gray-700 dark:text-gray-100",
                                 "block text-center px-4 py-2 text-sm"
                               )}
                             >
@@ -1802,7 +1802,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
           <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
             <label
               htmlFor="max-delta-queue"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
             >
               Max delta queue
             </label>
@@ -1834,7 +1834,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       MaxDeltaQueue: parseInt(e.target.value),
                     });
                   }}
-                  className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md ${
+                  className={`max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md ${
                     errorFields.includes("max-delta-queue")
                       ? "border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
                       : ""
