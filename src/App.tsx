@@ -173,7 +173,7 @@ function App(props: any) {
         </Dialog>
       </Transition.Root>
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-        <div className="border-r border-gray-200 pt-5 flex flex-col flex-grow bg-white overflow-y-auto">
+        <div className="border-r border-gray-200 dark:border-gray-900 pt-5 flex flex-col flex-grow bg-white dark:bg-gray-800 overflow-y-auto">
           <div className="flex-shrink-0 px-4 flex justify-center items-center">
             <img
               className="h-16 w-auto"
@@ -183,7 +183,7 @@ function App(props: any) {
           </div>
           <Menu as="div" className="px-3 relative inline-block text-left pt-6">
             <div>
-              <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
+              <Menu.Button className="group w-full bg-gray-100 dark:bg-gray-700 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
                 <span className="flex w-full justify-between items-center">
                   <span className="flex min-w-0 items-center justify-between space-x-3">
                     <img
@@ -192,11 +192,11 @@ function App(props: any) {
                       alt=""
                     />
                     <span className="flex-1 flex flex-col min-w-0">
-                      <span className="text-gray-900 text-sm font-medium truncate">
+                      <span className="text-gray-900 dark:text-white text-sm font-medium truncate">
                         {user.username}
                       </span>
                       {user.roles.includes("admin") && (
-                        <span className="text-gray-500 text-sm truncate">
+                        <span className="text-gray-500 dark:text-gray-200 text-sm truncate">
                           Administrator
                         </span>
                       )}
@@ -246,14 +246,14 @@ function App(props: any) {
                 )}
                 aria-hidden="true"
               />
-              <a href="#" className="truncate hover:text-gray-600">
+              <a href="#" className="truncate dark:text-gray-200 dark:hover:text-gray-300 hover:text-gray-600">
                 <span>Connected:</span>
               </a>
             </div>
-            <div className="flex mt-2 ml-2 text-gray-500 font-normal">
+            <div className="flex mt-2 ml-2 text-gray-500 dark:text-gray-400 font-normal">
               <p>{ip}</p>
               <button
-                className="bg-gray-200 ml-auto rounded-md shadow-lg px-2"
+                className="bg-gray-200 dark:bg-gray-700 dark:text-white ml-auto rounded-md shadow-lg px-2"
                 onClick={() => fetchSystemInfo()}
               >
                 ...
@@ -279,7 +279,7 @@ function App(props: any) {
                 type="text"
                 name="search"
                 id="search"
-                className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm dark:bg-gray-700 dark:border-gray-800 dark:text-white border-gray-300 rounded-md"
                 placeholder="Search"
               />
             </div>
@@ -294,8 +294,8 @@ function App(props: any) {
                     item.href === "/logout"
                       ? "text-red-700"
                       : item.href === location.pathname
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                      ? "bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-100",
                     "group rounded-md py-2 px-2 flex items-center text-sm font-medium"
                   )}
                 >
@@ -304,8 +304,8 @@ function App(props: any) {
                       item.href === "/logout"
                         ? "text-red-700"
                         : item.href === location.pathname
-                        ? "text-gray-500"
-                        : "text-gray-400 group-hover:text-gray-500",
+                        ? "text-gray-500 dark:text-gray-200"
+                        : "text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300",
                       "mr-3 flex-shrink-0 h-6 w-6"
                     )}
                     aria-hidden="true"
