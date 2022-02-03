@@ -73,8 +73,7 @@ function App(props: any) {
       navigate("/login");
       return;
     }
-    // TODO: add token logic
-    setUser({ username: state.username, roles: state.roles, token: "" });
+    setUser({ username: state.username, roles: state.roles, token: state.token});
   }, []);
 
   return (

@@ -186,7 +186,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   }
 
   return (
-    <form className="mt-2 space-y-8 divide-y divide-gray-200">
+    <form className="mt-2 space-y-8 divide-y divide-gray-200 dark:divide-gray-600">
       <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div>
           <div>
@@ -215,7 +215,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           })
                         }
                         className={classNames(
-                          configState.Log ? "bg-indigo-600" : "bg-gray-200 dark:bg-gray-300",
+                          configState.Log ? "bg-indigo-600 dark:bg-indigo-900" : "bg-gray-200 dark:bg-gray-400",
                           "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         )}
                       >
@@ -300,7 +300,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             })
                           }
                           className={classNames(
-                            configState.Debug ? "bg-indigo-600" : "bg-gray-200",
+                              configState.Debug ? "bg-indigo-600 dark:bg-indigo-900" : "bg-gray-200 dark:bg-gray-400",
                             "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           )}
                         >
@@ -372,7 +372,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <label
                 htmlFor="data"
                 className="flex text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2 inset-y-0 items-center pointer-events-auto"
@@ -586,7 +586,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Boot: e.target.value,
                       })
                     }
-                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500 rounded-md"
                   />
                 </div>
                 <div
@@ -627,7 +627,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div> */}
 
-            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <p className="font-bold dark:text-gray-100">Events</p>
               <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
                 <div className="sm:mt-0 sm:col-span-1">
@@ -728,7 +728,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     <div className="has-tooltip">
                       <button
                         type="button"
-                        className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        className="mt-1 ml-4 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 dark:border-gray-600 dark:bg-green-600 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                         onClick={() =>
                           currentEvent &&
                           setCompoundEvents([...compoundEvents, currentEvent])
@@ -742,10 +742,10 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
               <div className={"flex space-x-3 mt-2"}>
                 {compoundEvents.map((e, idx) => (
-                  <div className="flex p-2 bg-gray-100 dark:bg-gray-500 rounded-md transform transition duration-100 hover:scale-110">
+                  <div className="flex p-2 bg-gray-100 dark:bg-gray-700 rounded-md transform transition duration-100 hover:scale-110">
                     <p className="dark:text-gray-100">{JSON.stringify(e)}</p>
                     <XCircleIcon
-                      className="my-auto ml-2 h-5 text-red-500 cursor-pointer"
+                      className="my-auto ml-2 h-5 text-red-500 dark:text-red-700 cursor-pointer"
                       onClick={() => {
                         const temp = [...compoundEvents];
                         temp.splice(idx, 1);
@@ -757,7 +757,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <p className="font-bold dark:text-gray-100">Lightweight Indexes</p>
               {/* TODO: Add Indexes to array */}
               <div className="sm:grid sm:grid-cols-8 sm:gap-4 sm:items-start">
@@ -961,7 +961,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                 ))}
               </div>
             </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <label
                 htmlFor="multiple-disk-max-queue-number"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
@@ -1068,7 +1068,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t border-gray-200 border-gray-600 sm:pt-5">
               <label
                 htmlFor="logical-block-size-number"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"
@@ -1155,13 +1155,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     </div>
                   )}
                 </div>
-                <div className="border mt-4 border-red-400 rounded-b bg-red-100 max-w-xs px-3 py-2 text-red-700 rounded-md">
+                <div className="border mt-4 border-red-400 rounded-b bg-red-100 max-w-xs px-3 py-2 text-red-700 rounded-md dark:bg-red-700 dark:bg-opacity-20">
                   <p>WARNING: l and p not supported yet!</p>
                 </div>
               </div>
             </div>
 
-            <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
+            <div className={"sm:border-t border-gray-100 dark:border-gray-600 sm:pt-5"}>
               <p className={"font-bold dark:text-gray-100"}>Macro Block Configuration</p>
               <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
@@ -1349,7 +1349,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className={"sm:border-t sm:border-gray-100 sm:pt-5"}>
+            <div className={"sm:border-t border-gray-100 dark:border-gray-600 sm:pt-5"}>
               <p className="font-bold dark:text-gray-100">Cache Configuration</p>
               <div className="sm:grid sm:grid-cols-6 sm:gap-4 sm:items-center pt-3">
                 <label
@@ -1467,7 +1467,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <p className="font-bold dark:text-gray-100">Compressors</p>
               <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start">
                 <div className="sm:mt-0 sm:col-span-2">
@@ -1681,7 +1681,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
               </div>
             </div>
 
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t border-gray-200 dark:border-gray-600 sm:pt-5">
               <label
                 htmlFor="river-threads"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-100 sm:mt-px sm:pt-2"

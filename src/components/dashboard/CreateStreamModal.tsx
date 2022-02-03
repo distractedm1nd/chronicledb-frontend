@@ -25,13 +25,13 @@ export default function CreateStreamModal({
   const cancelButtonRef = useRef(null);
   const [theme, setTheme] = useLocalStorage("theme","light");
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [theme])
+  // useEffect(() => {
+  //   if (theme === 'dark') {
+  //     document.documentElement.classList.add('dark');
+  //   } else {
+  //     document.documentElement.classList.remove('dark')
+  //   }
+  // }, [theme])
 
   useEffect(() => {
     setConfigState(DefaultStreamConfig);
@@ -74,9 +74,9 @@ export default function CreateStreamModal({
           >
             <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
               <div className="flex items-center justify-start mb-4">
-                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
                   <CogIcon
-                    className="h-6 w-6 text-blue-600"
+                    className="h-6 w-6 text-blue-600 dark:text-blue-700"
                     aria-hidden="true"
                   />
                 </div>
@@ -118,7 +118,7 @@ export default function CreateStreamModal({
                 </div>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={() => {
                     setErrorMsg("");
                     let { isValid, errorMessage } =
