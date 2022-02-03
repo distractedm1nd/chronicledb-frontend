@@ -179,11 +179,7 @@ export default function Dashboard() {
       <main className="flex-1">
         <div className="p-6">
           <div className="px-4 sm:px-6 md:px-0 flex justify-between">
-<<<<<<< HEAD
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 my-auto">
-=======
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-200 my-auto">
->>>>>>> origin/mahdi
               Stream Dashboard
             </h1>
             {(user.roles.includes("admin") || user.roles.includes("write")) && (
