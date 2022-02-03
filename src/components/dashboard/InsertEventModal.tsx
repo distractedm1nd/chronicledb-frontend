@@ -77,12 +77,12 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                     leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                    <div className="inline-block align-bottom bg-white rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+                    <div className="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
                         <div className="flex items-center justify-start mb-4">
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <Dialog.Title
                                     as="h3"
-                                    className="text-lg font-medium text-gray-900"
+                                    className="text-lg font-medium text-gray-900 dark:text-gray-100"
                                 >
                                     Insert Event in Stream {currentStream}
                                 </Dialog.Title>
@@ -91,7 +91,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                         <div className="mt-4">
                             <label
                                 htmlFor="eventType"
-                                className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                             >
                                 Timestamp
                             </label>
@@ -104,7 +104,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                     onChange={(e) =>
                                         setTimestamp(parseInt(e.target.value) || 0)
                                     }
-                                    className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                                    className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 rounded-md"
                                 />
                             </div>
                             <form className="mt-2 space-y-8 divide-y divide-gray-200">
@@ -114,14 +114,14 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                 <div className="sm:mt-0 sm:col-span-1">
                                                     <label
                                                         htmlFor="eventType"
-                                                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                                                     >
                                                         Event Type
                                                     </label>
                                                     <select
                                                         id="eventType"
                                                         name="eventType"
-                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 sm:text-sm rounded-md"
                                                         value={eventType}
                                                         onChange={(event) => setEventType(event.target.value)}
                                                     >
@@ -135,14 +135,14 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                 <div className="sm:col-span-2">
                                                     <label
                                                         htmlFor="translation"
-                                                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                                                     >
                                                         Datatype
                                                     </label>
                                                     <select
                                                         id="dataType"
                                                         name="dataType"
-                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                                         value={dataType}
                                                         onChange={(event) => setDataType(event.target.value)}
                                                     >
@@ -157,14 +157,14 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                 <div className="sm:col-span-1">
                                                     <label
                                                         htmlFor="translation"
-                                                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                                                     >
                                                         Storage
                                                     </label>
                                                     <select
                                                         id="dataType"
                                                         name="dataType"
-                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                                         value={storage}
                                                         onChange={(event) => setStorage(event.target.value)}
                                                     >
@@ -179,7 +179,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                 <div className="sm:col-span-4">
                                                     <label
                                                         htmlFor="multiple-disk-max-queue-number"
-                                                        className="relative top-4 left-2 bg-white -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                                        className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                                                     >
                                                         Data
                                                     </label>
@@ -205,7 +205,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                                 setDataList(dataArray);
                                                             }
                                                             }
-                                                            className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                                                            className="mt-1 block w-full shadow-sm dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100  focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                                         />
                                                         <button
                                                             type="button"
@@ -219,7 +219,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                             </div>
                                             <div className={"flex flex-wrap mt-3"}>
                                                 {compoundEvents.map((e, idx) =>
-                                                    <div className="flex p-2 mr-4 my-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
+                                                    <div className="flex p-2 mr-4 my-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-100 rounded-md transform transition duration-100 hover:scale-110">
                                                         <p>{JSON.stringify(e)}</p>
                                                         <XCircleIcon className="my-auto ml-2 h-5 text-red-500 cursor-pointer" onClick={() => {
                                                             const temp = [...compoundEvents];

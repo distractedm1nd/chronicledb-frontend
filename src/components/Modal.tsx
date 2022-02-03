@@ -40,7 +40,7 @@ export default function Modal(props: IModal) {
                         leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                         leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
-                        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-7xl sm:w-full sm:p-6">
+                        <div className="inline-block align-bottom bg-white dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-7xl sm:w-full sm:p-6">
                             <div>
                                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
                                     <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
@@ -52,7 +52,7 @@ export default function Modal(props: IModal) {
                                     <div className="mt-2">
                                         <pre>
                                         {props.body.split("\n").map(paragraph =>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs text-gray-500 dark:text-gray-1ßß">
                                                 {paragraph}
                                             </p>
                                         )}

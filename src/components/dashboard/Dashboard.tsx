@@ -187,7 +187,7 @@ export default function Dashboard() {
                 onClick={() => {
                   setModalState(true);
                 }}
-                className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800 dark:bg-gray-600 dark:text-white dark:border-gray-500 dark:hover:bg-gray-500"
+                className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800 dark:bg-blue-500 dark:text-white dark:border-gray-500 dark:hover:bg-blue-400"
               >
                 Create Stream
                 <PlusIcon className="ml-2 my-auto h-4" />
