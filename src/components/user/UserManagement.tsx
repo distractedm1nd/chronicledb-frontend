@@ -36,12 +36,31 @@ export default function UserManagement() {
   const [modalTitle, setModalTitle] = useState("Loading...");
   const navigate = useNavigate();
 
+  const deleteUser = async (user: User) => {
+    const response = await fetch(api + "/delete-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": userContext.token
+      },
+      body: JSON.stringify({
+        askedPermission: "admin",
+        caller: userContext.username,
+        roles: user.roles,
+        username: user.username,
+      }),
+    });
+
+    if (response.status === 200) {
+      alert("user successfully deleted");
+      fetchUsers();
+    }
+  };
+
   const UserActions = [
     {
       name: "Delete user",
-      onClick: () => {
-        console.log("deleting....");
-      },
+      onClick: deleteUser,
     },
     {
       name: "Edit roles",
