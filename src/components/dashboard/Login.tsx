@@ -158,7 +158,7 @@ export default function Login() {
                       setUser({ ...user, username: e.target.value })
                     }
                     required
-                    className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
+                    className="appearance-none dark:text-white dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function Login() {
                       setUser({ ...user, password: e.target.value })
                     }
                     required
-                    className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
+                    className="appearance-none dark:text-white dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
                 </div>
               </div>
