@@ -230,7 +230,7 @@ export default function Dashboard() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="bg-white divide-y divide-gray-100 dark:divide-gray-600">
                 {availableStreams.map((stream) => (
                   <tr key={stream[0]}>
                     <td className="px-6 py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium dark:bg-gray-500 text-gray-900 dark:text-gray-200">
