@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -11,9 +11,11 @@ import QueryTimeTravelModal from "../dashboard/QueryTimeTravelModal";
 import CreateUserModal from "./CreateUserModal";
 import { useNavigate } from "react-router-dom";
 import ChangeRoleModal from "./ChangeRoleModal";
+import {UserContext} from "../../App";
 
 export default function UserManagement() {
   const [currentStream, setCurrentStream] = useState<number>(0);
+  const userContext = useContext(UserContext);
   const [modalOpen, setModalState] = useState(false);
   const [userRolesModalOpen, setUserRolesModalOpenState] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -102,6 +104,7 @@ export default function UserManagement() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": userContext.token
       },
       body: JSON.stringify({
         caller: activeUser,

@@ -56,6 +56,7 @@ export default function CreateUserModal({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": userContext.token
       },
       body: JSON.stringify({
         askedPermission: "admin",
