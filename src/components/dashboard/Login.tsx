@@ -58,7 +58,7 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div className={"min-h-screen w-full dark:bg-gray-800"}>
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <Menu as="div" className="relative block h-10 text-right">
           <div>
@@ -76,7 +76,7 @@ export default function Login() {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-        <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+        <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
@@ -225,6 +225,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
