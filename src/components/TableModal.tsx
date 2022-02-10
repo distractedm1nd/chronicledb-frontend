@@ -16,8 +16,6 @@ export default function TableModal(props: ITableModal) {
 
     try {
         const streams = JSON.parse(props.body);
-        console.log("Success Bro!:" + JSON.parse(props.body))
-        console.log(streams);
     } catch(error) {
         console.log(error);
     }

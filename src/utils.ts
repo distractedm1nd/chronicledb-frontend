@@ -50,6 +50,20 @@ export const insertOrdered = (streamId: number, timestamp: number, event: IEvent
         .finally(callback);
 };
 
+export const insertArrayOrdered = (streamId: number, eventArray: IEvent[], callback: () => void) => {
+    console.log('Insert Array Ordered');
+    console.log(eventArray);
+    console.log(JSON.stringify(eventArray).replaceAll("\"[", "[").replaceAll("]\"", "]"))
+    fetch(`${ip}/insert_array_ordered/${streamId}`, {
+        method: "POST",
+        body: `${JSON.stringify(eventArray).replaceAll("\"[", "[").replaceAll("]\"", "]")}`,
+    })
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error))
+        .finally(callback);
+};
+
 export const shutdownStream = (streamId: number, callback: () => void) => {
     fetch(`${ip}/shutdown_stream/${streamId}`)
         .then((response) => response.json())

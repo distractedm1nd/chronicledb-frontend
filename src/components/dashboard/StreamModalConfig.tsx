@@ -49,7 +49,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [eventType, setEventType] = useState<string>("Raw");
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
-  const [data, setData] = useState<any>("");
+  const [data, setData] = useState<string>("");
+  const [dataList, setDataList] = useState<number[]>([]);
+  const [rawData, setRawData] = useState<number>(360);
   const [errorFields, setErrorFields] = useState<string[]>([]);
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
@@ -120,7 +122,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     let dataOptions = EventNames[eventType];
     let storageOptions = dataOptions[dataType];
     if (dataType in dataOptions && storage in storageOptions) {
-      setCurrentEvent({ [storageOptions[storage]]: data });
+      if ((eventType === "Var" || eventType === "Const") && dataType != "String") {
+        setCurrentEvent({ [storageOptions[storage]]: dataList });
+      } else if (eventType === "Raw") {
+        setCurrentEvent({ [storageOptions[storage]]: rawData });
+      } else if (dataType === "String") {
+        setCurrentEvent({ [storageOptions[storage]]: data });
+      }
     } else if (dataType in dataOptions) {
       setStorage(Object.keys(storageOptions)[0]);
     } else {
@@ -699,15 +707,21 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       type="text"
                       name="data"
                       id="data"
-                      value={data}
-                      onChange={(e) => {
-                        var y: number = parseFloat(e.target.value);
-                        if (Number.isNaN(y)) {
-                          console.log(e.target.value);
-                          setData(e.target.value);
-                        } else {
-                          setData(y);
+                      value={data.toString()}
+                      onChange={(event) => {
+                        setData(event.target.value);
+                        var y:number = parseFloat(event.target.value)
+                        if (!Number.isNaN(y)) {
+                          setRawData(y)
                         }
+                        var dataArray: number[] = [];
+                        var keys = event.target.value.split(",");
+
+                        for (let i = 0; i < keys.length; i++) {
+                          dataArray.push(parseFloat(keys[i]));
+                        }
+
+                        setDataList(dataArray);
                       }}
                       className="mt-1 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                     />

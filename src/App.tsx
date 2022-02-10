@@ -20,6 +20,7 @@ import UniLogo from "./assets/Uni_Marburg_Logo.svg";
 import BSeeger from "./assets/bseeger.jpeg";
 import { ip } from "./types/types";
 import { useLocation, useNavigate } from "react-router-dom";
+import Modal from "./components/Modal";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -78,6 +79,13 @@ function App(props: any) {
 
   return (
     <UserContext.Provider value={user}>
+      <Modal
+        title={modalTitle}
+        body={modalBody}
+        buttonTitle={"Close"}
+        open={infoModalOpen}
+        setOpen={setInfoModalOpen}
+      />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           as="div"

@@ -2,17 +2,17 @@ import React, {Fragment, useEffect, useRef, useState} from "react";
 import {Dialog, Transition} from "@headlessui/react";
 import {CogIcon} from "@heroicons/react/outline";
 import StreamModalConfig from "./StreamModalConfig";
-import {createStream, insertOrdered} from "../../utils";
-import {DefaultStreamConfig, EventNames, IEvent} from "../../types/types";
+import {createStream, insertArrayOrdered, insertOrdered} from "../../utils";
+import {DefaultStreamConfig, EventNames, IEvent, stream} from "../../types/types";
 import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
 
-type InsertEventModalProps = {
+type InsertArrayModalProps = {
     open: boolean;
     setOpen: (state: boolean) => void;
     currentStream: any;
 };
 
-const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps) => {
+const InsertArrayModal = ({open, setOpen, currentStream}: InsertArrayModalProps) => {
     const cancelButtonRef = useRef(null);
     const [timestamp, setTimestamp] = useState<number>(0);
     const [eventType, setEventType] = useState<string>("Raw");
@@ -20,9 +20,17 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
     const [storage, setStorage] = useState<string>("8");
     const [data, setData] = useState<any>("");
     const [dataList, setDataList] = useState<number[]>([]);
-    const [rawData, setRawData] = useState<number>(360);
+    const [rawData, setRawData] = useState<number>(0);
     const [currentEvent, setCurrentEvent] = useState<IEvent>();
     const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
+    const [stream, setStream] = useState<stream>({"t1":timestamp, "payload": currentEvent});
+    const [streams, setStreams] = useState<stream[]>([]);
+
+    useEffect(() => {
+        if (timestamp || currentEvent) {
+            setStream({"t1":timestamp, "payload": compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent})
+        }
+    },[timestamp, currentEvent, compoundEvents])
 
     useEffect(() => {
         // @ts-ignore
@@ -84,7 +92,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                     as="h3"
                                     className="text-lg font-medium text-gray-900"
                                 >
-                                    Insert Event in Stream {currentStream}
+                                    Insert Array in Stream {currentStream}
                                 </Dialog.Title>
                             </div>
                         </div>
@@ -228,7 +236,7 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                                         }}/>
                                                     </div>
                                                 )}
-                                        </div>
+                                            </div>
                                     </div>
                                 </div>
 
@@ -236,6 +244,18 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                                 <div className="pt-2"></div>
                             </form>
 
+                        </div>
+                        <div className={"flex flex-wrap mt-3"}>
+                                {streams.map((e, idx) =>
+                                    <div className="flex p-2 mr-4 my-2 bg-gray-100 rounded-md transform transition duration-100 hover:scale-110">
+                                        <p>{JSON.stringify(e)}</p>
+                                            <XCircleIcon className="my-auto ml-2 h-5 text-red-500 cursor-pointer" onClick={() => {
+                                                const temp = [...streams];
+                                                temp.splice(idx, 1);
+                                                setStreams(temp);
+                                                }}/>
+                                    </div>
+                                                )}
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row sm:justify-end space-x-3">
                             {/*<button*/}
@@ -256,19 +276,26 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
                             <button
                                 type="button"
                                 className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
+                                onClick={() => stream && setStreams([...streams, stream])}
+                                ref={cancelButtonRef}
+                            >
+                                Add Event
+                            </button>
+                            <button
+                                type="button"
+                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                                 onClick={() => {
-                                    currentEvent && 
-                                        insertOrdered(
+                                    stream && 
+                                        insertArrayOrdered(
                                             currentStream,
-                                            timestamp,
-                                            compoundEvents.length > 1 ? {"Compound": compoundEvents} : currentEvent,
+                                            streams,
                                             () => setOpen(false)
                                         );
                                 }}
 
                                 ref={cancelButtonRef}
                             >
-                                Insert Event
+                                Insert Array
                             </button>
                         </div>
                     </div>
@@ -278,4 +305,4 @@ const InsertEventModal = ({open, setOpen, currentStream}: InsertEventModalProps)
     </Transition.Root>
 }
 
-export default InsertEventModal;
+export default InsertArrayModal;
