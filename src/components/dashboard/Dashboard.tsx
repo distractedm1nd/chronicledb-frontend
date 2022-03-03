@@ -1,18 +1,15 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Menu, Transition } from "@headlessui/react";
-import {
-  PlusIcon,
-  ServerIcon,
-  UsersIcon,
-  CalendarIcon,
-} from "@heroicons/react/outline";
+import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { Fragment, useContext, useEffect, useState } from "react";
+
 import {
   classNames,
   fetchStreamAttribute,
   fetchStreams,
   recoverStreamSnapshot,
-  shutdownStream
+  shutdownStream,
 } from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
@@ -40,7 +37,11 @@ export default function Dashboard() {
     useState(false);
 
   // The modal belonging to this component is responsible for showing right flank and stream info.
-  const [modal, setModal] = useState({open: false, title: "Loading...", body: ""})
+  const [modal, setModal] = useState({
+    open: false,
+    title: "Loading...",
+    body: "",
+  });
 
   const StreamDropdownItems = [
     {
@@ -53,7 +54,7 @@ export default function Dashboard() {
       name: "Query Time Travel",
       onClick: (streamId: number) => {
         setCurrentStream(streamId);
-        setQueryTimeTravelModalOpen(true)
+        setQueryTimeTravelModalOpen(true);
       },
     },
     {
@@ -63,11 +64,13 @@ export default function Dashboard() {
         setInsertEventModalOpen(true);
       },
     },
-    { name: "Insert Array Ordered", 
-    onClick: (streamId: number) => {
-      setCurrentStream(streamId);
-      setInsertArrayModalOpen(true);
-    } },
+    {
+      name: "Insert Array Ordered",
+      onClick: (streamId: number) => {
+        setCurrentStream(streamId);
+        setInsertArrayModalOpen(true);
+      },
+    },
   ];
 
   // Every time the user or modalOpen loads/changes, updateStreams is called.
@@ -77,30 +80,30 @@ export default function Dashboard() {
 
   // Fetch information and populate Dashboard table view.
   const updateStreams = async () => {
-    const streams = await fetchStreams(user)
+    const streams = await fetchStreams(user);
     setAvailableStreams(streams);
     await fetchExtraStreamInfo(streams);
-  }
+  };
 
   const showStreamInfo = async (streamId: number) => {
     setModal({
       open: true,
       title: "Stream Info: " + streamId,
-      body: await fetchStreamAttribute(streamId, "stream_info")
-    })
+      body: await fetchStreamAttribute(streamId, "stream_info"),
+    });
   };
 
   const showRightFlank = async (streamId: number) => {
     setModal({
       open: true,
       title: "Right Flank: " + streamId,
-      body: await fetchStreamAttribute(streamId, "show_right_flank")
-    })
+      body: await fetchStreamAttribute(streamId, "show_right_flank"),
+    });
   };
 
   // Extra data is retrieved from the server to display more information in the Dashboard table.
   const fetchExtraStreamInfo = async (streams: any[]) => {
-    let extraInfo: { [key in number]: object } = {};
+    const extraInfo: { [key in number]: object } = {};
     for (const stream of streams) {
       const streamId = stream[0];
       const min_key = await fetchStreamAttribute(streamId, "min_key");
@@ -143,7 +146,9 @@ export default function Dashboard() {
         body={modal.body}
         buttonTitle={"Close"}
         open={modal.open}
-        setOpen={(openState) => setModal(current => ({...current, open: openState}))}
+        setOpen={(openState) =>
+          setModal((current) => ({ ...current, open: openState }))
+        }
       />
       <main className="flex-1">
         <div className="p-6">

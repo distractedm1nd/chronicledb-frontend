@@ -1,16 +1,17 @@
-import { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { api, ip, User } from "../../types/types";
-import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
+import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import ChangeRoleModal from "./ChangeRoleModal";
+import CreateUserModal from "./CreateUserModal";
 import CreateStreamModal from "../dashboard/CreateStreamModal";
-import Modal from "../Modal";
 import InsertEventModal from "../dashboard/InsertEventModal";
 import QueryTimeTravelModal from "../dashboard/QueryTimeTravelModal";
-import CreateUserModal from "./CreateUserModal";
-import { useNavigate } from "react-router-dom";
-import ChangeRoleModal from "./ChangeRoleModal";
+import Modal from "../Modal";
+import { api, ip, User } from "../../types/types";
+import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
 
 export default function UserManagement() {
   const [currentStream, setCurrentStream] = useState<number>(0);
@@ -109,7 +110,7 @@ export default function UserManagement() {
         askedPermission: "admin",
       }),
     });
-    let resJSON = await response.json();
+    const resJSON = await response.json();
 
     if (response.status === 200) {
       alert(resJSON.message);

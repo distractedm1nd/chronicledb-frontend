@@ -1,31 +1,31 @@
-import { Fragment, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
-import { api } from "../../types/types";
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, Transition } from "@headlessui/react";
 import {
-  MoonIcon,
-  SunIcon,
   DesktopComputerIcon,
   DotsVerticalIcon,
-} from '@heroicons/react/solid';
+  MoonIcon,
+  SunIcon,
+} from "@heroicons/react/solid";
+import { Fragment, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import { useLocalStorage } from "../../useLocalStorage";
-import {classNames, login} from "../../utils";
+import { classNames, login } from "../../utils";
 
 export default function Login() {
   const [user, setUser] = useState({ username: "", password: "" });
-  const [theme, setTheme] = useLocalStorage("theme","light");
+  const [theme, setTheme] = useLocalStorage("theme", "light");
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.remove("dark");
     }
-  }, [theme])
+  }, [theme]);
 
   useEffect(() => {
     // When the user navigates to /logout, clear the user from browser storage and navigate to /login
@@ -52,68 +52,83 @@ export default function Login() {
             <Menu.Button className="absolute inset-y-0 right-0 h-5 bg-gray-100 rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
               <span className="sr-only">Open options</span>
               <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
-              </Menu.Button>
+            </Menu.Button>
           </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-        <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("light") : ""}
+                    >
+                      <SunIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      Light
+                    </a>
                   )}
-                  onClick={active ? setTheme("light"):""}
-                >
-                  <SunIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Light
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("dark") : ""}
+                    >
+                      <MoonIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-100"
+                        aria-hidden="true"
+                      />
+                      Dark
+                    </a>
                   )}
-                  onClick={active ? setTheme("dark"):""}
-                >
-                  <MoonIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-100" aria-hidden="true" />
-                  Dark
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("system") : ""}
+                    >
+                      <DesktopComputerIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      System
+                    </a>
                   )}
-                  onClick={active ? setTheme("system"):""}
-                >
-                  <DesktopComputerIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  System
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-20 w-auto" src={UniLogo} alt="Workflow" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">

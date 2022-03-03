@@ -1,24 +1,25 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Transition, Dialog, Menu } from "@headlessui/react";
+import { Dialog, Menu,Transition } from "@headlessui/react";
 import {
-  HomeIcon,
-  ServerIcon,
-  InboxIcon,
-  UsersIcon,
   CogIcon,
+  HomeIcon,
+  InboxIcon,
+  LogoutIcon,
   MenuAlt2Icon,
   SearchIcon,
   SelectorIcon,
+  ServerIcon,
+  UsersIcon,
   XIcon,
-  LogoutIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
-import {classNames, fetchSystemInfo} from "./utils";
-import UniLogo from "./assets/Uni_Marburg_Logo.svg";
-import BSeeger from "./assets/bseeger.jpeg";
-import {ip, User} from "./types/types";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import BSeeger from "./assets/bseeger.jpeg";
+import UniLogo from "./assets/Uni_Marburg_Logo.svg";
 import Modal from "./components/Modal";
+import { ip, User } from "./types/types";
+import { classNames, fetchSystemInfo } from "./utils";
 
 // Sidebar links
 const navigation = [
@@ -58,7 +59,11 @@ function AppWrapper(props: any) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // The information modal is used to display information fetched by the SystemInfo query
-  const [infoModal, setInfoModal] = useState({open: false, title: "Loading...", body: ""})
+  const [infoModal, setInfoModal] = useState({
+    open: false,
+    title: "Loading...",
+    body: "",
+  });
 
   const [user, setUser] = useState({
     username: "Prof. Seeger",
@@ -79,8 +84,8 @@ function AppWrapper(props: any) {
     setInfoModal({
       open: true,
       title: "System Info",
-      body: await fetchSystemInfo()
-    })
+      body: await fetchSystemInfo(),
+    });
   };
 
   useEffect(() => {
@@ -103,7 +108,9 @@ function AppWrapper(props: any) {
         body={infoModal.body}
         buttonTitle={"Close"}
         open={infoModal.open}
-        setOpen={(openState) => setInfoModal(current => ({...current, open: openState}))}
+        setOpen={(openState) =>
+          setInfoModal((current) => ({ ...current, open: openState }))
+        }
       />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog

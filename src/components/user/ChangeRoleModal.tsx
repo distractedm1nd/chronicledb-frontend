@@ -1,13 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { api, DefaultStreamConfig, Roles } from "../../types/types";
-import ErrorComponent from "../ErrorComponent";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import "@themesberg/flowbite";
+
 import RoleToggle from "./RoleToggle";
+import ErrorComponent from "../ErrorComponent";
 import { UserContext } from "../../AppWrapper";
-import {changeRoles} from "../../utils";
+import { api, DefaultStreamConfig, Roles } from "../../types/types";
+import { changeRoles } from "../../utils";
 
 type CreateUserModalProps = {
   currentRoles: string[];
@@ -44,7 +45,11 @@ export default function ChangeRoleModal({
   };
 
   const submit = async () => {
-    const response = await changeRoles(userContext.username, username, newRoles);
+    const response = await changeRoles(
+      userContext.username,
+      username,
+      newRoles
+    );
     const json = await response.json();
     if (response.status === 200) {
       alert(json.message);

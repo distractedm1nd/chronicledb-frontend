@@ -1,13 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { api, DefaultStreamConfig, Roles } from "../../types/types";
-import ErrorComponent from "../ErrorComponent";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import "@themesberg/flowbite";
+
 import RoleToggle from "./RoleToggle";
+import ErrorComponent from "../ErrorComponent";
 import { UserContext } from "../../AppWrapper";
-import {createUser} from "../../utils";
+import { api, DefaultStreamConfig, Roles } from "../../types/types";
+import { createUser } from "../../utils";
 
 type CreateUserModalProps = {
   open: boolean;

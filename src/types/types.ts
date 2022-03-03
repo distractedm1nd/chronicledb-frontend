@@ -1,5 +1,3 @@
-
-
 export type User = {
   _id?: string;
   token?: string;
@@ -18,8 +16,8 @@ export type ValidationType = {
   errorMessage: string | null;
 };
 
-export const EventNames = {
 // EventNames are the human readable names to be used in the UI, corresponding to their Event Types.
+export const EventNames = {
   Raw: {
     Empty: {
       Empty: "Empty",
@@ -119,7 +117,7 @@ export type Task = {
 
 export type IEvent = { [EventType: string]: any };
 
-export type stream = {"t1": number, "payload": IEvent | IEvent[] | undefined}
+export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
 
 export type Aggregate = SMA | BloomFilter;
 

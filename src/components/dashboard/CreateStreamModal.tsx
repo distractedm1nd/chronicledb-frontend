@@ -1,11 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon } from "@heroicons/react/outline";
+import { Fragment, useEffect, useRef, useState } from "react";
+import "@themesberg/flowbite";
+
 import StreamModalConfig from "./StreamModalConfig";
-import { DefaultStreamConfig } from "../../types/types";
-import {createStream, validateConfigState} from "../../utils";
 import ErrorComponent from "../ErrorComponent";
+import { DefaultStreamConfig } from "../../types/types";
+import { createStream, validateConfigState } from "../../utils";
 import '@themesberg/flowbite';
 import { useLocalStorage } from "../../useLocalStorage";
 
@@ -31,23 +33,20 @@ export default function CreateStreamModal({
 
   const submit = () => {
     setErrorMsg("");
-    let { isValid, errorMessage } =
-        validateConfigState(configState);
+    const { isValid, errorMessage } = validateConfigState(configState);
 
-    if (isValid)
-      createStream(configState, () => setOpen(false));
-    else
-      setErrorMsg(errorMessage!);
-  }
+    if (isValid) createStream(configState, () => setOpen(false));
+    else setErrorMsg(errorMessage!);
+  };
 
   return (
-      <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="fixed z-10 inset-0 overflow-y-auto"
-          initialFocus={cancelButtonRef}
-          onClose={setOpen}
-        >
+    <Transition.Root show={open} as={Fragment}>
+      <Dialog
+        as="div"
+        className="fixed z-10 inset-0 overflow-y-auto"
+        initialFocus={cancelButtonRef}
+        onClose={setOpen}
+      >
         <div className="flex items-end justify-center min-h-screen pt-4 px-2 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
@@ -108,14 +107,18 @@ export default function CreateStreamModal({
                 {/*</button>*/}
                 <button
                   type="button"
-                  data-tooltip-target ="tooltip-default"
+                  data-tooltip-target="tooltip-default"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={() => setOpen(false)}
                   ref={cancelButtonRef}
                 >
                   Cancel
                 </button>
-                <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block rounded-lg bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm duration-300 invisible dark:bg-gray-700">
+                <div
+                  id="tooltip-default"
+                  role="tooltip"
+                  className="tooltip absolute z-10 inline-block rounded-lg bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm duration-300 invisible dark:bg-gray-700"
+                >
                   Tooltip content
                   <div className="tooltip-arrow" data-popper-arrow></div>
                 </div>
