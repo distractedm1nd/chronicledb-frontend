@@ -128,7 +128,7 @@ export default function Login() {
       </Transition>
     </Menu>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img className="mx-auto h-20 w-auto" src={UniLogo} alt="Workflow" />
+          <img className="mx-auto h-24 w-auto p-2 dark:bg-gray-700 rounded-lg dark:shadow-md" src={UniLogo} alt="Workflow" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
             ChronicleDB Login
           </h2>
