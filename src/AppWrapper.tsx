@@ -16,13 +16,14 @@ import {
   CalendarIcon,
 } from "@heroicons/react/outline";
 import "./App.css";
-import { classNames } from "./utils";
+import {classNames, fetchSystemInfo} from "./utils";
 import UniLogo from "./assets/Uni_Marburg_Logo.svg";
 import BSeeger from "./assets/bseeger.jpeg";
-import { ip } from "./types/types";
+import {ip, User} from "./types/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import Modal from "./components/Modal";
 
+// Sidebar links
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Servers", href: "#", icon: ServerIcon },
@@ -32,17 +33,20 @@ const navigation = [
   { name: "Settings", href: "#", icon: CogIcon },
   { name: "Sign Out", href: "/logout", icon: LogoutIcon },
 ];
+
+// Links for the user menu dropdown
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
   { name: "Sign out", href: "/logout" },
 ];
 
+// Storage using react context, so that user information can be given to child components.
 export const UserContext = React.createContext({
   username: "",
   roles: [] as string[],
   token: "",
-});
+} as User);
 
 export const TaskContext = React.createContext([
   {
@@ -52,14 +56,13 @@ export const TaskContext = React.createContext([
   }
 ]);
 
-function App(props: any) {
+function AppWrapper(props: any) {
+  // The sidebar corresponds to the mobile sidebar, which is hidden on screens larger than the 'sm' breakpoint.
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  // The information modal is used to display information fetched by the SystemInfo query
+  const [infoModal, setInfoModal] = useState({open: false, title: "Loading...", body: ""})
 
-  const [modalTitle, setModalTitle] = useState("Loading...");
   const [user, setUser] = useState({
     username: "Prof. Seeger",
     roles: [] as string[],
@@ -70,36 +73,40 @@ function App(props: any) {
     date:"second",
     period:"2",
   }])
-  const [modalBody, setModalBody] = useState("");
 
-  const fetchSystemInfo = () => {
-    setModalTitle("System Info");
-    setInfoModalOpen(true);
-    fetch(`${ip}/system_info`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
+  // The following hooks are used to emulate browser emulation in our SPA.
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const showSystemInfo = async () => {
+    setInfoModal({
+      open: true,
+      title: "System Info",
+      body: await fetchSystemInfo()
+    })
   };
 
   useEffect(() => {
+    // Question: Why isn't the useLocalStorage hook used here?
     const savedUser = localStorage.getItem("user");
     const state = savedUser && JSON.parse(savedUser);
     if (!state) {
       navigate("/login");
       return;
     }
-    setUser({ username: state.username, roles: state.roles, token: state.token});
+    // QUESTION: Isn't token logic already implemented in the other branch? We can probably merge here.
+    setUser({ username: state.username, roles: state.roles, token: "" });
   }, []);
 
   return (
     <UserContext.Provider value={user}>
       <TaskContext.Provider value={tasks}>
       <Modal
-        title={modalTitle}
-        body={modalBody}
+        title={infoModal.title}
+        body={infoModal.body}
         buttonTitle={"Close"}
-        open={infoModalOpen}
-        setOpen={setInfoModalOpen}
+        open={infoModal.open}
+        setOpen={(openState) => setInfoModal(current => ({...current, open: openState}))}
       />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -269,7 +276,7 @@ function App(props: any) {
               <p>{ip}</p>
               <button
                 className="bg-gray-200 dark:bg-gray-700 dark:text-white ml-auto rounded-md shadow-lg px-2"
-                onClick={() => fetchSystemInfo()}
+                onClick={showSystemInfo}
               >
                 ...
               </button>
@@ -345,7 +352,6 @@ function App(props: any) {
               <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-
           {props.children}
         </div>
       </div>
@@ -354,4 +360,4 @@ function App(props: any) {
   );
 }
 
-export default App;
+export default AppWrapper;

@@ -1,54 +1,59 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import {
-  CogIcon,
-  HomeIcon,
-  InboxIcon,
-  MenuAlt2Icon,
   PlusIcon,
   ServerIcon,
   UsersIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { ip } from "../../types/types";
-import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
+import {
+  classNames,
+  fetchStreamAttribute,
+  fetchStreams,
+  recoverStreamSnapshot,
+  shutdownStream
+} from "../../utils";
 import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
 import InsertEventModal from "./InsertEventModal";
 import QueryTimeTravelModal from "./QueryTimeTravelModal";
-import { TaskContext, UserContext } from "../../App";
+import { TaskContext, UserContext } from "../../AppWrapper";
 import InsertArrayModal from "./InsertArrayModal";
 
 export default function Dashboard() {
+  // The userContext is passed by the parent AppWrapper
   const user = useContext(UserContext);
+
   const tasks = useContext(TaskContext)
   const [currentStream, setCurrentStream] = useState<number>(0);
-  const [modalOpen, setModalState] = useState(false);
-  const [availableStreams, setAvailableStreams] = useState([]);
+  const [availableStreams, setAvailableStreams] = useState<any[]>([]);
   const [extraStreamInfo, setExtraStreamInfo] = useState<{
     [key in number]: any;
   }>({});
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
+
+  // TODO: These four useStates can be merged into an object
+  const [createStreamModalOpen, setCreateStreamModalOpen] = useState(false);
   const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
   const [insertArrayModalOpen, setInsertArrayModalOpen] = useState(false);
   const [queryTimeTravelModalOpen, setQueryTimeTravelModalOpen] =
     useState(false);
-  const [modalBody, setModalBody] = useState("");
-  const [modalTitle, setModalTitle] = useState("Loading...");
+
+  // The modal belonging to this component is responsible for showing right flank and stream info.
+  const [modal, setModal] = useState({open: false, title: "Loading...", body: ""})
 
   const StreamDropdownItems = [
     {
       name: "Show Right Flank",
       onClick: (streamId: number) => {
-        fetchRightFlank(streamId);
+        showRightFlank(streamId);
       },
     },
     {
       name: "Query Time Travel",
       onClick: (streamId: number) => {
         setCurrentStream(streamId);
-        setQueryTimeTravelModalOpen(true);
+        setQueryTimeTravelModalOpen(true)
       },
     },
     {
@@ -65,50 +70,42 @@ export default function Dashboard() {
     } },
   ];
 
+  // Every time the user or modalOpen loads/changes, updateStreams is called.
   useEffect(() => {
-    fetchStreams();
-  }, [user, modalOpen]);
+    updateStreams();
+  }, [user, modal]);
 
-  useEffect(() => {
-    fetchExtraStreamInfo(availableStreams);
-  }, [availableStreams]);
+  // Fetch information and populate Dashboard table view.
+  const updateStreams = async () => {
+    const streams = await fetchStreams(user)
+    setAvailableStreams(streams);
+    await fetchExtraStreamInfo(streams);
+  }
 
-  const fetchStreams = () => {
-    console.log(user);
-    if (user.roles.includes("admin") || user.roles.includes("read")) {
-      fetch(`${ip}/show_streams`)
-        .then((response) => response.json())
-        .then((result) => setAvailableStreams(result))
-        .catch((error) => console.log("error", error));
-    }
+  const showStreamInfo = async (streamId: number) => {
+    setModal({
+      open: true,
+      title: "Stream Info: " + streamId,
+      body: await fetchStreamAttribute(streamId, "stream_info")
+    })
   };
 
-  const fetchStreamInfo = (streamId: number) => {
-    setModalTitle("Stream Info: " + streamId);
-    setInfoModalOpen(true);
-    fetch(`${ip}/stream_info/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
+  const showRightFlank = async (streamId: number) => {
+    setModal({
+      open: true,
+      title: "Right Flank: " + streamId,
+      body: await fetchStreamAttribute(streamId, "show_right_flank")
+    })
   };
 
-  const fetchQueryTimeTravel = (streamId: number) => {
-    setModalTitle("Query Time Travel: " + streamId);
-    setQueryTimeTravelModalOpen(true);
-    fetch(`${ip}/query_time_travel/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
-  };
-
+  // Extra data is retrieved from the server to display more information in the Dashboard table.
   const fetchExtraStreamInfo = async (streams: any[]) => {
     let extraInfo: { [key in number]: object } = {};
     for (const stream of streams) {
       const streamId = stream[0];
-      let min_key, max_key, tree_height;
-      min_key = await fetchStreamAttribute(streamId, "min_key");
-      max_key = await fetchStreamAttribute(streamId, "max_key");
-      tree_height = await fetchTreeHeight(streamId);
+      const min_key = await fetchStreamAttribute(streamId, "min_key");
+      const max_key = await fetchStreamAttribute(streamId, "max_key");
+      const tree_height = await fetchStreamAttribute(streamId, "tree_height");
 
       extraInfo[streamId] = {
         max_key: max_key,
@@ -120,41 +117,11 @@ export default function Dashboard() {
     setExtraStreamInfo(extraInfo);
   };
 
-  const fetchStreamAttribute = async (streamId: number, attribute: string) => {
-    return await fetch(`${ip}/${attribute}/${streamId}`).then((res) =>
-      res.text()
-    );
-  };
-
-  const fetchTreeHeight = async (streamId: number) => {
-    return await fetch(`${ip}/tree_height/${streamId}`).then((res) =>
-      res.text()
-    );
-  };
-
-  const fetchRightFlank = async (streamId: number) => {
-    setModalTitle("Right Flank: " + streamId);
-    setInfoModalOpen(true);
-    fetch(`${ip}/show_right_flank/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
-  };
-
-  const fetchSystemInfo = () => {
-    setModalTitle("System Info");
-    setInfoModalOpen(true);
-    fetch(`${ip}/system_info`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
-  };
-
   return (
     <>
       <CreateStreamModal
-        open={modalOpen}
-        setOpen={(val) => setModalState(val)}
+        open={createStreamModalOpen}
+        setOpen={setCreateStreamModalOpen}
       />
       <InsertEventModal
         open={insertEventModalOpen}
@@ -172,11 +139,11 @@ export default function Dashboard() {
         currentStream={currentStream}
       />
       <Modal
-        title={modalTitle}
-        body={modalBody}
+        title={modal.title}
+        body={modal.body}
         buttonTitle={"Close"}
-        open={infoModalOpen}
-        setOpen={setInfoModalOpen}
+        open={modal.open}
+        setOpen={(openState) => setModal(current => ({...current, open: openState}))}
       />
       <main className="flex-1">
         <div className="p-6">
@@ -187,7 +154,7 @@ export default function Dashboard() {
             {(user.roles.includes("admin") || user.roles.includes("write")) && (
               <button
                 onClick={() => {
-                  setModalState(true);
+                  setCreateStreamModalOpen(true);
                 }}
                 className="flex px-4 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800 dark:bg-blue-500 dark:text-white dark:border-gray-500 dark:hover:bg-blue-400"
               >
@@ -265,7 +232,7 @@ export default function Dashboard() {
                             ? "text-gray-500 dark:text-gray-300 cursor-not-allowed"
                             : "text-gray-700 dark:text-gray-200"
                         )}
-                        onClick={() => fetchStreamInfo(stream[0])}
+                        onClick={() => showStreamInfo(stream[0])}
                         disabled={stream[1] === "Offline"}
                       >
                         Show Info
@@ -296,8 +263,8 @@ export default function Dashboard() {
                           className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-xs font-normal text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800 dark:bg-gray-600 dark:text-white dark:border-gray-700 dark:hover:bg-gray-500"
                           onClick={() =>
                             stream[1] === "Online"
-                              ? shutdownStream(stream[0], fetchStreams)
-                              : recoverStreamSnapshot(stream[0], fetchStreams)
+                              ? shutdownStream(stream[0], updateStreams)
+                              : recoverStreamSnapshot(stream[0], updateStreams)
                           }
                         >
                           {stream[1] === "Online" ? "Shutdown" : "Recover"}

@@ -6,7 +6,7 @@ import { api, DefaultStreamConfig, Roles } from "../../types/types";
 import ErrorComponent from "../ErrorComponent";
 import "@themesberg/flowbite";
 import RoleSwitch from "./RoleSwitch";
-import { UserContext } from "../../App";
+import { UserContext } from "../../AppWrapper";
 
 type CreateUserModalProps = {
   open: boolean;

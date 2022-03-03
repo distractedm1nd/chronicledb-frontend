@@ -1,4 +1,25 @@
+
+
+export type User = {
+  _id?: string;
+  token?: string;
+  username: string;
+  roles: string[];
+};
+
+export enum Roles {
+  ADMIN = "admin",
+  READ = "read",
+  WRITE = "write",
+}
+
+export type ValidationType = {
+  isValid: boolean;
+  errorMessage: string | null;
+};
+
 export const EventNames = {
+// EventNames are the human readable names to be used in the UI, corresponding to their Event Types.
   Raw: {
     Empty: {
       Empty: "Empty",
@@ -64,6 +85,7 @@ export const EventNames = {
   },
 };
 
+// StreamConfigKey gives more easily readable UI names for the corresponding StreamConfig fields.
 export enum StreamConfigKey {
   Log = "Log",
   Debug = "Debug",
@@ -95,16 +117,16 @@ export type Task = {
   period: number,
 }
 
+export type IEvent = { [EventType: string]: any };
+
+export type stream = {"t1": number, "payload": IEvent | IEvent[] | undefined}
+
+export type Aggregate = SMA | BloomFilter;
+
 export type HashFunction = {
   a: number;
   b: number;
 };
-
-export type IEvent = { [EventType: string]: any };
-
-export type stream = {"t1":number, "payload":IEvent | IEvent[] | undefined}
-
-export type Aggregate = SMA | BloomFilter;
 
 export type BloomFilter = {
   BloomFilter: {
@@ -460,15 +482,3 @@ export const configString: string = `###########################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################`;
-
-export type User = {
-  _id: string;
-  username: string;
-  roles: string[];
-};
-
-export enum Roles {
-  ADMIN = "admin",
-  READ = "read",
-  WRITE = "write",
-}

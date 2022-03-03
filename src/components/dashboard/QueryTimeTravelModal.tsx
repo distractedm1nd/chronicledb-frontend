@@ -1,12 +1,6 @@
 import React, {Fragment, useEffect, useRef, useState} from "react";
 import {Dialog, Transition} from "@headlessui/react";
-import {CogIcon} from "@heroicons/react/outline";
-import StreamModalConfig from "./StreamModalConfig";
-import {createStream, insertOrdered} from "../../utils";
-import {DefaultStreamConfig, EventNames, IEvent} from "../../types/types";
-import {PlusIcon, XCircleIcon} from "@heroicons/react/solid";
-import Modal from "../Modal";
-import { ip } from "../../types/types";
+import {queryTimeTravel} from "../../utils";
 import TableModal from "../TableModal";
 
 type QueryTimeTravelModalProps = {
@@ -16,41 +10,30 @@ type QueryTimeTravelModalProps = {
 };
 
 const QueryTimeTravelModal = ({open, setOpen, currentStream}: QueryTimeTravelModalProps) => {
-    
+    const [infoModal, setInfoModal] = useState({open: false, title: "Loading...", body: "[]"})
     const cancelButtonRef = useRef(null);
-    const [timestamp, setTimestamp] = useState<number>(0);
+
+    // TODO: These three things can be combined into an object
     const [margin, setMargin] = useState<string>("Exclusive");
     const [intervalStart, setIntervalStart] = useState<number>(0);
     const [intervalEnd, setIntervalEnd] = useState<number>(1);
-    const [modalBody, setModalBody] = useState<string>("[]");
-    const [modalTitle, setModalTitle] = useState("Loading...");
-    const [infoTableModalOpen, setInfoTableModalOpen] = useState(false);
 
-    const queryTimeTravel =(streamId: number, margin: string, start: number, end:number) => {
-        setModalTitle("Query Time Travel: Stream " + streamId )
-        setInfoTableModalOpen(true);
-        fetch(`${ip}/query_time_travel/${streamId}`, {
-            method:"POST",
-            body: `{"${margin}": {"start":${start},"end": ${end}}}`,
+    const showQueryTimeTravel = async (streamId: number, margin: string, start: number, end:number) => {
+        setInfoModal({
+            open: true,
+            title: "Query Time Travel: Stream" + streamId,
+            body: await queryTimeTravel(streamId, margin, start, end)
         })
-        .then((response) => response.text())
-        .then((result) => {
-            setModalBody(result);
-            console.log(result);
-            //console.log(JSON.parse(result));
-        }
-        )
-        .catch((error) => console.log("error", error))
     }
-    
+
     return (
         <div>
             <TableModal
-                title={modalTitle}
-                body={modalBody}
+                title={infoModal.title}
+                body={infoModal.body}
                 buttonTitle={"Close"}
-                open={infoTableModalOpen}
-                setOpen={setInfoTableModalOpen}
+                open={infoModal.open}
+                setOpen={(openState) => setInfoModal(current => ({...current, open: openState}))}
             />
             <Transition.Root show={open} as={Fragment}>
                 <Dialog
@@ -176,7 +159,7 @@ const QueryTimeTravelModal = ({open, setOpen, currentStream}: QueryTimeTravelMod
                                     <button
                                         type="button"
                                         className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                        onClick={() => {queryTimeTravel(currentStream, margin, intervalStart, intervalEnd)}}
+                                        onClick={() => showQueryTimeTravel(currentStream, margin, intervalStart, intervalEnd)}
                                         ref={cancelButtonRef}
                                     >
                                         Search

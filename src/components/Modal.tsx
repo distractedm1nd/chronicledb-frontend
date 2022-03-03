@@ -7,7 +7,7 @@ export interface IModal {
     body: string
     buttonTitle: string
     open: boolean
-    setOpen: Dispatch<SetStateAction<boolean>>
+    setOpen: (openState: boolean) => void | Dispatch<SetStateAction<boolean>>
 }
 
 export default function Modal(props: IModal) {

@@ -4,8 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon } from "@heroicons/react/outline";
 import StreamModalConfig from "./StreamModalConfig";
 import { DefaultStreamConfig } from "../../types/types";
-import { createStream } from "../../utils";
-import { validateConfigState } from "../../helperFunctions";
+import {createStream, validateConfigState} from "../../utils";
 import ErrorComponent from "../ErrorComponent";
 import '@themesberg/flowbite';
 import { useLocalStorage } from "../../useLocalStorage";
@@ -20,31 +19,35 @@ export default function CreateStreamModal({
   open,
   setOpen,
 }: CreateStreamModalProps) {
+  const cancelButtonRef = useRef(null);
+
   const [configState, setConfigState] = useState(DefaultStreamConfig);
   const [errorMsg, setErrorMsg] = useState("");
-  const cancelButtonRef = useRef(null);
-  const [theme, setTheme] = useLocalStorage("theme","light");
 
-  // useEffect(() => {
-  //   if (theme === 'dark') {
-  //     document.documentElement.classList.add('dark');
-  //   } else {
-  //     document.documentElement.classList.remove('dark')
-  //   }
-  // }, [theme])
-
+  // The config state is set to the default config when the modal is opened.
   useEffect(() => {
     setConfigState(DefaultStreamConfig);
   }, [open]);
 
+  const submit = () => {
+    setErrorMsg("");
+    let { isValid, errorMessage } =
+        validateConfigState(configState);
+
+    if (isValid)
+      createStream(configState, () => setOpen(false));
+    else
+      setErrorMsg(errorMessage!);
+  }
+
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="fixed z-10 inset-0 overflow-y-auto"
-        initialFocus={cancelButtonRef}
-        onClose={setOpen}
-      >
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog
+          as="div"
+          className="fixed z-10 inset-0 overflow-y-auto"
+          initialFocus={cancelButtonRef}
+          onClose={setOpen}
+        >
         <div className="flex items-end justify-center min-h-screen pt-4 px-2 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
@@ -119,16 +122,7 @@ export default function CreateStreamModal({
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={() => {
-                    setErrorMsg("");
-                    let { isValid, errorMessage } =
-                      validateConfigState(configState);
-                    if (isValid) {
-                      createStream(configState, () => setOpen(false));
-                    } else {
-                      setErrorMsg(errorMessage!);
-                    }
-                  }}
+                  onClick={submit}
                   ref={cancelButtonRef}
                 >
                   Create Stream

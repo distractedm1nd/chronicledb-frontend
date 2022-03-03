@@ -7,18 +7,10 @@ export interface ITableModal {
     body: string
     buttonTitle: string
     open: boolean
-    setOpen: Dispatch<SetStateAction<boolean>>
+    setOpen: (open: boolean) => void | Dispatch<SetStateAction<boolean>>
 }
 
-
-
 export default function TableModal(props: ITableModal) {
-
-    try {
-        const streams = JSON.parse(props.body);
-    } catch(error) {
-        console.log(error);
-    }
     return (
         <Transition.Root show={props.open} as={Fragment}>
             <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={props.setOpen}>
@@ -90,18 +82,18 @@ export default function TableModal(props: ITableModal) {
                                                 <tbody>
                                                     {
                                                         JSON.parse(props.body).map((stream: any, streamIdx: number) => (
-                                                        <tr key={stream.t1} className={streamIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{stream.t1}</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                                {JSON.stringify(stream.payload)}
-                                                            </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Admin</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                                Edit
-                                                            </a>
-                                                            </td>
-                                                        </tr>
+                                                            <tr key={stream.t1} className={streamIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{stream.t1}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    {JSON.stringify(stream.payload)}
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Admin</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                                <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                                                    Edit
+                                                                </a>
+                                                                </td>
+                                                            </tr>
                                                     ))}
                                                 </tbody>
                                                 </table>
