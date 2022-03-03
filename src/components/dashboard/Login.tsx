@@ -10,14 +10,12 @@ import {
   DotsVerticalIcon,
 } from '@heroicons/react/solid';
 import { useLocalStorage } from "../../useLocalStorage";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import {classNames, login} from "../../utils";
 
 export default function Login() {
   const [user, setUser] = useState({ username: "", password: "" });
   const [theme, setTheme] = useLocalStorage("theme","light");
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,6 +28,7 @@ export default function Login() {
   }, [theme])
 
   useEffect(() => {
+    // When the user navigates to /logout, clear the user from browser storage and navigate to /login
     if (location.pathname === "/logout") {
       localStorage.setItem("user", JSON.stringify(null));
       navigate("/login");
@@ -38,21 +37,9 @@ export default function Login() {
 
   const loginUser = async (e: any) => {
     e.preventDefault();
-    const response = await fetch(api + "/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user.username,
-        password: user.password,
-      }),
-    });
-    let res = await response.json();
-
-    console.log(res);
-    if (response.status === 200) {
-      localStorage.setItem("user", JSON.stringify(res));
+    const response = await login(user.username, user.password);
+    if (response) {
+      localStorage.setItem("user", JSON.stringify(response));
       navigate("/");
     }
   };

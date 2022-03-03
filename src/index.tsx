@@ -21,7 +21,7 @@ const routes = [{
         element: <Login />
     },
     {
-        path: "/logout",
+        path: "/schedular",
         element: <AppWrapper><TaskScheduler /></AppWrapper>
     },
     {

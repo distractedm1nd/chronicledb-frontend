@@ -1,4 +1,4 @@
-import {IEvent, ip, StreamConfig, StreamConfigKey, User, ValidationType} from "./types/types";
+import {api, IEvent, ip, StreamConfig, StreamConfigKey, User, ValidationType} from "./types/types";
 
 // TODO
 export const nameof = <T>(name: keyof T) => name;
@@ -94,9 +94,14 @@ export const insertArrayOrdered = (streamId: number, events: IEvent[], callback:
         .finally(callback);
 }
 
+/**
+ * Submits a time travel query on a stream.
+ * @param streamId The id of the stream
+ * @param margin The margin of the query
+ * @param start The beginning timestamp of the query
+ * @param end The ending timestamp of the query
+ * **/
 export const queryTimeTravel = async (streamId: number, margin: string, start: number, end:number) => {
-    // setModalTitle("Query Time Travel: Stream " + streamId )
-    // setInfoTableModalOpen(true);
     return await fetch(`${ip}/query_time_travel/${streamId}`, {
         method:"POST",
         body: JSON.stringify({
@@ -105,6 +110,62 @@ export const queryTimeTravel = async (streamId: number, margin: string, start: n
     }).then((response) => response.text())
 }
 
+/**
+ * Sends an authentication request to the authentication API.
+ * **/
+export const login = async (username: string, password: string) => {
+    return await fetch(api + "/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+    }).then(res => res.json());
+}
+
+/**
+ * Allows an admin to create a new user.
+ * @param caller The currently logged in user
+ * @param newUser The information of the new user to be created
+ * **/
+export const createUser = async (caller: User, newUser: User) => {
+    return await fetch(api + "/create-user", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            askedPermission: "admin",
+            caller: caller.username,
+            username: newUser.username,
+            roles: newUser.roles,
+        }),
+    });
+}
+
+/**
+ * Allows an admin to update the roles of another user.
+ * @param caller The username of the user sending the request.
+ * @param username The username of the user.
+ * @param roles The updated roles of the user.
+ * **/
+export const changeRoles = async (caller: string, username: string, roles: string[]) => {
+    return await fetch(api + "/change-roles", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            askedPermission: "admin",
+            caller: caller,
+            username: username,
+            roles: roles,
+        }),
+    });
+}
 
 /**
  * Sends a request to the Rust backend to shut down a running stream.
@@ -148,17 +209,29 @@ export const createStream = (config: StreamConfig, callback: () => void) => {
         .finally(callback);
 };
 
+/**
+ * Fetches information about the server.
+ * **/
 export const fetchSystemInfo = async (): Promise<string> => {
     return await fetch(`${ip}/system_info`).then(response => response.text())
 }
 
+/**
+ * Fetches extended stream information given a streamId and api path.
+ * @param streamId The stream to be queried.
+ * @param attribute The name/path of the attribute to be fetched for the stream.
+ * **/
 export const fetchStreamAttribute = async (streamId: number, attribute: string) => {
     return await fetch(`${ip}/${attribute}/${streamId}`).then((res) =>
         res.text()
     );
 };
 
-// TODO: Create a type that is fetched
+/**
+ * Fetches all streams that a given user has permission to view.
+ * @param user The user requesting the stream information
+ * @todo Create a type that is fetched instead of any[]
+ * **/
 export const fetchStreams = async (user: User): Promise<any[]> => {
     // This is of course ridiculous.
     // Either the auth backend should act as a proxy for all requests with basic authentication, or the backend itself needs authentication.
@@ -167,6 +240,7 @@ export const fetchStreams = async (user: User): Promise<any[]> => {
     else
         return [];
 }
+
 /**
  * Input Validation function for stream configs in StreamModalConfig.tsx
  * @param configState StreamConfig created by the user to be checked for validation errors.

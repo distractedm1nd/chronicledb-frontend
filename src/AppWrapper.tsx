@@ -6,16 +6,13 @@ import {
   InboxIcon,
   UsersIcon,
   CogIcon,
-  ChevronDownIcon,
   MenuAlt2Icon,
-  PlusIcon,
   SearchIcon,
   SelectorIcon,
   XIcon,
   LogoutIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
-import "./App.css";
 import {classNames, fetchSystemInfo} from "./utils";
 import UniLogo from "./assets/Uni_Marburg_Logo.svg";
 import BSeeger from "./assets/bseeger.jpeg";
