@@ -106,28 +106,28 @@ export default function CreateUserModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white dark:bg-gray-700 dark:text-white rounded-lg px-2 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
               <div className="flex items-center justify-start mb-4">
-                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
                   <CogIcon
-                    className="h-6 w-6 text-blue-600"
+                    className="h-6 w-6 text-blue-600 dark:text-blue-700"
                     aria-hidden="true"
                   />
                 </div>
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg leading-6 font-medium text-gray-900"
+                    className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100"
                   >
                     Create User
                   </Dialog.Title>
                 </div>
               </div>
               <div className="mt-4">
-                <div className="flex sm:items-center sm:border-t sm:border-gray-200 sm:pt-5 mb-8">
+                <div className="flex sm:items-center border-t border-gray-200 dark:border-gray-600 sm:pt-5 mb-8">
                   <label
                     htmlFor="data"
-                    className="flex mr-8 text-sm font-medium text-gray-700 sm:mt-px sm:pt-0 inset-y-0 items-center pointer-events-auto"
+                    className="flex mr-8 text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-0 inset-y-0 items-center pointer-events-auto"
                   >
                     Username
                   </label>
@@ -145,7 +145,7 @@ export default function CreateUserModal({
                             username: e.target.value,
                           })
                         }
-                        className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                        className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-black dark:bg-gray-600 dark:text-gray-100 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                   </div>
@@ -173,7 +173,7 @@ export default function CreateUserModal({
                 <button
                   type="button"
                   data-tooltip-target="tooltip-default"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-400 dark:hover:bg-gray-500 dark:text-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={() => setOpen(false)}
                   ref={cancelButtonRef}
                 >
@@ -189,7 +189,7 @@ export default function CreateUserModal({
                 </div>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-green-500 dark:bg-green-600 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   onClick={async () => {
                     if (!userState.username.trim()) {
                       setErrorMsg("please provide a valid username");
