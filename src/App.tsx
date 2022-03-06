@@ -13,6 +13,7 @@ import {
   SelectorIcon,
   XIcon,
   LogoutIcon,
+  CalendarIcon,
 } from "@heroicons/react/outline";
 import "./App.css";
 import { classNames } from "./utils";
@@ -25,6 +26,7 @@ import Modal from "./components/Modal";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Servers", href: "#", icon: ServerIcon },
+  { name: "Jobs", href:"/schedular", icon: CalendarIcon},
   { name: "Reports", href: "#", icon: InboxIcon },
   { name: "Users", href: "/users", icon: UsersIcon },
   { name: "Settings", href: "#", icon: CogIcon },
@@ -42,6 +44,14 @@ export const UserContext = React.createContext({
   token: "",
 });
 
+export const TaskContext = React.createContext([
+  {
+    name:"",
+    date:"",
+    period:"",
+  }
+]);
+
 function App(props: any) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -55,6 +65,11 @@ function App(props: any) {
     roles: [] as string[],
     token: "",
   });
+  const [tasks, setTasks] = useState([{
+    name:"Create Stream",
+    date:"second",
+    period:"2",
+  }])
   const [modalBody, setModalBody] = useState("");
 
   const fetchSystemInfo = () => {
@@ -78,6 +93,7 @@ function App(props: any) {
 
   return (
     <UserContext.Provider value={user}>
+      <TaskContext.Provider value={tasks}>
       <Modal
         title={modalTitle}
         body={modalBody}
@@ -333,6 +349,7 @@ function App(props: any) {
           {props.children}
         </div>
       </div>
+      </TaskContext.Provider>
     </UserContext.Provider>
   );
 }

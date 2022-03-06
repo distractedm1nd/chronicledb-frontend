@@ -7,6 +7,7 @@ import Login from "./components/dashboard/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UserManagement from "./components/user/UserManagement";
 import Dashboard from "./components/dashboard/Dashboard";
+import TaskScheduler from "./components/scheduler/TaskScheduler";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -26,6 +27,14 @@ ReactDOM.render(
         element={
           <App>
             <UserManagement />
+          </App>
+        }
+      />
+      <Route
+        path="/schedular"
+        element={
+          <App>
+            <TaskScheduler />
           </App>
         }
       />

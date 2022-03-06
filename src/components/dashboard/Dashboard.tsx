@@ -8,6 +8,7 @@ import {
   PlusIcon,
   ServerIcon,
   UsersIcon,
+  CalendarIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { ip } from "../../types/types";
@@ -16,11 +17,12 @@ import CreateStreamModal from "./CreateStreamModal";
 import Modal from "../Modal";
 import InsertEventModal from "./InsertEventModal";
 import QueryTimeTravelModal from "./QueryTimeTravelModal";
-import { UserContext } from "../../App";
+import { TaskContext, UserContext } from "../../App";
 import InsertArrayModal from "./InsertArrayModal";
 
 export default function Dashboard() {
   const user = useContext(UserContext);
+  const tasks = useContext(TaskContext)
   const [currentStream, setCurrentStream] = useState<number>(0);
   const [modalOpen, setModalState] = useState(false);
   const [availableStreams, setAvailableStreams] = useState([]);

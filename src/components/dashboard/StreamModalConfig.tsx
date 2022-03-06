@@ -49,9 +49,9 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [eventType, setEventType] = useState<string>("Raw");
   const [dataType, setDataType] = useState<string>("Integer");
   const [storage, setStorage] = useState<string>("8");
-  const [data, setData] = useState<string>("");
+  const [data, setData] = useState<string>("20");
   const [dataList, setDataList] = useState<number[]>([]);
-  const [rawData, setRawData] = useState<number>(360);
+  const [rawData, setRawData] = useState<number>(20);
   const [errorFields, setErrorFields] = useState<string[]>([]);
   const [currentEvent, setCurrentEvent] = useState<IEvent>();
   const [compoundEvents, setCompoundEvents] = useState<IEvent[]>([]);
@@ -586,7 +586,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         Boot: e.target.value,
                       })
                     }
-                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500 rounded-md"
+                    className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500 rounded-md"
                   />
                 </div>
                 <div
@@ -918,7 +918,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                           });
                           setCurrentHashFunctions(temp);
                         }}
-                        className="w-full block pl-3 py-2 mr-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-500 dark:bg-gray-700 dark:text-gray-100 rounded-md"
+                        className="w-full block pl-3 py-2 mr-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                       />
                     </div>
                     <div className="w-full ml-2">

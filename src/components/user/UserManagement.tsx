@@ -91,7 +91,7 @@ export default function UserManagement() {
     return (
       <div className="flex w-full mt-10 items-center justify-center">
         <p className="text-red-700 font-bold">
-          You don't have permissions the manage the users
+          You don't have permissions to manage the users!
         </p>
       </div>
     );
@@ -177,13 +177,13 @@ export default function UserManagement() {
             <table className="min-w-full">
               <thead>
                 <tr className="border-t border-gray-200 dark:border-gray-500">
-                  <th className="px-6 py-3 bg-gray-50 bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3  bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <span className="lg:pl-2">User</span>
                   </th>
-                  <th className="px-6 py-3 bg-gray-50 bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3  bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <span className="lg:pl-2">Roles</span>
                   </th>
-                  <th className="px-6 py-3 bg-gray-50 bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3  bg-gray-50 dark:bg-gray-600 dark:text-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <span className="lg:pl-2">Actions</span>
                   </th>
                 </tr>

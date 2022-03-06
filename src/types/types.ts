@@ -1,6 +1,3 @@
-import { type } from "os";
-import { TypeOfTag } from "typescript";
-
 export const EventNames = {
   Raw: {
     Empty: {
@@ -89,6 +86,13 @@ export enum StreamConfigKey {
   CompressorExtras = "Compressor extras",
   RiverThreads = "River threads",
   MaxDeltaQueue = "Max delta queue",
+}
+
+export type Task = {
+  _id: string,
+  name: string,
+  date: string,
+  period: number,
 }
 
 export type HashFunction = {
@@ -196,6 +200,7 @@ export const DefaultStreamConfig: StreamConfig = {
 
 export const ip: string = "http://localhost:8000";
 export const api: string = "http://localhost:3001";
+export const api2 : string = "http://localhost:4001"
 
 export const configString: string = `##########################################################################################
 ##########################################################################################
