@@ -24,11 +24,8 @@ import { classNames, fetchSystemInfo } from "./utils";
 // Sidebar links
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
-  { name: "Servers", href: "#", icon: ServerIcon },
   { name: "Jobs", href:"/scheduler", icon: CalendarIcon},
-  { name: "Reports", href: "#", icon: InboxIcon },
   { name: "Users", href: "/users", icon: UsersIcon },
-  { name: "Settings", href: "#", icon: CogIcon },
   { name: "Sign Out", href: "/logout", icon: LogoutIcon },
 ];
 
@@ -286,30 +283,7 @@ function AppWrapper(props: any) {
               </button>
             </div>
           </div>
-          {/* Sidebar Search */}
-          <div className="px-3">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div
-                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                aria-hidden="true"
-              >
-                <SearchIcon
-                  className="mr-3 h-4 w-4 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm dark:bg-gray-700 dark:border-gray-800 dark:text-white border-gray-300 rounded-md"
-                placeholder="Search"
-              />
-            </div>
-          </div>
+
           <div className="flex-grow mt-5 flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
               {navigation.map((item) => (

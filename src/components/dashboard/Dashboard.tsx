@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -22,7 +21,6 @@ export default function Dashboard() {
   // The userContext is passed by the parent AppWrapper
   const user = useContext(UserContext);
 
-  const tasks = useContext(TaskContext)
   const [currentStream, setCurrentStream] = useState<number>(0);
   const [availableStreams, setAvailableStreams] = useState<any[]>([]);
   const [extraStreamInfo, setExtraStreamInfo] = useState<{
@@ -103,6 +101,7 @@ export default function Dashboard() {
 
   // Extra data is retrieved from the server to display more information in the Dashboard table.
   const fetchExtraStreamInfo = async (streams: any[]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const extraInfo: { [key in number]: object } = {};
     for (const stream of streams) {
       const streamId = stream[0];
