@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon, PlusIcon } from "@heroicons/react/outline";
@@ -6,7 +5,7 @@ import { api2, DefaultStreamConfig } from "../../types/types";
 import ErrorComponent from "../ErrorComponent";
 import '@themesberg/flowbite';
 import { useLocalStorage } from "../../useLocalStorage";
-import { TaskContext, UserContext } from "../../App";
+import { TaskContext, UserContext } from "../../AppWrapper";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
