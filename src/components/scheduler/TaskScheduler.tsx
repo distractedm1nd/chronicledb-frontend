@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useState,} from "react";
+import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon, PlusIcon } from "@heroicons/react/outline";
+import { Fragment, useEffect, useState,} from "react";
+
 import CreateJobModal from "./CreateJobModal";
 import { api2, Task } from "../../types/types";
-import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
 
 

@@ -4,6 +4,12 @@ import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Fragment, useContext, useEffect, useState } from "react";
 
+import CreateStreamModal from "./CreateStreamModal";
+import InsertArrayModal from "./InsertArrayModal";
+import InsertEventModal from "./InsertEventModal";
+import QueryTimeTravelModal from "./QueryTimeTravelModal";
+import Modal from "../Modal";
+import { TaskContext, UserContext } from "../../AppWrapper";
 import {
   classNames,
   fetchStreamAttribute,
@@ -11,12 +17,6 @@ import {
   recoverStreamSnapshot,
   shutdownStream,
 } from "../../utils";
-import CreateStreamModal from "./CreateStreamModal";
-import Modal from "../Modal";
-import InsertEventModal from "./InsertEventModal";
-import QueryTimeTravelModal from "./QueryTimeTravelModal";
-import { TaskContext, UserContext } from "../../AppWrapper";
-import InsertArrayModal from "./InsertArrayModal";
 
 export default function Dashboard() {
   // The userContext is passed by the parent AppWrapper

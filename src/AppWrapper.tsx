@@ -1,5 +1,6 @@
 import { Dialog, Menu,Transition } from "@headlessui/react";
 import {
+  CalendarIcon,
   CogIcon,
   HomeIcon,
   InboxIcon,
@@ -10,7 +11,6 @@ import {
   ServerIcon,
   UsersIcon,
   XIcon,
-  CalendarIcon,
 } from "@heroicons/react/outline";
 import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

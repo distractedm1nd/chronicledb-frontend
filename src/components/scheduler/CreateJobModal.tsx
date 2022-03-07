@@ -1,12 +1,13 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon, PlusIcon } from "@heroicons/react/outline";
-import { api2, DefaultStreamConfig } from "../../types/types";
-import ErrorComponent from "../ErrorComponent";
-import '@themesberg/flowbite';
-import { useLocalStorage } from "../../useLocalStorage";
-import { TaskContext, UserContext } from "../../AppWrapper";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import '@themesberg/flowbite';
+
+import ErrorComponent from "../ErrorComponent";
+import { TaskContext, UserContext } from "../../AppWrapper";
+import { api2, DefaultStreamConfig } from "../../types/types";
+import { useLocalStorage } from "../../useLocalStorage";
 
 
 type CreateJobModalProps = {
