@@ -3,12 +3,11 @@ import { ChevronDownIcon, PlusIcon } from "@heroicons/react/outline";
 import { Fragment, useEffect, useState,} from "react";
 
 import CreateJobModal from "./CreateJobModal";
-import { api2, Task } from "../../types/types";
-import { classNames } from "../../utils";
+import { Task } from "../../types/types";
+import {deleteJob, fetchJobs} from "../../utils";
 
 
-
-export default function TaskSchedular() {
+export default function TaskScheduler() {
 
     const [modalOpen, setModalState] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,48 +16,21 @@ export default function TaskSchedular() {
       console.log("From UseEffect: ");
       console.log(typeof(tasks));
       console.log(tasks);
-      fetchJobs();
+      refreshJobs();
     }, [modalOpen, setModalState]);
 
-    const fetchJobs = () => {
-      fetch(`${api2}/get-jobs`)
-        .then((response) => response.json())
-        .then((result) => setTasks(JSON.parse(result)))
-        .catch((error) => console.log("error", error));
+    const refreshJobs = () => {
+        fetchJobs().then((result) => setTasks(JSON.parse(result))).catch((error) => console.log("error", error));
     };
 
-    const deleteJob = (job : Task) => {
-      fetch(`${api2}/delete-job`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(job)
-      })
-      .then((response) => response.json())
+    const submitJobDeletion = async (job : Task) => {
+        console.debug("Deleting : " + JSON.stringify(job));
+      await deleteJob(job)
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
-    }
 
-    const executeCronJob = (job : Task) => {
-      fetch(`${api2}/execute-cron-job`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(job),
-      })
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      refreshJobs();
     }
-
-    const UserActions = [
-      {
-        name: "Start Cron Job",
-        onClick: () => {}
-      },
-    ];
 
   return (
     <>
@@ -128,61 +100,12 @@ export default function TaskSchedular() {
                       <span className="relative inline-flex shadow-sm rounded-md">
                         <button
                           type="button"
-                          className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-xs font-normal text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800  dark:bg-gray-600 dark:text-white dark:border-gray-700 dark:hover:bg-gray-500"
-                          onClick={
-                            () => {
-                              console.log("Deleting : " + JSON.stringify(job));
-                              deleteJob(job);
-                            }
-                          }
+                          className="relative inline-flex items-center px-4 py-2 rounded-md border border-gray-300 bg-white text-xs font-normal text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800  dark:bg-gray-600 dark:text-white dark:border-gray-700 dark:hover:bg-gray-500"
+                          onClick={() => submitJobDeletion(job)}
                         >
                           Delete Task
                         </button>
 
-                        <Menu as="span" className="-ml-px relative block">
-                          <Menu.Button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800  dark:bg-gray-600 dark:text-white dark:border-gray-700 dark:hover:bg-gray-500">
-                            <span className="sr-only">Open options</span>
-                            <ChevronDownIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </Menu.Button>
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                          >
-                            <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50 dark:bg-gray-600">
-                              <div className="py-1 z-50">
-                                {UserActions.map((item) => {
-                                  if (false)
-                                    return null;
-                                  return (
-                                    <Menu.Item key={item.name}>
-                                      {({ active }) => (
-                                        <button
-                                          onClick={() => {executeCronJob(job)}}
-                                          className={classNames(
-                                            active
-                                                ? "bg-gray-100 text-gray-900 dark:bg-gray-500 dark:text-gray-100"
-                                                : "text-gray-700 dark:text-gray-200",
-                                              "block px-4 py-2 text-xs font-regular w-full text-left"
-                                          )}
-                                        >
-                                          {item.name}
-                                        </button>
-                                      )}
-                                    </Menu.Item>
-                                  );
-                                })}
-                              </div>
-                            </Menu.Items>
-                          </Transition>
-                        </Menu>
                       </span>
                       </td>
                     </tr>

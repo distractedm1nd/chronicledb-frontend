@@ -25,7 +25,7 @@ import { classNames, fetchSystemInfo } from "./utils";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Servers", href: "#", icon: ServerIcon },
-  { name: "Jobs", href:"/schedular", icon: CalendarIcon},
+  { name: "Jobs", href:"/scheduler", icon: CalendarIcon},
   { name: "Reports", href: "#", icon: InboxIcon },
   { name: "Users", href: "/users", icon: UsersIcon },
   { name: "Settings", href: "#", icon: CogIcon },

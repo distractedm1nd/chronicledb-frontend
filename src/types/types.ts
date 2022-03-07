@@ -220,7 +220,6 @@ export const DefaultStreamConfig: StreamConfig = {
 
 export const ip = "http://localhost:8000";
 export const api = "http://localhost:3001";
-export const api2  = "http://localhost:4001"
 
 export const configString = `##########################################################################################
 ##########################################################################################

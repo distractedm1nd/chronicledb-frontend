@@ -23,7 +23,7 @@ const routes = [{
         element: <Login />
     },
     {
-        path: "/schedular",
+        path: "/scheduler",
         element: <AppWrapper><TaskScheduler /></AppWrapper>
     },
     {

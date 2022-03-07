@@ -1,9 +1,9 @@
 import {
-  api, api2,
+  api,
   IEvent,
   ip,
   StreamConfig,
-  StreamConfigKey,
+  StreamConfigKey, Task,
   User,
   ValidationType,
 } from "./types/types";
@@ -308,19 +308,64 @@ export const fetchStreams = async (user: User): Promise<any[]> => {
   else return [];
 };
 
-export const createTask = async (name: string, date: string, period: number) => {
-  return await fetch(`${api2}/create-task`, {
+/**
+ * Creates a job that creates a stream periodically.
+ * @param date The type of interval that is to be used (eg. Day, Month)
+ * @param period The number of units of the interval between every run.
+ * **/
+export const createCreateStreamJob = async (date: string, period: number) => {
+  return await fetch(`${api}/create-task/createStream`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name: name,
       date: date,
       period: period,
     }),
   }).then((response) => response.json())
 };
+
+/**
+ * Creates a job that inserts an event into a stream periodically.
+ * @param date The type of interval that is to be used (eg. Day, Month)
+ * @param period The number of units of the interval between every run.
+ * @param streamId The id of the stream where events will be inserted into
+ * **/
+export const createInsertOrderedJob = async (date: string, period: number, streamId: number) => {
+  return await fetch(`${api}/create-task/insertOrdered`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      date: date,
+      period: period,
+      streamId: streamId
+    }),
+  }).then((response) => response.json())
+};
+
+/**
+ * Fetches the list of jobs currently in the database
+ * **/
+export const fetchJobs = async () => {
+ return await fetch(`${api}/get-jobs`).then((response) => response.json())
+}
+
+/**
+ * Deletes a job by its id
+ * @param job The job to be deleted
+ * **/
+export const deleteJob = async (job: Task) => {
+  return await fetch(`${api}/delete-job`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(job)
+      }).then((response) => response.json())
+}
 
 /**
  * Input Validation function for stream configs in StreamModalConfig.tsx

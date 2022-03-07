@@ -3,7 +3,7 @@ import { CogIcon } from "@heroicons/react/outline";
 import { Fragment, useRef, useState } from "react";
 import '@themesberg/flowbite';
 
-import {createTask} from "../../utils";
+import {classNames, createCreateStreamJob, createInsertOrderedJob} from "../../utils";
 
 
 type CreateJobModalProps = {
@@ -18,13 +18,20 @@ export default function CreateJobModal({
   const cancelButtonRef = useRef(null);
 
   const [date, setDate] = useState<string>("Minute");
+  const [streamId, setStreamId] = useState<string>("0");
   const [period, setPeriod] = useState<number>(1);
-  const [taskName, setTaskName] = useState<string>("");
+  const [taskName, setTaskName] = useState<string>("Create Stream");
 
-  const submitTaskCreation = (name: string, date: string, period: number) => {
-    createTask(name, date, period)
-        .then((result) => console.debug(result))
-        .then((error) => console.error("error", error));
+  const submitTaskCreation =  () => {
+      if(taskName == "Create Stream") {
+          createCreateStreamJob(date, period)
+              .then((result) => console.debug(result))
+              .then((error) => console.error("error", error));
+      } else {
+          createInsertOrderedJob(date, period, parseInt(streamId))
+              .then((result) => console.debug(result))
+              .then((error) => console.error("error", error));
+      }
     setOpen(false);
   };
 
@@ -84,7 +91,7 @@ export default function CreateJobModal({
                             <form className="mt-2 space-y-8 divide-y divide-gray-200">
                                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                                     <div>
-                                            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-gray-200">
+                                            <div className={classNames("sm:grid sm:gap-4 sm:items-start sm:border-gray-200", taskName === "Create Stream" ? "sm:grid-cols-3" : "sm:grid-cols-4")}>
                                                 <div className="sm:mt-0 sm:col-span-1">
                                                 <label
                                                         htmlFor="multiple-disk-max-queue-number"
@@ -100,8 +107,6 @@ export default function CreateJobModal({
                                                         onChange={(event) => setTaskName(event.target.value)}
                                                     >
                                                                 <option>Create Stream</option>
-                                                                <option>System Info</option>
-                                                                <option>Show Right Flank</option>
                                                                 <option>Insert Ordered</option>
                                                     </select>
                                                 </div>
@@ -119,7 +124,6 @@ export default function CreateJobModal({
                                                         value={date}
                                                         onChange={(event) => setDate(event.target.value)}
                                                     >
-                                                                <option>Second</option>
                                                                 <option>Minute</option>
                                                                 <option>Day</option>
                                                                 <option>Month</option>
@@ -145,6 +149,25 @@ export default function CreateJobModal({
                                                                 <option>10</option>
                                                     </select>
                                                 </div>
+                                                { taskName === "Insert Ordered" &&
+                                                    <div className="sm:col-span-1">
+                                                        <label
+                                                            htmlFor="multiple-disk-max-queue-number"
+                                                            className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md  -mt-px inline-block px-1 text-xs font-medium text-gray-400"
+                                                        >
+                                                            Stream Id
+                                                        </label>
+                                                        <input
+                                                            id="streamId"
+                                                            type="text"
+                                                            name="streamId"
+                                                            className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                                            value={streamId}
+                                                            onChange={(event) => setStreamId(event.target.value)}
+                                                        >
+                                                        </input>
+                                                    </div>
+                                                }
                                             </div>
                                     </div>
                                 </div>
@@ -178,7 +201,7 @@ export default function CreateJobModal({
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={() => submitTaskCreation(taskName,date,period)}
+                  onClick={submitTaskCreation}
                   ref={cancelButtonRef}
                 >
                   Schedule
