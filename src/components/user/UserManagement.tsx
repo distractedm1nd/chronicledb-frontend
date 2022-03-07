@@ -129,16 +129,6 @@ export default function UserManagement() {
         open={userRolesModalOpen}
         setOpen={(val: any) => setUserRolesModalOpenState(val)}
       />
-      <InsertEventModal
-        open={insertEventModalOpen}
-        setOpen={setInsertEventModalOpen}
-        currentStream={currentStream}
-      />
-      <QueryTimeTravelModal
-        open={queryTimeTravelModalOpen}
-        setOpen={setQueryTimeTravelModalOpen}
-        currentStream={currentStream}
-      />
       <Modal
         title={modalTitle}
         body={modalBody}

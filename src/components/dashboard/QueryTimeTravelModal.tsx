@@ -21,7 +21,6 @@ const QueryTimeTravelModal = ({
   });
   const cancelButtonRef = useRef(null);
 
-  // TODO: These three things can be combined into an object
   const [margin, setMargin] = useState<string>("Exclusive");
   const [intervalStart, setIntervalStart] = useState<number>(0);
   const [intervalEnd, setIntervalEnd] = useState<number>(1);

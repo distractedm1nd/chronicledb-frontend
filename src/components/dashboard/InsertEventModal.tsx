@@ -183,6 +183,7 @@ const InsertEventModal = ({
                               // @ts-ignore
                               dataType in EventNames[eventType] &&
                                 Object.keys(
+                                  // @ts-ignore
                                   EventNames[eventType][dataType]
                                 ).map((name) => <option>{name}</option>)
                             }
