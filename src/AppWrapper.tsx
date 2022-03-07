@@ -31,8 +31,6 @@ const navigation = [
 
 // Links for the user menu dropdown
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
   { name: "Sign out", href: "/logout" },
 ];
 
@@ -93,8 +91,7 @@ function AppWrapper(props: any) {
       navigate("/login");
       return;
     }
-    // QUESTION: Isn't token logic already implemented in the other branch? We can probably merge here.
-    setUser({ username: state.username, roles: state.roles, token: "" });
+    setUser({ username: state.username, roles: state.roles, token: state.token });
   }, []);
 
   return (

@@ -1,13 +1,14 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import "@themesberg/flowbite";
+
 import RoleToggle from "./RoleToggle";
+import ErrorComponent from "../ErrorComponent";
+import Notification from "../Notification";
 import { UserContext } from "../../AppWrapper";
 import { api, DefaultStreamConfig, Roles } from "../../types/types";
 import { changeRoles } from "../../utils";
-import ErrorComponent from "../ErrorComponent";
-import "@themesberg/flowbite";
-import Notification from "../Notification";
 
 type CreateUserModalProps = {
   currentRoles: string[];
@@ -49,7 +50,7 @@ export default function ChangeRoleModal({
       userContext.username,
       username,
       newRoles,
-      userContext.token
+      userContext.token || ""
     );
     if (response.status === 200) {
       toggleNotification(true);

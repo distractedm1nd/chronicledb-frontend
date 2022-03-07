@@ -158,12 +158,14 @@ export const login = async (username: string, password: string) => {
  * Allows an admin to create a new user.
  * @param caller The currently logged in user
  * @param newUser The information of the new user to be created
+ * @param token The JSON Web Token of the caller
  * **/
-export const createUser = async (caller: User, newUser: User) => {
+export const createUser = async (caller: User, newUser: User, token: string) => {
   return await fetch(api + "/create-user", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": token
     },
     body: JSON.stringify({
       askedPermission: "admin",
@@ -175,20 +177,45 @@ export const createUser = async (caller: User, newUser: User) => {
 };
 
 /**
+ * Allows an admin to create a new user.
+ * @param caller The currently logged in user
+ * @param newUser The information of the new user to be created
+ * @param token The JSON Web Token of the caller
+ * **/
+export const deleteUser = async (caller: string, newUser: User, token: string) => {
+  return await fetch(api + "/delete-user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({
+      askedPermission: "admin",
+      caller: caller,
+      username: newUser.username,
+      roles: newUser.roles,
+    }),
+  });
+};
+
+/**
  * Allows an admin to update the roles of another user.
  * @param caller The username of the user sending the request.
  * @param username The username of the user.
  * @param roles The updated roles of the user.
+ * @param token The JSON Web Token of the caller
  * **/
 export const changeRoles = async (
   caller: string,
   username: string,
-  roles: string[]
+  roles: string[],
+  token: string
 ) => {
   return await fetch(api + "/change-roles", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": token
     },
     body: JSON.stringify({
       askedPermission: "admin",
@@ -204,7 +231,7 @@ export const changeRoles = async (
  * Sends a request to the Authentication backend to fetch all users.
  * **/
 export const fetchUsers = async () => {
-  return await fetch(`${ip}/get_users`)
+  return await fetch(`${api}/get-users`)
       .then((response) => response.json())
 };
 
@@ -212,12 +239,14 @@ export const fetchUsers = async () => {
  * Sends a request to the Authentication backend to reset a users password.
  * @param caller The username of the user making the request
  * @param username The username of the user who's password is to be reset
+ * @param token The JSON Web Token of the caller
  * **/
-export const resetPassword = async (caller: string, username: string) => {
+export const resetPassword = async (caller: string, username: string, token: string) => {
   return await fetch(api + "/reset-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": token
     },
     body: JSON.stringify({
       caller: caller,

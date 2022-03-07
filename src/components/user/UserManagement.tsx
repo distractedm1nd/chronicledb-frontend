@@ -1,15 +1,15 @@
-import { Fragment, useEffect, useState, useContext } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
+import { Fragment, useContext,useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ChangeRoleModal from './ChangeRoleModal';
-import Notification from '../Notification';
 import CreateUserModal from './CreateUserModal';
-import { api, User } from '../../types/types';
+import Notification from '../Notification';
 import { UserContext } from "../../AppWrapper";
-import { classNames, fetchUsers, resetPassword } from '../../utils';
+import { User } from '../../types/types';
+import {classNames, deleteUser, fetchUsers, resetPassword} from '../../utils';
 
 export default function UserManagement() {
   const userContext = useContext(UserContext);
@@ -33,7 +33,7 @@ export default function UserManagement() {
     {
       name: 'Delete user',
       onClick: (user: User) => {
-        deleteUser(user, userContext.token);
+        submitUserDeletion(user);
       },
     },
     {
@@ -76,20 +76,8 @@ export default function UserManagement() {
   }
 
   //
-  const deleteUser = async (user: User) => {
-    const response = await fetch(api + '/delete-user', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        caller: activeUser,
-        username: user.username,
-        roles: user.roles,
-        askedPermission: 'admin',
-      }),
-    });
-    const resJSON = await response.json();
+  const submitUserDeletion = async (user: User) => {
+    const response = await deleteUser(activeUser, user, userContext.token || "");
 
     if (response.status === 200) {
       fetchUsers();
@@ -102,7 +90,7 @@ export default function UserManagement() {
   };
 
   const submitPasswordReset = async (username: string) => {
-    const result = await resetPassword(activeUser, username, userContext.token);
+    const result = await resetPassword(activeUser, username, userContext.token || "");
     if (result.status === 200) {
       setNotification({
         shown: true,

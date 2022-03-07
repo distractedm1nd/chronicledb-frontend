@@ -1,12 +1,13 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { api, DefaultStreamConfig, Roles } from "../../types/types";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import "@themesberg/flowbite";
-import Notification from "../Notification";
+
 import RoleToggle from "./RoleToggle";
 import ErrorComponent from "../ErrorComponent";
+import Notification from "../Notification";
 import { UserContext } from "../../AppWrapper";
+import { api, DefaultStreamConfig, Roles } from "../../types/types";
 import { createUser } from "../../utils";
 
 type CreateUserModalProps = {
@@ -61,7 +62,7 @@ export default function CreateUserModal({
       setErrorMsg("Please provide a valid username.");
       return;
     }
-    await createUser(userContext, newUser, userContext.token);
+    await createUser(userContext, newUser, userContext.token || "");
   };
 
   return (
