@@ -2,32 +2,34 @@ import { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import UniLogo from "../../assets/Uni_Marburg_Logo.svg";
 import { api } from "../../types/types";
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, Transition } from "@headlessui/react";
 import {
   MoonIcon,
   SunIcon,
   DesktopComputerIcon,
   DotsVerticalIcon,
-} from '@heroicons/react/solid';
+} from "@heroicons/react/solid";
 import { useLocalStorage } from "../../useLocalStorage";
+import { XCircleIcon } from "@heroicons/react/solid";
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Login() {
   const [user, setUser] = useState({ username: "", password: "" });
-  const [theme, setTheme] = useLocalStorage("theme","light");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [theme, setTheme] = useLocalStorage("theme", "light");
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.remove("dark");
     }
-  }, [theme])
+  }, [theme]);
 
   useEffect(() => {
     if (location.pathname === "/logout") {
@@ -38,6 +40,12 @@ export default function Login() {
 
   const loginUser = async (e: any) => {
     e.preventDefault();
+
+    if (!user.username.trim() || !user.password.trim()) {
+      setErrorMessage("Please enter valid login credentials.");
+      return;
+    }
+
     const response = await fetch(api + "/login", {
       method: "POST",
       headers: {
@@ -50,10 +58,12 @@ export default function Login() {
     });
     let res = await response.json();
 
-    console.log(res);
     if (response.status === 200) {
       localStorage.setItem("user", JSON.stringify(res));
       navigate("/");
+    } else if (response.status === 400 || response.status === 401) {
+      setErrorMessage(res.message);
+      return;
     }
   };
 
@@ -65,68 +75,83 @@ export default function Login() {
             <Menu.Button className="absolute inset-y-0 right-0 h-5 bg-gray-100 rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
               <span className="sr-only">Open options</span>
               <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
-              </Menu.Button>
+            </Menu.Button>
           </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-        <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="origin-top-right absolute right-0 mt-6 w-56 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("light") : ""}
+                    >
+                      <SunIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      Light
+                    </a>
                   )}
-                  onClick={active ? setTheme("light"):""}
-                >
-                  <SunIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Light
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("dark") : ""}
+                    >
+                      <MoonIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-100"
+                        aria-hidden="true"
+                      />
+                      Dark
+                    </a>
                   )}
-                  onClick={active ? setTheme("dark"):""}
-                >
-                  <MoonIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-100" aria-hidden="true" />
-                  Dark
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300',
-                    'group flex items-center px-4 py-2 text-sm'
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? "bg-gray-100 dark:bg-gray-500 text-gray-900 dark:text-gray-100"
+                          : "text-gray-700 dark:text-gray-300",
+                        "group flex items-center px-4 py-2 text-sm"
+                      )}
+                      onClick={active ? setTheme("system") : ""}
+                    >
+                      <DesktopComputerIcon
+                        className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      System
+                    </a>
                   )}
-                  onClick={active ? setTheme("system"):""}
-                >
-                  <DesktopComputerIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  System
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-20 w-auto" src={UniLogo} alt="Workflow" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
@@ -154,9 +179,10 @@ export default function Login() {
                     type="email"
                     autoComplete="email"
                     value={user.username}
-                    onChange={(e) =>
-                      setUser({ ...user, username: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setErrorMessage("");
+                      setUser({ ...user, username: e.target.value });
+                    }}
                     required
                     className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
@@ -177,9 +203,10 @@ export default function Login() {
                     type="password"
                     value={user.password}
                     autoComplete="current-password"
-                    onChange={(e) =>
-                      setUser({ ...user, password: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setErrorMessage("");
+                      setUser({ ...user, password: e.target.value });
+                    }}
                     required
                     className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
@@ -187,21 +214,6 @@ export default function Login() {
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-indigo-600 dark:bg-gray-500 focus:ring-indigo-500 border-gray-300 dark:border-gray-500 rounded"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-900 dark:text-gray-200"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
                 <div className="text-sm">
                   <a
                     href="#"
@@ -221,6 +233,28 @@ export default function Login() {
                   Sign in
                 </button>
               </div>
+              {errorMessage && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <XCircleIcon
+                        className="h-5 w-5 text-red-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">
+                        An error occurred
+                      </h3>
+                      <div className="mt-2 text-sm text-red-700">
+                        <ul role="list" className="list-disc pl-5 space-y-1">
+                          <p>{errorMessage}</p>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </form>
           </div>
         </div>

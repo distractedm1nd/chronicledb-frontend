@@ -11,10 +11,16 @@ import QueryTimeTravelModal from "../dashboard/QueryTimeTravelModal";
 import CreateUserModal from "./CreateUserModal";
 import { useNavigate } from "react-router-dom";
 import ChangeRoleModal from "./ChangeRoleModal";
+import Notification from "../Notification";
 
 export default function UserManagement() {
   const [currentStream, setCurrentStream] = useState<number>(0);
   const [modalOpen, setModalState] = useState(false);
+  const [notification, setNotification] = useState({
+    shown: false,
+    title: "",
+    message: "",
+  });
   const [userRolesModalOpen, setUserRolesModalOpenState] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [editUser, setEditetUser] = useState<{
@@ -37,8 +43,8 @@ export default function UserManagement() {
   const UserActions = [
     {
       name: "Delete user",
-      onClick: () => {
-        console.log("deleting....");
+      onClick: (user: User) => {
+        deleteUser(user);
       },
     },
     {
@@ -78,15 +84,6 @@ export default function UserManagement() {
       .catch((error) => console.log("error", error));
   };
 
-  const fetchRightFlank = async (streamId: number) => {
-    setModalTitle("Right Flank: " + streamId);
-    setInfoModalOpen(true);
-    fetch(`${ip}/show_right_flank/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
-  };
-
   if (!userRoles.includes("admin")) {
     return (
       <div className="flex w-full mt-10 items-center justify-center">
@@ -96,6 +93,31 @@ export default function UserManagement() {
       </div>
     );
   }
+
+  const deleteUser = async (user: User) => {
+    const response = await fetch(api + "/delete-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        caller: activeUser,
+        username: user.username,
+        roles: user.roles,
+        askedPermission: "admin",
+      }),
+    });
+    let resJSON = await response.json();
+
+    if (response.status === 200) {
+      fetchUsers();
+      setNotification({
+        shown: true,
+        title: "User successfully deleted",
+        message: "The user was successfully deleted.",
+      });
+    }
+  };
 
   const resetPassword = async (username: string) => {
     const response = await fetch(api + "/reset-password", {
@@ -112,7 +134,11 @@ export default function UserManagement() {
     let resJSON = await response.json();
 
     if (response.status === 200) {
-      alert(resJSON.message);
+      setNotification({
+        shown: true,
+        title: "Password successfully resetted",
+        message: "The password was successfully resetted.",
+      });
     }
   };
 
@@ -127,16 +153,6 @@ export default function UserManagement() {
         currentRoles={editUser.roles}
         open={userRolesModalOpen}
         setOpen={(val: any) => setUserRolesModalOpenState(val)}
-      />
-      <InsertEventModal
-        open={insertEventModalOpen}
-        setOpen={setInsertEventModalOpen}
-        currentStream={currentStream}
-      />
-      <QueryTimeTravelModal
-        open={queryTimeTravelModalOpen}
-        setOpen={setQueryTimeTravelModalOpen}
-        currentStream={currentStream}
       />
       <Modal
         title={modalTitle}
@@ -274,6 +290,14 @@ export default function UserManagement() {
           </div>
         </div>
       </main>
+      <Notification
+        shown={notification.shown}
+        title={notification.title}
+        message={notification.message}
+        toggleNotification={(val: boolean) =>
+          setNotification({ ...notification, shown: false })
+        }
+      />
     </>
   );
 }

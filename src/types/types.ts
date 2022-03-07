@@ -98,7 +98,7 @@ export type HashFunction = {
 
 export type IEvent = { [EventType: string]: any };
 
-export type stream = {"t1":number, "payload":IEvent | IEvent[] | undefined}
+export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
 
 export type Aggregate = SMA | BloomFilter;
 
@@ -194,7 +194,7 @@ export const DefaultStreamConfig: StreamConfig = {
   MaxDeltaQueue: 10,
 };
 
-export const ip: string = "http://localhost:8000";
+export const ip: string = "http://192.168.158.77:8000";
 export const api: string = "http://localhost:3001";
 
 export const configString: string = `##########################################################################################
