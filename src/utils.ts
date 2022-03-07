@@ -199,6 +199,34 @@ export const changeRoles = async (
   });
 };
 
+
+/**
+ * Sends a request to the Authentication backend to fetch all users.
+ * **/
+export const fetchUsers = async () => {
+  return await fetch(`${ip}/get_users`)
+      .then((response) => response.json())
+};
+
+/**
+ * Sends a request to the Authentication backend to reset a users password.
+ * @param caller The username of the user making the request
+ * @param username The username of the user who's password is to be reset
+ * **/
+export const resetPassword = async (caller: string, username: string) => {
+  return await fetch(api + "/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      caller: caller,
+      username: username,
+      askedPermission: "admin",
+    }),
+  }).then(res => res.json());
+}
+
 /**
  * Sends a request to the Rust backend to shut down a running stream.
  * @param streamId id of the stream to be shut down.
