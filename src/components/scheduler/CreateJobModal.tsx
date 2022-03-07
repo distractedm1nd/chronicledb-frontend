@@ -1,13 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { CogIcon, PlusIcon } from "@heroicons/react/outline";
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { CogIcon } from "@heroicons/react/outline";
+import { Fragment, useRef, useState } from "react";
 import '@themesberg/flowbite';
 
-import ErrorComponent from "../ErrorComponent";
-import { TaskContext, UserContext } from "../../AppWrapper";
-import { api2, DefaultStreamConfig } from "../../types/types";
-import { useLocalStorage } from "../../useLocalStorage";
+import {createTask} from "../../utils";
 
 
 type CreateJobModalProps = {
@@ -19,57 +15,21 @@ export default function CreateJobModal({
   open,
   setOpen,
 }: CreateJobModalProps) {
-  const [configState, setConfigState] = useState(DefaultStreamConfig);
-  const [errorMsg, setErrorMsg] = useState("");
   const cancelButtonRef = useRef(null);
-  const [theme, setTheme] = useLocalStorage("theme","light");
+
   const [date, setDate] = useState<string>("Minute");
   const [period, setPeriod] = useState<number>(1);
-  const [task, setTask] = useState<string>("");
-  const user = useContext(UserContext);
-  const tasks = useContext(TaskContext);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [taskName, setTaskName] = useState<string>("");
 
-  const scheduleJobs = () => {
-    fetch(`${api2}/jobs`)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+  const submitTaskCreation = (name: string, date: string, period: number) => {
+    createTask(name, date, period)
+        .then((result) => console.debug(result))
+        .then((error) => console.error("error", error));
+    setOpen(false);
   };
 
-  const createTask = (name: string, date: string, period: number) => {
-    fetch(`${api2}/create-task`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: task,
-        date: date,
-        period: period,
-      }),
-    })
-    .then((response) => response.json())
-    .then((result) => console.log(result))
-    .then((error) => console.log("error", error));
-  };
-
-
-  // useEffect(() => {
-  //   if (theme === 'dark') {
-  //     document.documentElement.classList.add('dark');
-  //   } else {
-  //     document.documentElement.classList.remove('dark')
-  //   }
-  // }, [theme])
-
-  useEffect(() => {
-    setConfigState(DefaultStreamConfig);
-  }, [open]);
-
-  return (
-    <Transition.Root show={open} as={Fragment}>
+    return (
+        <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
@@ -136,8 +96,8 @@ export default function CreateJobModal({
                                                         id="date"
                                                         name="date"
                                                         className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                                                        value={task}
-                                                        onChange={(event) => setTask(event.target.value)}
+                                                        value={taskName}
+                                                        onChange={(event) => setTaskName(event.target.value)}
                                                     >
                                                                 <option>Create Stream</option>
                                                                 <option>System Info</option>
@@ -213,21 +173,17 @@ export default function CreateJobModal({
                 </button>
                 <div id="tooltip-default" role="tooltip" className="tooltip absolute z-10 inline-block rounded-lg bg-gray-900 font-medium shadow-sm text-white py-2 px-3 text-sm duration-300 invisible dark:bg-gray-700">
                   Tooltip content
-                  <div className="tooltip-arrow" data-popper-arrow></div>
+                  <div className="tooltip-arrow" data-popper-arrow />
                 </div>
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-500 shadow-sm px-4 py-2 bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={() => {
-                    createTask(task,date,period);
-                    setOpen(false);}
-                    }
+                  onClick={() => submitTaskCreation(taskName,date,period)}
                   ref={cancelButtonRef}
                 >
-                  schedule
+                  Schedule
                 </button>
               </div>
-              {errorMsg && <ErrorComponent errorMessage={errorMsg} />}
             </div>
           </Transition.Child>
         </div>

@@ -1,5 +1,5 @@
 import {
-  api,
+  api, api2,
   IEvent,
   ip,
   StreamConfig,
@@ -306,6 +306,20 @@ export const fetchStreams = async (user: User): Promise<any[]> => {
       response.json()
     );
   else return [];
+};
+
+export const createTask = async (name: string, date: string, period: number) => {
+  return await fetch(`${api2}/create-task`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: name,
+      date: date,
+      period: period,
+    }),
+  }).then((response) => response.json())
 };
 
 /**
