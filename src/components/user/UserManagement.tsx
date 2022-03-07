@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useContext } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
@@ -8,9 +8,11 @@ import ChangeRoleModal from './ChangeRoleModal';
 import Notification from '../Notification';
 import CreateUserModal from './CreateUserModal';
 import { api, User } from '../../types/types';
+import { UserContext } from "../../AppWrapper";
 import { classNames, fetchUsers, resetPassword } from '../../utils';
 
 export default function UserManagement() {
+  const userContext = useContext(UserContext);
   const [modalOpen, setModalState] = useState(false);
   const [notification, setNotification] = useState({
     shown: false,
@@ -31,7 +33,7 @@ export default function UserManagement() {
     {
       name: 'Delete user',
       onClick: (user: User) => {
-        deleteUser(user);
+        deleteUser(user, userContext.token);
       },
     },
     {
@@ -73,11 +75,12 @@ export default function UserManagement() {
     );
   }
 
+  //
   const deleteUser = async (user: User) => {
     const response = await fetch(api + '/delete-user', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         caller: activeUser,
@@ -99,7 +102,7 @@ export default function UserManagement() {
   };
 
   const submitPasswordReset = async (username: string) => {
-    const result = await resetPassword(activeUser, username);
+    const result = await resetPassword(activeUser, username, userContext.token);
     if (result.status === 200) {
       setNotification({
         shown: true,

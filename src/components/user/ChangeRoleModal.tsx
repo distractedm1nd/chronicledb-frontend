@@ -48,9 +48,9 @@ export default function ChangeRoleModal({
     const response = await changeRoles(
       userContext.username,
       username,
-      newRoles
+      newRoles,
+      userContext.token
     );
-    const json = await response.json();
     if (response.status === 200) {
       toggleNotification(true);
       setOpen(false);

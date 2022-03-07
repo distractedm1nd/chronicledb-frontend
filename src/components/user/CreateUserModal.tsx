@@ -61,7 +61,7 @@ export default function CreateUserModal({
       setErrorMsg("Please provide a valid username.");
       return;
     }
-    await createUser(userContext, newUser);
+    await createUser(userContext, newUser, userContext.token);
   };
 
   return (
