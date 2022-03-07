@@ -1,90 +1,113 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Transition, Dialog, Menu } from "@headlessui/react";
+import { Dialog, Menu,Transition } from "@headlessui/react";
 import {
-  HomeIcon,
-  ServerIcon,
-  InboxIcon,
-  UsersIcon,
+  CalendarIcon,
   CogIcon,
-  ChevronDownIcon,
+  HomeIcon,
+  InboxIcon,
+  LogoutIcon,
   MenuAlt2Icon,
-  PlusIcon,
   SearchIcon,
   SelectorIcon,
+  ServerIcon,
+  UsersIcon,
   XIcon,
-  LogoutIcon,
 } from "@heroicons/react/outline";
-import "./App.css";
-import { classNames } from "./utils";
-import UniLogo from "./assets/Uni_Marburg_Logo.svg";
-import BSeeger from "./assets/bseeger.jpeg";
-import { ip } from "./types/types";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Modal from "./components/Modal";
 
+import BSeeger from "./assets/bseeger.jpeg";
+import UniLogo from "./assets/Uni_Marburg_Logo.svg";
+import Modal from "./components/Modal";
+import { ip, User } from "./types/types";
+import { classNames, fetchSystemInfo } from "./utils";
+
+// Sidebar links
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
-  { name: "Servers", href: "#", icon: ServerIcon },
-  { name: "Reports", href: "#", icon: InboxIcon },
+  { name: "Jobs", href:"/scheduler", icon: CalendarIcon},
   { name: "Users", href: "/users", icon: UsersIcon },
-  { name: "Settings", href: "#", icon: CogIcon },
   { name: "Sign Out", href: "/logout", icon: LogoutIcon },
 ];
+
+// Links for the user menu dropdown
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign out", href: "/logout" },
 ];
 
+// Storage using react context, so that user information can be given to child components.
 export const UserContext = React.createContext({
   username: "",
   roles: [] as string[],
   token: "",
-});
+} as User);
 
-function App(props: any) {
+export const TaskContext = React.createContext([
+  {
+    name:"",
+    date:"",
+    period:"",
+  }
+]);
+
+function AppWrapper(props: any) {
+  // The sidebar corresponds to the mobile sidebar, which is hidden on screens larger than the 'sm' breakpoint.
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  // The information modal is used to display information fetched by the SystemInfo query
+  const [infoModal, setInfoModal] = useState({
+    open: false,
+    title: "Loading...",
+    body: "",
+  });
 
-  const [modalTitle, setModalTitle] = useState("Loading...");
   const [user, setUser] = useState({
     username: "Prof. Seeger",
     roles: [] as string[],
     token: "",
   });
-  const [modalBody, setModalBody] = useState("");
+  const [tasks, setTasks] = useState([{
+    name:"Create Stream",
+    date:"second",
+    period:"2",
+  }])
 
-  const fetchSystemInfo = () => {
-    setModalTitle("System Info");
-    setInfoModalOpen(true);
-    fetch(`${ip}/system_info`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
+  // The following hooks are used to emulate browser emulation in our SPA.
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const showSystemInfo = async () => {
+    setInfoModal({
+      open: true,
+      title: "System Info",
+      body: await fetchSystemInfo(),
+    });
   };
 
   useEffect(() => {
+    // Question: Why isn't the useLocalStorage hook used here?
     const savedUser = localStorage.getItem("user");
     const state = savedUser && JSON.parse(savedUser);
     if (!state) {
       navigate("/login");
       return;
     }
-    // TODO: add token logic
+    // QUESTION: Isn't token logic already implemented in the other branch? We can probably merge here.
     setUser({ username: state.username, roles: state.roles, token: "" });
   }, []);
 
   return (
     <UserContext.Provider value={user}>
+      <TaskContext.Provider value={tasks}>
       <Modal
-        title={modalTitle}
-        body={modalBody}
+        title={infoModal.title}
+        body={infoModal.body}
         buttonTitle={"Close"}
-        open={infoModalOpen}
-        setOpen={setInfoModalOpen}
+        open={infoModal.open}
+        setOpen={(openState) =>
+          setInfoModal((current) => ({ ...current, open: openState }))
+        }
       />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -173,17 +196,17 @@ function App(props: any) {
         </Dialog>
       </Transition.Root>
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-        <div className="border-r border-gray-200 pt-5 flex flex-col flex-grow bg-white overflow-y-auto">
+        <div className="border-r border-gray-200 dark:border-gray-900 pt-5 flex flex-col flex-grow bg-white dark:bg-gray-800 overflow-y-auto">
           <div className="flex-shrink-0 px-4 flex justify-center items-center">
             <img
-              className="h-16 w-auto"
+              className="dark:bg-gray-700 py-2 px-4 rounded-xl"
               src={UniLogo}
               alt="Logo der Philipps Universität Marburg"
             />
           </div>
           <Menu as="div" className="px-3 relative inline-block text-left pt-6">
             <div>
-              <Menu.Button className="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
+              <Menu.Button className="group w-full bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-800">
                 <span className="flex w-full justify-between items-center">
                   <span className="flex min-w-0 items-center justify-between space-x-3">
                     <img
@@ -192,11 +215,11 @@ function App(props: any) {
                       alt=""
                     />
                     <span className="flex-1 flex flex-col min-w-0">
-                      <span className="text-gray-900 text-sm font-medium truncate">
+                      <span className="text-gray-900 dark:text-white text-sm font-medium truncate">
                         {user.username}
                       </span>
                       {user.roles.includes("admin") && (
-                        <span className="text-gray-500 text-sm truncate">
+                        <span className="text-gray-500 dark:text-gray-200 text-sm truncate">
                           Administrator
                         </span>
                       )}
@@ -246,44 +269,21 @@ function App(props: any) {
                 )}
                 aria-hidden="true"
               />
-              <a href="#" className="truncate hover:text-gray-600">
+              <a href="#" className="truncate dark:text-gray-200 dark:hover:text-gray-300 hover:text-gray-600">
                 <span>Connected:</span>
               </a>
             </div>
-            <div className="flex mt-2 ml-2 text-gray-500 font-normal">
+            <div className="flex mt-2 ml-2 text-gray-500 dark:text-gray-400 font-normal">
               <p>{ip}</p>
               <button
-                className="bg-gray-200 ml-auto rounded-md shadow-lg px-2"
-                onClick={() => fetchSystemInfo()}
+                className="bg-gray-200 dark:bg-gray-700 dark:text-white ml-auto rounded-md shadow-lg px-2"
+                onClick={showSystemInfo}
               >
                 ...
               </button>
             </div>
           </div>
-          {/* Sidebar Search */}
-          <div className="px-3">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div
-                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                aria-hidden="true"
-              >
-                <SearchIcon
-                  className="mr-3 h-4 w-4 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
-                placeholder="Search"
-              />
-            </div>
-          </div>
+
           <div className="flex-grow mt-5 flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
               {navigation.map((item) => (
@@ -294,8 +294,8 @@ function App(props: any) {
                     item.href === "/logout"
                       ? "text-red-700"
                       : item.href === location.pathname
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                      ? "bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-gray-100",
                     "group rounded-md py-2 px-2 flex items-center text-sm font-medium"
                   )}
                 >
@@ -304,8 +304,8 @@ function App(props: any) {
                       item.href === "/logout"
                         ? "text-red-700"
                         : item.href === location.pathname
-                        ? "text-gray-500"
-                        : "text-gray-400 group-hover:text-gray-500",
+                        ? "text-gray-500 dark:text-gray-200"
+                        : "text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300",
                       "mr-3 flex-shrink-0 h-6 w-6"
                     )}
                     aria-hidden="true"
@@ -330,12 +330,12 @@ function App(props: any) {
               <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-
           {props.children}
         </div>
       </div>
+      </TaskContext.Provider>
     </UserContext.Provider>
   );
 }
 
-export default App;
+export default AppWrapper;

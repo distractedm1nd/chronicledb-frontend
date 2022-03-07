@@ -1,13 +1,13 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import { api, DefaultStreamConfig, Roles } from "../../types/types";
-import ErrorComponent from "../ErrorComponent";
 import "@themesberg/flowbite";
-import RoleSwitch from "./RoleSwitch";
-import { UserContext } from "../../App";
 import Notification from "../Notification";
+import RoleToggle from "./RoleToggle";
+import ErrorComponent from "../ErrorComponent";
+import { UserContext } from "../../AppWrapper";
+import { createUser } from "../../utils";
 
 type CreateUserModalProps = {
   open: boolean;
@@ -19,7 +19,7 @@ export default function CreateUserModal({
   setOpen,
 }: CreateUserModalProps) {
   const userContext = useContext(UserContext);
-  const [userState, setUserState] = useState<{
+  const [newUser, setNewUser] = useState<{
     username: string;
     roles: string[];
   }>({ username: "", roles: [] });
@@ -28,49 +28,40 @@ export default function CreateUserModal({
   const cancelButtonRef = useRef(null);
 
   const setRole = (roleKey: string) => {
+    // If the Admin toggle is used, activate all roles.
     if (roleKey === Roles.ADMIN) {
-      setUserState({ ...userState, roles: Object.values(Roles) });
+      setNewUser({ ...newUser, roles: Object.values(Roles) });
     } else {
-      setUserState({
-        ...userState,
-        roles: [...userState.roles, roleKey],
+      setNewUser({
+        ...newUser,
+        roles: [...newUser.roles, roleKey],
       });
     }
   };
 
   const removeRole = (roleKey: string) => {
-    setUserState({
-      ...userState,
-      roles: userState.roles.filter((role) => role !== roleKey),
+    setNewUser({
+      ...newUser,
+      roles: newUser.roles.filter((role) => role !== roleKey),
     });
   };
 
   useEffect(() => {
-    setUserState({ username: "", roles: [] });
+    // Reset the fields when the modal is opened
+    setNewUser({ username: "", roles: [] });
   }, [open]);
 
   useEffect(() => {
+    // When input fields are changed, reset the error message.
     setErrorMsg("");
-  }, [userState]);
+  }, [newUser]);
 
-  const createUser = async () => {
-    const response = await fetch(api + "/create-user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        askedPermission: "admin",
-        caller: userContext.username,
-        username: userState.username,
-        roles: userState.roles,
-      }),
-    });
-
-    if (response.status === 200) {
-      toggleNotification(true);
-      setOpen(false);
+  const handleSubmit = async () => {
+    if (!newUser.username.trim()) {
+      setErrorMsg("Please provide a valid username.");
+      return;
     }
+    await createUser(userContext, newUser);
   };
 
   return (
@@ -140,11 +131,11 @@ export default function CreateUserModal({
                           type="text"
                           name="data"
                           id="data"
-                          value={userState.username}
+                          value={newUser.username}
                           // TODO: parse to array
                           onChange={(e) =>
-                            setUserState({
-                              ...userState,
+                            setNewUser({
+                              ...newUser,
                               username: e.target.value,
                             })
                           }
@@ -156,12 +147,12 @@ export default function CreateUserModal({
                   {Object.keys(Roles).map((key) => {
                     const roleKey = key as keyof typeof Roles;
                     return (
-                      <RoleSwitch
-                        name={Roles[roleKey]}
-                        checkedCond={userState.roles.includes(Roles[roleKey])}
-                        set={() => setRole(Roles[roleKey])}
-                        remove={() => removeRole(Roles[roleKey])}
-                      />
+                        <RoleToggle
+                            name={Roles[roleKey]}
+                            checked={newUser.roles.includes(Roles[roleKey])}
+                            set={() => setRole(Roles[roleKey])}
+                            remove={() => removeRole(Roles[roleKey])}
+                        />
                     );
                   })}
                 </div>
@@ -193,13 +184,7 @@ export default function CreateUserModal({
                   <button
                     type="button"
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={async () => {
-                      if (!userState.username.trim()) {
-                        setErrorMsg("please provide a valid username");
-                        return;
-                      }
-                      let createdUser = await createUser();
-                    }}
+                    onClick={handleSubmit}
                     ref={cancelButtonRef}
                   >
                     Create User

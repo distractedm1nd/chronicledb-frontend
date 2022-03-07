@@ -10,16 +10,14 @@ import {
   DotsVerticalIcon,
 } from "@heroicons/react/solid";
 import { useLocalStorage } from "../../useLocalStorage";
+import { classNames, login } from "../../utils";
 import { XCircleIcon } from "@heroicons/react/solid";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Login() {
   const [user, setUser] = useState({ username: "", password: "" });
-  const [errorMessage, setErrorMessage] = useState("");
   const [theme, setTheme] = useLocalStorage("theme", "light");
+
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,6 +30,7 @@ export default function Login() {
   }, [theme]);
 
   useEffect(() => {
+    // When the user navigates to /logout, clear the user from browser storage and navigate to /login
     if (location.pathname === "/logout") {
       localStorage.setItem("user", JSON.stringify(null));
       navigate("/login");
@@ -45,30 +44,20 @@ export default function Login() {
       setErrorMessage("Please enter valid login credentials.");
       return;
     }
-
-    const response = await fetch(api + "/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user.username,
-        password: user.password,
-      }),
-    });
-    let res = await response.json();
-
-    if (response.status === 200) {
-      localStorage.setItem("user", JSON.stringify(res));
+    
+    const response = await login(user.username, user.password);
+    if (response) {
+      if (response.status === 400 || response.status === 401) {
+        setErrorMessage(res.message);
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify(response));
       navigate("/");
-    } else if (response.status === 400 || response.status === 401) {
-      setErrorMessage(res.message);
-      return;
     }
   };
 
   return (
-    <>
+    <div className={"min-h-screen w-full dark:bg-gray-800"}>
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <Menu as="div" className="relative block h-10 text-right">
           <div>
@@ -170,7 +159,7 @@ export default function Login() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                 >
-                  Email address
+                  Username
                 </label>
                 <div className="mt-1">
                   <input
@@ -184,7 +173,7 @@ export default function Login() {
                       setUser({ ...user, username: e.target.value });
                     }}
                     required
-                    className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
+                    className="appearance-none dark:text-white dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
                 </div>
               </div>
@@ -208,7 +197,7 @@ export default function Login() {
                       setUser({ ...user, password: e.target.value });
                     }}
                     required
-                    className="appearance-none dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
+                    className="appearance-none dark:text-white dark:bg-gray-600 block w-full px-3 py-2 border-gray-300 dark:border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-800 focus:border-indigo-600 sm:text-sm"
                   />
                 </div>
               </div>
@@ -259,6 +248,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

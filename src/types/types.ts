@@ -1,6 +1,22 @@
-import { type } from "os";
-import { TypeOfTag } from "typescript";
+export type User = {
+  _id?: string;
+  token?: string;
+  username: string;
+  roles: string[];
+};
 
+export enum Roles {
+  ADMIN = "admin",
+  READ = "read",
+  WRITE = "write",
+}
+
+export type ValidationType = {
+  isValid: boolean;
+  errorMessage: string | null;
+};
+
+// EventNames are the human readable names to be used in the UI, corresponding to their Event Types.
 export const EventNames = {
   Raw: {
     Empty: {
@@ -67,6 +83,7 @@ export const EventNames = {
   },
 };
 
+// StreamConfigKey gives more easily readable UI names for the corresponding StreamConfig fields.
 export enum StreamConfigKey {
   Log = "Log",
   Debug = "Debug",
@@ -91,6 +108,19 @@ export enum StreamConfigKey {
   MaxDeltaQueue = "Max delta queue",
 }
 
+export type Task = {
+  _id: string,
+  name: string,
+  date: string,
+  period: number,
+}
+
+export type IEvent = { [EventType: string]: any };
+
+export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
+
+export type Aggregate = SMA | BloomFilter;
+
 export type HashFunction = {
   a: number;
   b: number;
@@ -98,7 +128,7 @@ export type HashFunction = {
 
 export type IEvent = { [EventType: string]: any };
 
-export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
+export type stream = {"t1":number, "payload":IEvent | IEvent[] | undefined}
 
 export type Aggregate = SMA | BloomFilter;
 
@@ -194,10 +224,10 @@ export const DefaultStreamConfig: StreamConfig = {
   MaxDeltaQueue: 10,
 };
 
-export const ip: string = "http://192.168.158.77:8000";
-export const api: string = "http://localhost:3001";
+export const ip = "http://localhost:8000";
+export const api = "http://localhost:3001";
 
-export const configString: string = `##########################################################################################
+export const configString = `##########################################################################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################
@@ -455,15 +485,3 @@ export const configString: string = `###########################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################`;
-
-export type User = {
-  _id: string;
-  username: string;
-  roles: string[];
-};
-
-export enum Roles {
-  ADMIN = "admin",
-  READ = "read",
-  WRITE = "write",
-}
