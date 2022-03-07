@@ -6,9 +6,9 @@ export type User = {
 };
 
 export enum Roles {
-  ADMIN = "admin",
-  READ = "read",
-  WRITE = "write",
+  ADMIN = 'admin',
+  READ = 'read',
+  WRITE = 'write',
 }
 
 export type ValidationType = {
@@ -20,106 +20,100 @@ export type ValidationType = {
 export const EventNames = {
   Raw: {
     Empty: {
-      Empty: "Empty",
+      Empty: 'Empty',
     },
-    "Unsigned Integer": {
-      8: "U8",
-      16: "U16",
-      32: "U32",
-      64: "U64",
+    'Unsigned Integer': {
+      8: 'U8',
+      16: 'U16',
+      32: 'U32',
+      64: 'U64',
     },
     Integer: {
-      8: "I8",
-      16: "I16",
-      32: "I32",
-      64: "I64",
+      8: 'I8',
+      16: 'I16',
+      32: 'I32',
+      64: 'I64',
     },
     Float: {
-      32: "F32",
-      64: "F64",
+      32: 'F32',
+      64: 'F64',
     },
   },
   Const: {
     String: {
-      Constant: "ConstString",
+      Constant: 'ConstString',
     },
-    "Unsigned Integer": {
-      8: "ConstU8List",
-      16: "ConstU16List",
-      32: "ConstU32List",
-      64: "ConstU64List",
+    'Unsigned Integer': {
+      8: 'ConstU8List',
+      16: 'ConstU16List',
+      32: 'ConstU32List',
+      64: 'ConstU64List',
     },
     Integer: {
-      8: "ConstI8List",
-      16: "ConstI16List",
-      32: "ConstI32List",
-      64: "ConstI64List",
+      8: 'ConstI8List',
+      16: 'ConstI16List',
+      32: 'ConstI32List',
+      64: 'ConstI64List',
     },
     Float: {
-      32: "ConstF32List",
-      64: "ConstF64List",
+      32: 'ConstF32List',
+      64: 'ConstF64List',
     },
   },
   Var: {
     String: {
-      Variable: "VarString",
+      Variable: 'VarString',
     },
-    "Unsigned Integer": {
-      8: "VarU8List",
-      16: "VarU16List",
-      32: "VarU32List",
-      64: "VarU64List",
+    'Unsigned Integer': {
+      8: 'VarU8List',
+      16: 'VarU16List',
+      32: 'VarU32List',
+      64: 'VarU64List',
     },
     Integer: {
-      8: "VarI8List",
-      16: "VarI16List",
-      32: "VarI32List",
-      64: "VarI64List",
+      8: 'VarI8List',
+      16: 'VarI16List',
+      32: 'VarI32List',
+      64: 'VarI64List',
     },
     Float: {
-      32: "VarF32List",
-      64: "VarF64List",
+      32: 'VarF32List',
+      64: 'VarF64List',
     },
   },
 };
 
 // StreamConfigKey gives more easily readable UI names for the corresponding StreamConfig fields.
 export enum StreamConfigKey {
-  Log = "Log",
-  Debug = "Debug",
-  Data = "Data",
-  Translation = "Translation",
-  Boot = "Boot",
-  RightFlank = "Right flank",
-  MultipleDiskMaxQueue = "Multiple disk max queue",
-  Event = "Event",
-  LightweightIndex = "Lightweight index",
-  LogicalBlockSize = "LogicalBlock size",
-  MacroBlockSize = "MacroBlock size",
-  MacroBlockSpare = "MacroBlock spare",
-  MacroBlockPreallocation = "MacroBlock preallocation",
-  MacroBlockBatchAllocation = "MacroBlock batch allocation",
-  MacroBlocksCache = "MacroBlocks cache",
-  NodesCache = "Nodes cache",
-  LeafCompressor = "Leaf Compressor",
-  IndexCompressor = "Index Compressor",
-  CompressorExtras = "Compressor extras",
-  RiverThreads = "River threads",
-  MaxDeltaQueue = "Max delta queue",
+  Log = 'Log',
+  Debug = 'Debug',
+  Data = 'Data',
+  Translation = 'Translation',
+  Boot = 'Boot',
+  RightFlank = 'Right flank',
+  MultipleDiskMaxQueue = 'Multiple disk max queue',
+  Event = 'Event',
+  LightweightIndex = 'Lightweight index',
+  LogicalBlockSize = 'LogicalBlock size',
+  MacroBlockSize = 'MacroBlock size',
+  MacroBlockSpare = 'MacroBlock spare',
+  MacroBlockPreallocation = 'MacroBlock preallocation',
+  MacroBlockBatchAllocation = 'MacroBlock batch allocation',
+  MacroBlocksCache = 'MacroBlocks cache',
+  NodesCache = 'Nodes cache',
+  LeafCompressor = 'Leaf Compressor',
+  IndexCompressor = 'Index Compressor',
+  CompressorExtras = 'Compressor extras',
+  RiverThreads = 'River threads',
+  MaxDeltaQueue = 'Max delta queue',
 }
 
 export type Task = {
-  _id: string,
-  name: string,
-  date: string,
-  period: number,
-}
-
-export type IEvent = { [EventType: string]: any };
-
-export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
-
-export type Aggregate = SMA | BloomFilter;
+  _id: string;
+  name: string;
+  date: string;
+  period: number;
+};
 
 export type HashFunction = {
   a: number;
@@ -128,7 +122,7 @@ export type HashFunction = {
 
 export type IEvent = { [EventType: string]: any };
 
-export type stream = {"t1":number, "payload":IEvent | IEvent[] | undefined}
+export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
 
 export type Aggregate = SMA | BloomFilter;
 
@@ -150,7 +144,7 @@ export type SMA = {
 
 export type LightweightIndex = {
   aggregate: Aggregate;
-  projector_sequence: "Mono" | "Empty" | { Slice: number[] };
+  projector_sequence: 'Mono' | 'Empty' | { Slice: number[] };
 };
 
 export type extrasCollection = compressorExtras[];
@@ -158,13 +152,13 @@ export type extrasCollection = compressorExtras[];
 export type compressorExtras =
   | { Sprintz: [boolean, number, boolean] }
   | { Lz4Level: number }
-  | "None";
+  | 'None';
 
 export type compressor =
-  | "None"
-  | "LZ4_Fast_No_Meta"
-  | "LZ4_Fast_With_Meta"
-  | "Sprintz";
+  | 'None'
+  | 'LZ4_Fast_No_Meta'
+  | 'LZ4_Fast_With_Meta'
+  | 'Sprintz';
 
 export type StreamConfig = {
   Log: boolean;
@@ -176,7 +170,7 @@ export type StreamConfig = {
   Event: [IEvent];
   LightweightIndex: LightweightIndex;
   LogicalBlockSize: number;
-  MacroBlockSize: "l" | "p" | number;
+  MacroBlockSize: 'l' | 'p' | number;
   MacroBlockSpare: number;
   MacroBlockPreallocation: number;
   MacroBlockBatchAllocation: number;
@@ -192,9 +186,9 @@ export type StreamConfig = {
 export const DefaultStreamConfig: StreamConfig = {
   Log: false,
   Debug: false,
-  Data: ["data0"],
-  Boot: ".boot",
-  Translation: "translation",
+  Data: ['data0'],
+  Boot: '.boot',
+  Translation: 'translation',
   MultipleDiskMaxQueue: 10,
   Event: [
     {
@@ -202,7 +196,7 @@ export const DefaultStreamConfig: StreamConfig = {
         { U64: 0 },
         { I64: 0 },
         { F64: 0.0 },
-        { VarString: "Hallo-Welt" },
+        { VarString: 'Hallo-Welt' },
       ],
     },
   ],
@@ -217,15 +211,15 @@ export const DefaultStreamConfig: StreamConfig = {
   MacroBlockBatchAllocation: 300,
   MacroBlocksCache: 2500,
   NodesCache: 10000,
-  LeafCompressor: "None",
-  IndexCompressor: "None",
-  CompressorExtras: ["None", "None"],
-  RiverThreads: "t",
+  LeafCompressor: 'None',
+  IndexCompressor: 'None',
+  CompressorExtras: ['None', 'None'],
+  RiverThreads: 't',
   MaxDeltaQueue: 10,
 };
 
-export const ip = "http://localhost:8000";
-export const api = "http://localhost:3001";
+export const ip = 'http://localhost:8000';
+export const api = 'http://localhost:3001';
 
 export const configString = `##########################################################################################
 ##########################################################################################
