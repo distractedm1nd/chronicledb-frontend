@@ -1,19 +1,15 @@
-import { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { api, ip, User } from "../../types/types";
-import { classNames, recoverStreamSnapshot, shutdownStream } from "../../utils";
-import CreateStreamModal from "../dashboard/CreateStreamModal";
-import Modal from "../Modal";
-import InsertEventModal from "../dashboard/InsertEventModal";
-import QueryTimeTravelModal from "../dashboard/QueryTimeTravelModal";
-import CreateUserModal from "./CreateUserModal";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import ChangeRoleModal from "./ChangeRoleModal";
+import CreateUserModal from "./CreateUserModal";
+import { User } from "../../types/types";
+import {classNames, fetchUsers, resetPassword} from "../../utils";
 
 export default function UserManagement() {
-  const [currentStream, setCurrentStream] = useState<number>(0);
   const [modalOpen, setModalState] = useState(false);
   const [userRolesModalOpen, setUserRolesModalOpenState] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -21,17 +17,8 @@ export default function UserManagement() {
     username: string;
     roles: string[];
   }>({ username: "", roles: [] });
-  const [extraStreamInfo, setExtraStreamInfo] = useState<{
-    [key in number]: any;
-  }>({});
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [activeUser, setActiveUser] = useState("");
   const [userRoles, setUserRoles] = useState<string[]>([]);
-  const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
-  const [queryTimeTravelModalOpen, setQueryTimeTravelModalOpen] =
-    useState(false);
-  const [modalBody, setModalBody] = useState("");
-  const [modalTitle, setModalTitle] = useState("Loading...");
   const navigate = useNavigate();
 
   const UserActions = [
@@ -62,29 +49,12 @@ export default function UserManagement() {
   }, []);
 
   useEffect(() => {
-    fetchUsers();
+    refreshUsers();
   }, [modalOpen, userRolesModalOpen]);
 
-  /*   useEffect(() => {
-    fetchExtraStreamInfo(availableStreams);
-  }, [availableStreams]); */
-
-  const fetchUsers = () => {
-    fetch(`${api}/get-users`)
-      .then((response) => response.json())
-      .then((result) => {
-        setUsers(result.users);
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  const fetchRightFlank = async (streamId: number) => {
-    setModalTitle("Right Flank: " + streamId);
-    setInfoModalOpen(true);
-    fetch(`${ip}/show_right_flank/${streamId}`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
+  const refreshUsers = async () => {
+    const result = await fetchUsers();
+    setUsers(result.users);
   };
 
   if (!userRoles.includes("admin")) {
@@ -97,22 +67,10 @@ export default function UserManagement() {
     );
   }
 
-  const resetPassword = async (username: string) => {
-    const response = await fetch(api + "/reset-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        caller: activeUser,
-        username: username,
-        askedPermission: "admin",
-      }),
-    });
-    let resJSON = await response.json();
-
-    if (response.status === 200) {
-      alert(resJSON.message);
+  const submitPasswordReset = async (username: string) => {
+    const result = await resetPassword(activeUser, username);
+    if (result.message) {
+      alert(result.message);
     }
   };
 
@@ -127,23 +85,6 @@ export default function UserManagement() {
         currentRoles={editUser.roles}
         open={userRolesModalOpen}
         setOpen={(val: any) => setUserRolesModalOpenState(val)}
-      />
-      <InsertEventModal
-        open={insertEventModalOpen}
-        setOpen={setInsertEventModalOpen}
-        currentStream={currentStream}
-      />
-      <QueryTimeTravelModal
-        open={queryTimeTravelModalOpen}
-        setOpen={setQueryTimeTravelModalOpen}
-        currentStream={currentStream}
-      />
-      <Modal
-        title={modalTitle}
-        body={modalBody}
-        buttonTitle={"Close"}
-        open={infoModalOpen}
-        setOpen={setInfoModalOpen}
       />
       <main className="flex-1">
         <div className="p-6">
@@ -213,7 +154,7 @@ export default function UserManagement() {
                         <button
                           type="button"
                           className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-xs font-normal text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-800 focus:border-indigo-800  dark:bg-gray-600 dark:text-white dark:border-gray-700 dark:hover:bg-gray-500"
-                          onClick={() => resetPassword(user.username)}
+                          onClick={() => submitPasswordReset(user.username)}
                         >
                           Reset Password
                         </button>

@@ -1,12 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { api, DefaultStreamConfig, Roles } from "../../types/types";
-import ErrorComponent from "../ErrorComponent";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import "@themesberg/flowbite";
-import RoleSwitch from "./RoleSwitch";
-import { UserContext } from "../../App";
+
+import RoleToggle from "./RoleToggle";
+import ErrorComponent from "../ErrorComponent";
+import { UserContext } from "../../AppWrapper";
+import { api, DefaultStreamConfig, Roles } from "../../types/types";
+import { changeRoles } from "../../utils";
 
 type CreateUserModalProps = {
   currentRoles: string[];
@@ -42,21 +44,13 @@ export default function ChangeRoleModal({
     setUserRoles(newRoles.filter((role) => role !== roleKey));
   };
 
-  const changeRoles = async () => {
-    const response = await fetch(api + "/change-roles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        askedPermission: "admin",
-        caller: userContext.username,
-        username: username,
-        roles: newRoles,
-      }),
-    });
-    let json = await response.json();
-
+  const submit = async () => {
+    const response = await changeRoles(
+      userContext.username,
+      username,
+      newRoles
+    );
+    const json = await response.json();
     if (response.status === 200) {
       alert(json.message);
       setOpen(false);
@@ -119,9 +113,9 @@ export default function ChangeRoleModal({
                 {Object.keys(Roles).map((key) => {
                   const roleKey = key as keyof typeof Roles;
                   return (
-                    <RoleSwitch
+                    <RoleToggle
                       name={Roles[roleKey]}
-                      checkedCond={newRoles.includes(Roles[roleKey])}
+                      checked={newRoles.includes(Roles[roleKey])}
                       set={() => setRole(Roles[roleKey])}
                       remove={() => removeRole(Roles[roleKey])}
                     />
@@ -156,9 +150,7 @@ export default function ChangeRoleModal({
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={async () => {
-                    await changeRoles();
-                  }}
+                  onClick={submit}
                   ref={cancelButtonRef}
                 >
                   Change user roles

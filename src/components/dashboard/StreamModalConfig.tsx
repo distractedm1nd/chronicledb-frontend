@@ -1,3 +1,13 @@
+import { Switch } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import {
+  ChevronDownIcon,
+  ExclamationCircleIcon,
+  PlusIcon,
+  XCircleIcon,
+} from "@heroicons/react/solid";
+import _ from "lodash";
 import React, {
   Dispatch,
   Fragment,
@@ -5,6 +15,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+
 import {
   BloomFilter,
   compressor,
@@ -16,16 +27,6 @@ import {
   LightweightIndex,
   StreamConfig,
 } from "../../types/types";
-import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
-import { Switch } from "@headlessui/react";
-import _ from "lodash";
-import {
-  ChevronDownIcon,
-  ExclamationCircleIcon,
-  PlusIcon,
-  XCircleIcon,
-} from "@heroicons/react/solid";
-import { Menu, Transition } from "@headlessui/react";
 
 export interface IStreamModalConfig {
   configState: StreamConfig;
@@ -33,7 +34,7 @@ export interface IStreamModalConfig {
 }
 
 export default function StreamModalConfig(props: IStreamModalConfig) {
-  let { configState, setConfigState } = props;
+  const { configState, setConfigState } = props;
   const [leafCompressorExtras, setLeafCompressorExtras] =
     useState<compressorExtras>("None");
   const [indexCompressorExtras, setIndexCompressorExtras] =
@@ -86,7 +87,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   const [sliceProjector, setSliceProjector] = useState<string>("1,1");
 
   useEffect(() => {
-    var bitArray: number[] = [0];
+    const bitArray: number[] = [0];
     if (bloomFilter.bit_set.bit_array.length < currentBloomFilter.count) {
       for (
         let step = bloomFilter.bit_set.bit_array.length;
@@ -100,11 +101,11 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
     if (bloomFilter.hash_functions.length < currentBloomFilter.k) {
       bloomFilter.hash_functions = currentHashFunctions;
     }
-    let aggregate =
+    const aggregate =
       lightweightIndexType === "BloomFilter"
         ? { BloomFilter: bloomFilter }
         : { SMA: currentSMA };
-    let projector_sequence = currentProjector;
+    const projector_sequence = currentProjector;
     if (aggregate && projector_sequence) {
       setIndex({ aggregate, projector_sequence });
     }
@@ -119,10 +120,13 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
 
   useEffect(() => {
     // @ts-ignore
-    let dataOptions = EventNames[eventType];
-    let storageOptions = dataOptions[dataType];
+    const dataOptions = EventNames[eventType];
+    const storageOptions = dataOptions[dataType];
     if (dataType in dataOptions && storage in storageOptions) {
-      if ((eventType === "Var" || eventType === "Const") && dataType != "String") {
+      if (
+        (eventType === "Var" || eventType === "Const") &&
+        dataType != "String"
+      ) {
         setCurrentEvent({ [storageOptions[storage]]: dataList });
       } else if (eventType === "Raw") {
         setCurrentEvent({ [storageOptions[storage]]: rawData });
@@ -157,7 +161,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
       currentHashFunctions.length < currentBloomFilter.k &&
       currentBloomFilter.k
     ) {
-      var temp = [...currentHashFunctions];
+      const temp = [...currentHashFunctions];
       for (
         let index = 0;
         index < currentBloomFilter.k - currentHashFunctions.length;
@@ -176,7 +180,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
   }, [currentIndex]);
 
   useEffect(() => {
-    let eventToSend =
+    const eventToSend =
       compoundEvents.length > 1 ? { Compound: compoundEvents } : currentEvent;
     if (eventToSend) setConfigState({ ...configState, Event: [eventToSend] });
   }, [currentEvent, compoundEvents]);
@@ -710,12 +714,12 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                       value={data.toString()}
                       onChange={(event) => {
                         setData(event.target.value);
-                        var y:number = parseFloat(event.target.value)
+                        const y: number = parseFloat(event.target.value);
                         if (!Number.isNaN(y)) {
-                          setRawData(y)
+                          setRawData(y);
                         }
-                        var dataArray: number[] = [];
-                        var keys = event.target.value.split(",");
+                        const dataArray: number[] = [];
+                        const keys = event.target.value.split(",");
 
                         for (let i = 0; i < keys.length; i++) {
                           dataArray.push(parseFloat(keys[i]));
@@ -843,8 +847,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         value={sliceProjector}
                         onChange={(event) => {
                           setSliceProjector(event.target.value);
-                          var projectorArray: number[] = [];
-                          var keys = event.target.value.split(",");
+                          const projectorArray: number[] = [];
+                          const keys = event.target.value.split(",");
 
                           for (let i = 0; i < keys.length; i++) {
                             projectorArray.push(parseInt(keys[i]));
@@ -874,8 +878,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         value={sliceProjector}
                         onChange={(event) => {
                           setSliceProjector(event.target.value);
-                          var projectorArray: number[] = [];
-                          var keys = event.target.value.split(",");
+                          const projectorArray: number[] = [];
+                          const keys = event.target.value.split(",");
 
                           for (let i = 0; i < keys.length; i++) {
                             projectorArray.push(parseInt(keys[i]));
@@ -911,7 +915,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="a"
                         value={e.a}
                         onChange={(event) => {
-                          var temp = [...currentHashFunctions];
+                          const temp = [...currentHashFunctions];
                           temp.splice(idx, 1, {
                             a: parseInt(event.target.value) || 0,
                             b: e.b,
@@ -935,7 +939,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                         name="b"
                         value={e.b}
                         onChange={(event) => {
-                          var temp = [...currentHashFunctions];
+                          const temp = [...currentHashFunctions];
                           temp.splice(idx, 1, {
                             b: parseInt(event.target.value) || 0,
                             a: e.a,
@@ -978,7 +982,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onMouseEnter={() => setTooltipStatus(6)}
                     onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) => {
-                      let inputInt = parseInt(e.target.value);
+                      const inputInt = parseInt(e.target.value);
                       setErrorFields(
                         errorFields.filter(
                           (e) => e !== "multiple-disk-max-queue-number"
@@ -1321,8 +1325,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     onMouseLeave={() => setTooltipStatus(0)}
                     onChange={(e) => {
                       console.log(e);
-                      let intVal = parseInt(e.target.value);
-                      let {
+                      const intVal = parseInt(e.target.value);
+                      const {
                         MacroBlockBatchAllocation,
                         MacroBlockPreallocation,
                       } = configState;
@@ -1565,8 +1569,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             value={leafSprintzValue}
                             onChange={(event) => {
                               setLeafSprintzValue(event.target.value);
-                              let sprintzKeys = event.target.value.split(",");
-                              let sprintzValues = [];
+                              const sprintzKeys = event.target.value.split(",");
+                              const sprintzValues = [];
                               if (sprintzKeys.length === 3) {
                                 for (let i = 0; i < sprintzKeys.length; i++) {
                                   switch (sprintzKeys[i]) {
@@ -1644,8 +1648,8 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                             value={indexSprintzValue}
                             onChange={(event) => {
                               setIndexSprintzValue(event.target.value);
-                              let sprintzKeys = event.target.value.split(",");
-                              let sprintzValues = [];
+                              const sprintzKeys = event.target.value.split(",");
+                              const sprintzValues = [];
                               if (sprintzKeys.length === 3) {
                                 for (let i = 0; i < sprintzKeys.length; i++) {
                                   switch (sprintzKeys[i]) {
@@ -1825,7 +1829,7 @@ export default function StreamModalConfig(props: IStreamModalConfig) {
                     }
                   }}
                   onChange={(e) => {
-                    let newArr = errorFields.filter(
+                    const newArr = errorFields.filter(
                       (e) => e !== "max-delta-queue"
                     );
                     setErrorFields(newArr);

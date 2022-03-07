@@ -1,48 +1,47 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Transition, Dialog, Menu } from "@headlessui/react";
+import { Dialog, Menu,Transition } from "@headlessui/react";
 import {
-  HomeIcon,
-  ServerIcon,
-  InboxIcon,
-  UsersIcon,
+  CalendarIcon,
   CogIcon,
-  ChevronDownIcon,
+  HomeIcon,
+  InboxIcon,
+  LogoutIcon,
   MenuAlt2Icon,
-  PlusIcon,
   SearchIcon,
   SelectorIcon,
+  ServerIcon,
+  UsersIcon,
   XIcon,
-  LogoutIcon,
-  CalendarIcon,
 } from "@heroicons/react/outline";
-import "./App.css";
-import { classNames } from "./utils";
-import UniLogo from "./assets/Uni_Marburg_Logo.svg";
-import BSeeger from "./assets/bseeger.jpeg";
-import { ip } from "./types/types";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Modal from "./components/Modal";
 
+import BSeeger from "./assets/bseeger.jpeg";
+import UniLogo from "./assets/Uni_Marburg_Logo.svg";
+import Modal from "./components/Modal";
+import { ip, User } from "./types/types";
+import { classNames, fetchSystemInfo } from "./utils";
+
+// Sidebar links
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
-  { name: "Servers", href: "#", icon: ServerIcon },
-  { name: "Jobs", href:"/schedular", icon: CalendarIcon},
-  { name: "Reports", href: "#", icon: InboxIcon },
+  { name: "Jobs", href:"/scheduler", icon: CalendarIcon},
   { name: "Users", href: "/users", icon: UsersIcon },
-  { name: "Settings", href: "#", icon: CogIcon },
   { name: "Sign Out", href: "/logout", icon: LogoutIcon },
 ];
+
+// Links for the user menu dropdown
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
   { name: "Sign out", href: "/logout" },
 ];
 
+// Storage using react context, so that user information can be given to child components.
 export const UserContext = React.createContext({
   username: "",
   roles: [] as string[],
   token: "",
-});
+} as User);
 
 export const TaskContext = React.createContext([
   {
@@ -52,14 +51,17 @@ export const TaskContext = React.createContext([
   }
 ]);
 
-function App(props: any) {
+function AppWrapper(props: any) {
+  // The sidebar corresponds to the mobile sidebar, which is hidden on screens larger than the 'sm' breakpoint.
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  // The information modal is used to display information fetched by the SystemInfo query
+  const [infoModal, setInfoModal] = useState({
+    open: false,
+    title: "Loading...",
+    body: "",
+  });
 
-  const [modalTitle, setModalTitle] = useState("Loading...");
   const [user, setUser] = useState({
     username: "Prof. Seeger",
     roles: [] as string[],
@@ -70,36 +72,42 @@ function App(props: any) {
     date:"second",
     period:"2",
   }])
-  const [modalBody, setModalBody] = useState("");
 
-  const fetchSystemInfo = () => {
-    setModalTitle("System Info");
-    setInfoModalOpen(true);
-    fetch(`${ip}/system_info`)
-      .then((response) => response.text())
-      .then((result) => setModalBody(result))
-      .catch((error) => console.log("error", error));
+  // The following hooks are used to emulate browser emulation in our SPA.
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const showSystemInfo = async () => {
+    setInfoModal({
+      open: true,
+      title: "System Info",
+      body: await fetchSystemInfo(),
+    });
   };
 
   useEffect(() => {
+    // Question: Why isn't the useLocalStorage hook used here?
     const savedUser = localStorage.getItem("user");
     const state = savedUser && JSON.parse(savedUser);
     if (!state) {
       navigate("/login");
       return;
     }
-    setUser({ username: state.username, roles: state.roles, token: state.token});
+    // QUESTION: Isn't token logic already implemented in the other branch? We can probably merge here.
+    setUser({ username: state.username, roles: state.roles, token: "" });
   }, []);
 
   return (
     <UserContext.Provider value={user}>
       <TaskContext.Provider value={tasks}>
       <Modal
-        title={modalTitle}
-        body={modalBody}
+        title={infoModal.title}
+        body={infoModal.body}
         buttonTitle={"Close"}
-        open={infoModalOpen}
-        setOpen={setInfoModalOpen}
+        open={infoModal.open}
+        setOpen={(openState) =>
+          setInfoModal((current) => ({ ...current, open: openState }))
+        }
       />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
@@ -269,36 +277,13 @@ function App(props: any) {
               <p>{ip}</p>
               <button
                 className="bg-gray-200 dark:bg-gray-700 dark:text-white ml-auto rounded-md shadow-lg px-2"
-                onClick={() => fetchSystemInfo()}
+                onClick={showSystemInfo}
               >
                 ...
               </button>
             </div>
           </div>
-          {/* Sidebar Search */}
-          <div className="px-3">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div
-                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                aria-hidden="true"
-              >
-                <SearchIcon
-                  className="mr-3 h-4 w-4 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="focus:ring-indigo-800 focus:border-indigo-800 block w-full pl-9 sm:text-sm dark:bg-gray-700 dark:border-gray-800 dark:text-white border-gray-300 rounded-md"
-                placeholder="Search"
-              />
-            </div>
-          </div>
+
           <div className="flex-grow mt-5 flex flex-col">
             <nav className="flex-1 px-2 pb-4 space-y-1">
               {navigation.map((item) => (
@@ -345,7 +330,6 @@ function App(props: any) {
               <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-
           {props.children}
         </div>
       </div>
@@ -354,4 +338,4 @@ function App(props: any) {
   );
 }
 
-export default App;
+export default AppWrapper;
