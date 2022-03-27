@@ -107,8 +107,9 @@ const InsertEventModal = ({
                 <div className={"flex w-full"}>
                   <input
                     type="text"
-                    name="data"
-                    id="data"
+                    name="timestamp"
+                    id="timestamp"
+                    title="timestamp"
                     value={timestamp}
                     onChange={(e) =>
                       setTimestamp(parseInt(e.target.value) || 0)

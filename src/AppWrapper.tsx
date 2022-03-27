@@ -2,6 +2,7 @@ import { Dialog, Menu,Transition } from "@headlessui/react";
 import {
   CalendarIcon,
   CogIcon,
+  DatabaseIcon,
   HomeIcon,
   InboxIcon,
   LogoutIcon,
@@ -26,6 +27,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Jobs", href:"/scheduler", icon: CalendarIcon},
   { name: "Users", href: "/users", icon: UsersIcon },
+  { name: "Java", href: "/java", icon: DatabaseIcon},
   { name: "Sign Out", href: "/logout", icon: LogoutIcon },
 ];
 

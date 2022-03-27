@@ -1,7 +1,6 @@
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import "@themesberg/flowbite";
 
 import RoleToggle from "./RoleToggle";
 import ErrorComponent from "../ErrorComponent";

@@ -9,6 +9,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Login from "./components/dashboard/Login";
 import TaskScheduler from "./components/scheduler/TaskScheduler";
 import UserManagement from "./components/user/UserManagement";
+import JavaDashboard from "./components/java/JavaDashboard";
 
 const routes = [{
     path: "/",
@@ -25,6 +26,10 @@ const routes = [{
     {
         path: "/scheduler",
         element: <AppWrapper><TaskScheduler /></AppWrapper>
+    },
+    {
+        path: "/java",
+        element: <AppWrapper><JavaDashboard /></AppWrapper>
     },
     {
         path: "/users",

@@ -2,8 +2,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { CogIcon } from '@heroicons/react/outline';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import '@themesberg/flowbite';
-import '@themesberg/flowbite';
 
 import StreamModalConfig from './StreamModalConfig';
 import ErrorComponent from '../ErrorComponent';

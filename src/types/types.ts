@@ -16,6 +16,10 @@ export type ValidationType = {
   errorMessage: string | null;
 };
 
+export const attributeTypes = {
+  BOOLEAN:"BOOLEAN", BYTE:"BYTE", SHORT: "SHORT", INTEGER:"INTEGER", LONG:"LONG", FLOAT:"FLOAT", DOUBLE:"DOUBLE", STRING:"STRING", GEOMETRY:"GEOMETRY"
+}
+
 // EventNames are the human readable names to be used in the UI, corresponding to their Event Types.
 export const EventNames = {
   Raw: {
@@ -124,6 +128,20 @@ export type IEvent = { [EventType: string]: any };
 
 export type stream = { t1: number; payload: IEvent | IEvent[] | undefined };
 
+export type javaStream = { 
+  streamName : string;
+  schema : attribute[];
+}
+
+export type attribute = {
+  name : string;
+  type : string;
+  properties : {
+    nullable : boolean;
+    index : boolean;
+  }
+}
+
 export type Aggregate = SMA | BloomFilter;
 
 export type BloomFilter = {
@@ -220,6 +238,7 @@ export const DefaultStreamConfig: StreamConfig = {
 
 export const ip = 'http://192.168.158.77:8000';
 export const api = 'http://localhost:3001';
+export const demo_api = 'https://dbs-demo.mathematik.uni-marburg.de/native';
 
 export const configString = `##########################################################################################
 ##########################################################################################

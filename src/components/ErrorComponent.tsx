@@ -14,7 +14,7 @@ export default function ErrorMessage({ errorMessage }: ErrorMessagePopUpProps) {
         <div className="ml-3">
           <h3 className="text-sm font-medium text-red-800">An error occured</h3>
           <div className="mt-2 text-sm text-red-700">
-            <ul role="list" className="list-disc pl-5 space-y-1">
+          <ul role="list" className="list-disc pl-5 space-y-1">
               <p>{errorMessage}</p>
             </ul>
           </div>

@@ -1,7 +1,10 @@
+import { result } from "lodash";
 import {
   api,
+  demo_api,
   IEvent,
   ip,
+  javaStream,
   StreamConfig,
   StreamConfigKey, Task,
   User,
@@ -116,6 +119,18 @@ export const insertArrayOrdered = (
     .catch((error) => console.log("error", error))
     .finally(callback);
 };
+
+export const createJavaStream =(javaStream : javaStream, callback : () => void) => {
+  fetch(`${demo_api}/create-stream`, {
+    method : "POST",
+    headers : { "Content-Type" : "application/json"},
+    body: JSON.stringify(javaStream),
+  })
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.log("error", error))
+  .finally(callback)
+}
 
 /**
  * Submits a time travel query on a stream.
@@ -323,6 +338,26 @@ export const fetchStreamAttribute = async (
 };
 
 /**
+ * Fetches extended Java Database stream information given a stream and api path.
+ * @param streamId The stream to be queried.
+ * @param attribute The name/path of the attribute to be fetched for the stream.
+ * **/
+ export const fetchJavaDBStreamInfo = async (stream: string,) => {
+   
+  return await fetch(
+    `${demo_api}/stream-info`, 
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      body: JSON.stringify({name: stream}),
+    })
+    .then((response) => response.text())
+    .then((result) => result)
+};
+
+/**
  * Fetches all streams that a given user has permission to view.
  * @param user The user requesting the stream information
  * @todo Create a type that is fetched instead of any[]
@@ -332,6 +367,19 @@ export const fetchStreams = async (user: User): Promise<any[]> => {
   // Either the auth backend should act as a proxy for all requests with basic authentication, or the backend itself needs authentication.
   if (user.roles.includes("admin") || user.roles.includes("read"))
     return await fetch(`${ip}/show_streams`).then((response) =>
+      response.json()
+    );
+  else return [];
+};
+
+/**
+ * Fetches all Java Database streams that a given user has permission to view.
+ * @param user The user requesting the stream information
+ * @todo Create a type that is fetched instead of any[]
+ * **/
+ export const fetchJavaDBStreams = async (user: User): Promise<any[]> => {
+  if (user.roles.includes("admin") || user.roles.includes("read"))
+    return await fetch(`${demo_api}/get-streams`).then((response) =>
       response.json()
     );
   else return [];

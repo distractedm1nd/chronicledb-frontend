@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { CogIcon } from "@heroicons/react/outline";
 import { Fragment, useRef, useState } from "react";
-import '@themesberg/flowbite';
 
 import {classNames, createCreateStreamJob, createInsertOrderedJob} from "../../utils";
 
@@ -100,7 +99,8 @@ export default function CreateJobModal({
                                                         Jobs
                                                 </label>
                                                 <select
-                                                        id="date"
+                                                        id="Jobs"
+                                                        title="Jobs"
                                                         name="date"
                                                         className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                                         value={taskName}
@@ -120,6 +120,7 @@ export default function CreateJobModal({
                                                     <select
                                                         id="date"
                                                         name="date"
+                                                        title="Date"
                                                         className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                                         value={date}
                                                         onChange={(event) => setDate(event.target.value)}
@@ -138,6 +139,7 @@ export default function CreateJobModal({
                                                     </label>
                                                     <select
                                                         id="period"
+                                                        title="Period"
                                                         name="period"
                                                         className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                                         value={period}
@@ -159,6 +161,7 @@ export default function CreateJobModal({
                                                         </label>
                                                         <input
                                                             id="streamId"
+                                                            title="Stream_ID"
                                                             type="text"
                                                             name="streamId"
                                                             className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
