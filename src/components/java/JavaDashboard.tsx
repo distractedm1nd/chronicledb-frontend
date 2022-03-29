@@ -4,17 +4,14 @@ import { ChevronDownIcon } from '@heroicons/react/solid';
 import { Fragment, useContext, useEffect, useState } from 'react';
 
 import Modal from '../Modal';
-import { TaskContext, UserContext } from '../../AppWrapper';
+import { UserContext } from '../../AppWrapper';
 import {
   classNames,
   fetchJavaDBStreamInfo,
   fetchJavaDBStreams,
-  fetchStreamAttribute,
-  fetchStreams,
-  recoverStreamSnapshot,
-  shutdownStream,
 } from '../../utils';
 import CreateJavaStreamModal from './CreateJavaStreamModal';
+import InsertJavaModal from './InsertJavaModal';
 
 export default function Dashboard() {
 
@@ -29,10 +26,9 @@ export default function Dashboard() {
 
   // TODO: These four useStates can be merged into an object
   const [createJavaStreamModalOpen, setCreateJavaStreamModalOpen] = useState(false);
-  const [insertEventModalOpen, setInsertEventModalOpen] = useState(false);
-  const [insertArrayModalOpen, setInsertArrayModalOpen] = useState(false);
-  const [queryTimeTravelModalOpen, setQueryTimeTravelModalOpen] =
-    useState(false);
+  const [insertJavaModalOpen, setInsertJavaModalOpen] = useState(false);
+  const [schemaJavaModalOpen, setSchemaJavaModalOpen] = useState(false);
+  const [queryJavaModalOpen, setQueryJavaModalOpen] = useState(false);
 
   // The modal belonging to this component is responsible for showing stream info.
   const [modal, setModal] = useState({
@@ -46,21 +42,21 @@ export default function Dashboard() {
       name: 'Query',
       onClick: (streamId: number) => {
         setCurrentStream(streamId);
-        setQueryTimeTravelModalOpen(true);
+        setQueryJavaModalOpen(true);
       },
     },
     {
       name: 'Insert',
       onClick: (streamId: number) => {
         setCurrentStream(streamId);
-        setInsertEventModalOpen(true);
+        setInsertJavaModalOpen(true);
       },
     },
     {
       name: 'Schema',
       onClick: (streamId: number) => {
         setCurrentStream(streamId);
-        setInsertArrayModalOpen(true);
+        setSchemaJavaModalOpen(true);
       },
     },
   ];
@@ -89,6 +85,11 @@ export default function Dashboard() {
       <CreateJavaStreamModal
         open={createJavaStreamModalOpen}
         setOpen={setCreateJavaStreamModalOpen}
+      />
+      <InsertJavaModal 
+        open={insertJavaModalOpen}
+        setOpen={setInsertJavaModalOpen} 
+        streamID={0}
       />
       <Modal
         title={modal.title}
