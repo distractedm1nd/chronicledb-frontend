@@ -12,17 +12,14 @@ import {
 } from '../../utils';
 import CreateJavaStreamModal from './CreateJavaStreamModal';
 import InsertJavaModal from './InsertJavaModal';
+import SchemaJavaModal from './SchemaJavaModal';
+import QueryJavaModal from './QueryJavaModal';
 
 export default function Dashboard() {
 
   // The userContext is passed by the parent AppWrapper
   const user = useContext(UserContext);
-
-  const [currentStream, setCurrentStream] = useState<number>(0);
   const [availableStreams, setAvailableStreams] = useState<any[]>([]);
-  const [extraStreamInfo, setExtraStreamInfo] = useState<{
-    [key in number]: any;
-  }>({});
 
   // TODO: These four useStates can be merged into an object
   const [createJavaStreamModalOpen, setCreateJavaStreamModalOpen] = useState(false);
@@ -41,21 +38,18 @@ export default function Dashboard() {
     {
       name: 'Query',
       onClick: (streamId: number) => {
-        setCurrentStream(streamId);
         setQueryJavaModalOpen(true);
       },
     },
     {
       name: 'Insert',
       onClick: (streamId: number) => {
-        setCurrentStream(streamId);
         setInsertJavaModalOpen(true);
       },
     },
     {
       name: 'Schema',
       onClick: (streamId: number) => {
-        setCurrentStream(streamId);
         setSchemaJavaModalOpen(true);
       },
     },
@@ -90,6 +84,14 @@ export default function Dashboard() {
         open={insertJavaModalOpen}
         setOpen={setInsertJavaModalOpen} 
         streamID={0}
+      />
+      <SchemaJavaModal 
+        open={schemaJavaModalOpen} 
+        setOpen={setSchemaJavaModalOpen} 
+      />
+      <QueryJavaModal 
+        open={queryJavaModalOpen} 
+        setOpen={setQueryJavaModalOpen} 
       />
       <Modal
         title={modal.title}

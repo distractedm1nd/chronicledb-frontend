@@ -120,7 +120,7 @@ export const insertArrayOrdered = (
     .finally(callback);
 };
 
-export const createJavaStream =(javaStream : javaStream, callback : () => void) => {
+export const createJavaStream = (javaStream : javaStream, callback : () => void) => {
   fetch(`${demo_api}/create-stream`, {
     method : "POST",
     headers : { "Content-Type" : "application/json"},
@@ -130,6 +130,41 @@ export const createJavaStream =(javaStream : javaStream, callback : () => void) 
   .then((result) => console.log(result))
   .catch((error) => console.log("error", error))
   .finally(callback)
+};
+
+export const schemaJavaStream = (query : string, callback : () => void) => {
+  fetch(`${demo_api}/schema`, {
+    method : "POST",
+    headers : { 
+      "Content-Type" : " application/json",
+      "Access-Controll-Allow-Origin" : "http://localhost:3000"
+    },
+    body :  JSON.stringify({
+      "queryString": query
+    }),
+  })
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .then(error => console.log('error', error))
+  .finally(callback);
+}
+
+export const queryJavaStream = (query : string, startTime : number, endTime : number, callback : () => void) => {
+  fetch(`${demo_api}/query`, {
+    method : "POST",
+    headers : { 
+      "Content-Type" : " application/json",      
+    },
+    body :  JSON.stringify({
+      "queryString": query,
+      "startTime": startTime,
+      "endTime": endTime
+    }),
+  })
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .then(error => console.log('error', error))
+  .finally(callback);
 }
 
 /**

@@ -110,10 +110,10 @@ const CreateJavaStreamModal = ({
                 </label>
                 <div className={"flex w-full"}>
                   <input
-                    title="timestamp"
+                    title="streamName"
                     type="text"
-                    name="data"
-                    id="timestamp"
+                    name="streamName"
+                    id="streamName"
                     value={streamName}
                     onChange={(e) =>
                       setStreamName(e.target.value)
@@ -127,7 +127,7 @@ const CreateJavaStreamModal = ({
                       <div className="sm:grid sm:grid-cols-2 sm:gap-4 sm:items-start sm:border-gray-200">
                         <div className="sm:mt-0 sm:col-span-1">
                           <label
-                            htmlFor="eventType"
+                            htmlFor="attribute_name"
                             className="relative top-4 left-2 bg-white dark:bg-gray-700 dark:text-gray-100 rounded-md  -mt-px inline-block px-1 text-xs font-medium text-gray-400"
                           >
                             Name
