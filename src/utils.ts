@@ -134,8 +134,8 @@ export const createJavaStream = async (javaStream : javaStream, callback : () =>
   .finally(callback);
 };
 
-export const schemaJavaStream = (query : string, callback : () => void) => {
-  fetch(`${api}/schema`, {
+export const schemaJavaStream = async (query : string, callback : () => void) => {
+  return await fetch(`${api}/java-schema`, {
     method : "POST",
     headers : { 
       "Content-Type" : " application/json",
@@ -144,9 +144,7 @@ export const schemaJavaStream = (query : string, callback : () => void) => {
       "queryString": query
     }),
   })
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .then(error => console.log('error', error))
+  .then(response => response.json())
   .finally(callback);
 }
 
@@ -162,7 +160,7 @@ export const queryJavaStream = async (query : string, startTime : number, endTim
       "endTime": endTime
     }),
   })
-  .then(response => response.text())
+  .then(response => response.json())
   .finally(callback);
 }
 

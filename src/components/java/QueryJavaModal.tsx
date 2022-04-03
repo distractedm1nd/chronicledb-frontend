@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/solid";
 import { Fragment, useRef, useState } from "react";
 import { queryJavaStream, schemaJavaStream } from "../../utils";
+import Modal from "../Modal";
 
 type QueryJavaModalProps = {
     open: boolean,
@@ -25,18 +26,25 @@ const QueryJavaModal = ({
       body: '',
     });
 
-    const executeJavaQuery = async (stream: string, queryString: string, startTime: number, endTime: number) => {
+    const executeJavaQuery = async (queryString: string, startTime: number, endTime: number) => {
       setModal({
         open: true,
-        title: 'Stream Infos of : ' + stream,
-        body:JSON.stringify(
-          queryJavaStream(queryString, startTime, endTime, 
-            () => setOpen(false))),
+        title: 'Query Response',
+        body:JSON.stringify( await queryJavaStream(queryString, startTime, endTime, () => setOpen(false))),
       });
     };
 
     return (
-    <Transition.Root show={open} as={Fragment}>
+      <div>
+        <Modal 
+        title={modal.title}
+        body={modal.body}
+        buttonTitle={'Close'}
+        open={modal.open}
+        setOpen={(openState) =>
+          setModal((current) => ({ ...current, open: openState }))
+        }/>
+        <Transition.Root show={open} as={Fragment}>
         <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
@@ -171,7 +179,7 @@ const QueryJavaModal = ({
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   ref={cancelButtonRef}
-                  onClick={() => console.log("in work")}
+                  onClick={() => executeJavaQuery(queryString,startTime,endTime)}
                 >
                   Query 
                 </button>
@@ -181,6 +189,7 @@ const QueryJavaModal = ({
         </div>
       </Dialog>
     </Transition.Root>
+      </div>
     );
 }
 

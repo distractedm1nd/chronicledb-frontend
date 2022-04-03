@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/solid";
 import { Fragment, useRef, useState } from "react";
 import { schemaJavaStream } from "../../utils";
+import Modal from "../Modal";
 
 type SchemaJavaModalProps = {
     open: boolean,
@@ -16,8 +17,32 @@ const SchemaJavaModal = ({
     const cancelButtonRef = useRef(null);
     const [queryString, setQueryString] = useState<string>("SELECT (X+Y) AS XY FROM S");
 
+    // The modal belonging to this component is responsible for showing query response.
+    const [modal, setModal] = useState({
+      open: false,
+      title: 'Loading...',
+      body: '',
+    });
+
+    const executeJavaSchemaQuery = async (queryString: string) => {
+      setModal({
+        open: true,
+        title: 'Schema Query Response',
+        body: JSON.stringify( await schemaJavaStream(queryString, () => setOpen(false))),
+      });
+    };
+
     return (
-    <Transition.Root show={open} as={Fragment}>
+      <div>
+        <Modal 
+        title={modal.title}
+        body={modal.body}
+        buttonTitle={'Close'}
+        open={modal.open}
+        setOpen={(openState) =>
+          setModal((current) => ({ ...current, open: openState }))
+        }/>
+        <Transition.Root show={open} as={Fragment}>
         <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
@@ -112,7 +137,7 @@ const SchemaJavaModal = ({
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   ref={cancelButtonRef}
-                  onClick={() => schemaJavaStream(queryString, () => setOpen(false))}
+                  onClick={() => executeJavaSchemaQuery(queryString)}
                 >
                   Query 
                 </button>
@@ -122,6 +147,7 @@ const SchemaJavaModal = ({
         </div>
       </Dialog>
     </Transition.Root>
+      </div>
     );
 }
 
