@@ -69,8 +69,8 @@ export default function Dashboard() {
   const showStreamInfo = async (stream: string) => {
     setModal({
       open: true,
-      title: 'Stream Info of : ' + stream,
-      body: await fetchJavaDBStreamInfo(stream),
+      title: 'Stream Infos of : ' + stream,
+      body: JSON.stringify(await fetchJavaDBStreamInfo(stream)),
     });
   };
 

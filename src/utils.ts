@@ -120,24 +120,25 @@ export const insertArrayOrdered = (
     .finally(callback);
 };
 
-export const createJavaStream = (javaStream : javaStream, callback : () => void) => {
-  fetch(`${demo_api}/create-stream`, {
+export const createJavaStream = async (javaStream : javaStream, callback : () => void) => {
+  await fetch(`${api}/create-java-stream`, {
     method : "POST",
-    headers : { "Content-Type" : "application/json"},
+    headers : { 
+      "Content-Type" : "application/json", 
+    },
     body: JSON.stringify(javaStream),
   })
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.log("error", error))
-  .finally(callback)
+  .finally(callback);
 };
 
 export const schemaJavaStream = (query : string, callback : () => void) => {
-  fetch(`${demo_api}/schema`, {
+  fetch(`${api}/schema`, {
     method : "POST",
     headers : { 
       "Content-Type" : " application/json",
-      "Access-Controll-Allow-Origin" : "http://localhost:3000"
     },
     body :  JSON.stringify({
       "queryString": query
@@ -149,8 +150,8 @@ export const schemaJavaStream = (query : string, callback : () => void) => {
   .finally(callback);
 }
 
-export const queryJavaStream = (query : string, startTime : number, endTime : number, callback : () => void) => {
-  fetch(`${demo_api}/query`, {
+export const queryJavaStream = async (query : string, startTime : number, endTime : number, callback : () => void) => {
+  return await fetch(`${api}/java-query`, {
     method : "POST",
     headers : { 
       "Content-Type" : " application/json",      
@@ -162,8 +163,6 @@ export const queryJavaStream = (query : string, startTime : number, endTime : nu
     }),
   })
   .then(response => response.text())
-  .then(result => console.log(result))
-  .then(error => console.log('error', error))
   .finally(callback);
 }
 
@@ -377,19 +376,16 @@ export const fetchStreamAttribute = async (
  * @param streamId The stream to be queried.
  * @param attribute The name/path of the attribute to be fetched for the stream.
  * **/
- export const fetchJavaDBStreamInfo = async (stream: string,) => {
-   
-  return await fetch(
-    `${demo_api}/stream-info`, 
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({name: stream}),
-    })
-    .then((response) => response.text())
-    .then((result) => result)
+ export const fetchJavaDBStreamInfo = async (name: string,) => {
+  return await fetch(`${api}/show-java-stream-info`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name : name
+    }),
+  }).then((response) => response.json()) 
 };
 
 /**

@@ -18,6 +18,23 @@ const QueryJavaModal = ({
     const [startTime, setStartTime] = useState<number>(5);
     const [endTime, setEndTime] = useState<number>(14);
 
+    // The modal belonging to this component is responsible for showing query response.
+    const [modal, setModal] = useState({
+      open: false,
+      title: 'Loading...',
+      body: '',
+    });
+
+    const executeJavaQuery = async (stream: string, queryString: string, startTime: number, endTime: number) => {
+      setModal({
+        open: true,
+        title: 'Stream Infos of : ' + stream,
+        body:JSON.stringify(
+          queryJavaStream(queryString, startTime, endTime, 
+            () => setOpen(false))),
+      });
+    };
+
     return (
     <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -101,7 +118,7 @@ const QueryJavaModal = ({
                             className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             value={startTime}
                             onChange={(event) =>
-                              setStartTime(parseInt(event.target.value))
+                              setStartTime(Number.isNaN(parseInt(event.target.value)) ? 0 : parseInt(event.target.value))
                             }
                           >
                           </input>
@@ -121,7 +138,7 @@ const QueryJavaModal = ({
                             className="mt-1 block dark:bg-gray-700 dark:border-gray-500 dark:text-gray-100 w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             value={endTime}
                             onChange={(event) =>
-                              setEndTime(parseInt(event.target.value))
+                              setEndTime(Number.isNaN(parseInt(event.target.value)) ? 0 : parseInt(event.target.value))
                             }
                           >
                           </input>
@@ -154,7 +171,7 @@ const QueryJavaModal = ({
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-green-500 text-white font-medium hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm"
                   ref={cancelButtonRef}
-                  onClick={() => queryJavaStream(queryString, startTime, endTime, () => setOpen(false))}
+                  onClick={() => console.log("in work")}
                 >
                   Query 
                 </button>
